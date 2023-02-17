@@ -1,0 +1,80 @@
+#CRAVAT Report
+#Created at Tuesday 03/16/2021 07:41:59
+#Report level: variant
+#
+Variant Annotation																Extra VCF INFO Annotations									VCF Info							
+UID	Chrom	Position	Ref Base	Alt Base	Note	Coding	Gene	Transcript	Sequence Ontology	cDNA change	Protein Change	All Mappings	Sample Count	Samples	Tags	VCF Position	VCF Ref Allele	VCF Alt Allele	NS	DP	AF	AA	DB	H2	Phred	VCF filter	Zygosity	Alternate reads	Total reads	Variant AF	Haplotype block ID	Haplotype strand ID
+1	chr20	17330	T	A									1	NA00002		17330	T	A	3	11	0.017				3	q10	het		5			
+2	chr20	85729	G	A			DEFB125	ENST00000382410.3	2kb_upstream_variant	c.-1981G>A		ENST00000382410.3:DEFB125:Q8N687:2kb_upstream_variant::c.-1981G>A; ENST00000608838.1:DEFB125::2kb_upstream_variant,processed_transcript::	2	NA00002;NA00003	rs6054257	85729	G	A	3	14	0.5		True	True	29;29	PASS;PASS	het;hom	4;4	8;5	0.5;0.8		
+3	chr20	1130053	A	G			PSMF1	ENST00000335877.11	intron_variant	c.365+2545A>G		ENST00000246015.8:PSMF1::intron_variant::c.365+2545A>G; ENST00000333082.7:PSMF1:Q92530:intron_variant::c.365+2545A>G; ENST00000335877.11:PSMF1:Q92530:intron_variant::c.365+2545A>G; ENST00000478004.1:PSMF1::intron_variant,processed_transcript::; ENST00000479715.5:PSMF1::intron_variant,processed_transcript::; ENST00000652336.1:PSMF1::intron_variant,NMD_transcript_variant::c.365+2545A>G	2	NA00001;NA00002	rs6040355	1130053	A	G	2	10	0.333	T	True		67;67	PASS;PASS	het;het		6;0			
+4	chr20	1130053	A	T			PSMF1	ENST00000335877.11	intron_variant	c.365+2545A>T		ENST00000246015.8:PSMF1::intron_variant::c.365+2545A>T; ENST00000333082.7:PSMF1:Q92530:intron_variant::c.365+2545A>T; ENST00000335877.11:PSMF1:Q92530:intron_variant::c.365+2545A>T; ENST00000478004.1:PSMF1::intron_variant,processed_transcript::; ENST00000479715.5:PSMF1::intron_variant,processed_transcript::; ENST00000652336.1:PSMF1::intron_variant,NMD_transcript_variant::c.365+2545A>T	3	NA00001;NA00002;NA00003	rs6040355	1130053	A	T	2	10	0.667	T	True		67;67;67	PASS;PASS;PASS	het;het;hom		6;0;4			
+5	chr20	1253924	TC	-			RAD21L1	ENST00000409241.5	intron_variant	c.1483-344_1483-343del		ENST00000402452.5:RAD21L1:Q9H4I0:intron_variant::c.1386+5222_1386+5223del; ENST00000409241.5:RAD21L1:Q9H4I0:intron_variant::c.1483-344_1483-343del	2	NA00001;NA00003	microsat1	1253923	GTC	G	3	9		G			50;50	PASS;PASS	het;hom	2;2	4;3	0.5;0.6666666666666666		
+6	chr20	1253926	-	T			RAD21L1	ENST00000409241.5	intron_variant	c.1483-344dup		ENST00000402452.5:RAD21L1:Q9H4I0:intron_variant::c.1386+5222dup; ENST00000409241.5:RAD21L1:Q9H4I0:intron_variant::c.1483-344dup	1	NA00002	microsat1	1253923	GTC	GTCT	3	9		G			50	PASS	het	3	5	0.6		
+7	chr22	30025797	A	T		Yes	MTMR3	ENST00000401950.6	missense_variant	c.3593A>T	p.Asn1198Ile	ENST00000323630.9:MTMR3::missense_variant:p.Asn1062Ile:c.3185A>T; ENST00000333027.7:MTMR3:Q13615:missense_variant:p.Asn1170Ile:c.3509A>T; ENST00000351488.7:MTMR3:Q13615:missense_variant:p.Asn1161Ile:c.3482A>T; ENST00000401950.6:MTMR3:Q13615:missense_variant:p.Asn1198Ile:c.3593A>T; ENST00000406629.1:MTMR3:Q13615:missense_variant:p.Asn1170Ile:c.3509A>T; ENST00000429350.5:HORMAD2-AS1::intron_variant,lnc_RNA::; ENST00000453743.6:HORMAD2-AS1::intron_variant,lnc_RNA::; ENST00000624945.1:AC003681.1::lnc_RNA::	2	NA00002;NA00003	TR1	30025797	A	T	3	14	0.5		True	True	29;29	PASS;PASS	het;hom		8;5			
+8	chr22	29050091	A	G		Yes	ZNRF3	ENST00000544604.7	missense_variant	c.1910A>G	p.His637Arg	ENST00000402174.5:ZNRF3:Q9ULT6:missense_variant:p.His537Arg:c.1610A>G; ENST00000406323.3:ZNRF3:Q9ULT6:missense_variant:p.His537Arg:c.1610A>G; ENST00000544604.7:ZNRF3:Q9ULT6:missense_variant:p.His637Arg:c.1910A>G	2	NA00001;NA00003		29050091	A	G	2	10	0.333	T	True		67;67	PASS;PASS	het;hom		6;4			
+9	chr22	40418496	T	C		Yes	MRTFA	ENST00000355630.9	missense_variant	c.2242A>G	p.Ser748Gly	ENST00000355630.9:MRTFA::missense_variant:p.Ser748Gly:c.2242A>G; ENST00000396617.7:MRTFA::missense_variant:p.Ser648Gly:c.1942A>G; ENST00000402042.6:MRTFA::missense_variant:p.Ser698Gly:c.2092A>G; ENST00000407029.7:MRTFA:Q969V6:missense_variant:p.Ser648Gly:c.1942A>G; ENST00000614754.4:MRTFA::missense_variant:p.Ser649Gly:c.1945A>G; ENST00000618196.6:MRTFA::missense_variant:p.Ser598Gly:c.1792A>G; ENST00000618417.1:MRTFA::intron_variant::c.-1245-5604A>G; ENST00000620651.4:MRTFA::missense_variant:p.Ser599Gly:c.1795A>G; ENST00000651595.1:MRTFA::missense_variant:p.Ser748Gly:c.2242A>G; ENST00000652095.2:MRTFA::missense_variant:p.Ser683Gly:c.2047A>G	1	NA00002	TR3	40418496	T	C	3	11	0.017				3	q10	het		5			
+10	chr22	40419252	C	T		Yes	MRTFA	ENST00000355630.9	missense_variant	c.1486G>A	p.Ala496Thr	ENST00000355630.9:MRTFA::missense_variant:p.Ala496Thr:c.1486G>A; ENST00000396617.7:MRTFA::missense_variant:p.Ala396Thr:c.1186G>A; ENST00000402042.6:MRTFA::missense_variant:p.Ala446Thr:c.1336G>A; ENST00000407029.7:MRTFA:Q969V6:missense_variant:p.Ala396Thr:c.1186G>A; ENST00000614754.4:MRTFA::missense_variant:p.Ala397Thr:c.1189G>A; ENST00000618196.6:MRTFA::missense_variant:p.Ala346Thr:c.1036G>A; ENST00000618417.1:MRTFA::intron_variant::c.-1245-6360G>A; ENST00000620651.4:MRTFA::missense_variant:p.Ala347Thr:c.1039G>A; ENST00000651595.1:MRTFA::missense_variant:p.Ala496Thr:c.1486G>A; ENST00000652095.2:MRTFA::missense_variant:p.Ala431Thr:c.1291G>A	2	NA00001;NA00002		40419252	C	T	3	13		T			47;47	PASS;PASS	het;het		7;4			
+11	chr12	122981746	GAAGAAGAA	-		Yes	ARL6IP4	ENST00000315580.9	inframe_deletion	c.896_904del	p.Lys299_Lys301del	ENST00000228922.11:OGFOD2:Q6N063:2kb_downstream_variant::c.*2408_*2416del; ENST00000280562.9:PITPNM2:Q9BZ72:2kb_downstream_variant::c.*4273_*4281del; ENST00000315580.9:ARL6IP4:Q66PJ3:inframe_deletion:p.Lys299_Lys301del:c.896_904del; ENST00000320201.8:PITPNM2:Q9BZ72:2kb_downstream_variant::c.*4273_*4281del; ENST00000357866.4:ARL6IP4::inframe_deletion:p.Lys107_Lys109del:c.320_328del; ENST00000392435.6:ARL6IP4:Q66PJ3:inframe_deletion:p.Lys280_Lys282del:c.839_847del; ENST00000397389.6:OGFOD2:Q6N063:2kb_downstream_variant::c.*2408_*2416del; ENST00000412505.6:ARL6IP4::inframe_deletion:p.Lys96_Lys98del:c.287_295del; ENST00000426960.6:ARL6IP4::inframe_deletion:p.Lys96_Lys98del:c.287_295del; ENST00000439686.6:ARL6IP4::inframe_deletion:p.Lys107_Lys109del:c.320_328del; ENST00000453766.6:ARL6IP4:Q66PJ3:inframe_deletion:p.Lys291_Lys293del:c.872_880del; ENST00000454694.6:OGFOD2:Q6N063:2kb_downstream_variant::c.*2408_*2416del; ENST00000454885.6:ARL6IP4:Q66PJ3:inframe_deletion:p.Lys104_Lys106del:c.311_319del; ENST00000536150.5:OGFOD2:Q6N063:2kb_downstream_variant::c.*2408_*2416del; ENST00000538755.5:OGFOD2:Q6N063:2kb_downstream_variant::c.*2408_*2416del; ENST00000539770.5:ARL6IP4::inframe_deletion,NMD_transcript_variant:p.Arg210_Arg212del:c.628_636del; ENST00000540324.5:OGFOD2:Q6N063:2kb_downstream_variant,NMD_transcript_variant::c.*3152_*3160del; ENST00000542678.5:ABCB9:Q9NP78:2kb_upstream_variant::c.-2944_-2936del; ENST00000542749.5:PITPNM2:Q9BZ72:2kb_downstream_variant::c.*4273_*4281del; ENST00000543566.5:ARL6IP4:Q66PJ3:inframe_deletion:p.Lys280_Lys282del:c.839_847del	3	NA00001;NA00002;NA00003	TRI	122981745	GGAAGAAGAA	G	3	13		T			50;50;50	PASS;PASS;PASS	het;het;het	1;2;3	4;6;8	0.25;0.3333333333333333;0.375		
+12	chr12	122981749	GAAGAA	-		Yes	ARL6IP4	ENST00000315580.9	inframe_deletion	c.899_904del	p.Lys300_Lys301del	ENST00000228922.11:OGFOD2:Q6N063:2kb_downstream_variant::c.*2411_*2416del; ENST00000280562.9:PITPNM2:Q9BZ72:2kb_downstream_variant::c.*4276_*4281del; ENST00000315580.9:ARL6IP4:Q66PJ3:inframe_deletion:p.Lys300_Lys301del:c.899_904del; ENST00000320201.8:PITPNM2:Q9BZ72:2kb_downstream_variant::c.*4276_*4281del; ENST00000357866.4:ARL6IP4::inframe_deletion:p.Lys108_Lys109del:c.323_328del; ENST00000392435.6:ARL6IP4:Q66PJ3:inframe_deletion:p.Lys281_Lys282del:c.842_847del; ENST00000397389.6:OGFOD2:Q6N063:2kb_downstream_variant::c.*2411_*2416del; ENST00000412505.6:ARL6IP4::inframe_deletion:p.Lys97_Lys98del:c.290_295del; ENST00000426960.6:ARL6IP4::inframe_deletion:p.Lys97_Lys98del:c.290_295del; ENST00000439686.6:ARL6IP4::inframe_deletion:p.Lys108_Lys109del:c.323_328del; ENST00000453766.6:ARL6IP4:Q66PJ3:inframe_deletion:p.Lys292_Lys293del:c.875_880del; ENST00000454694.6:OGFOD2:Q6N063:2kb_downstream_variant::c.*2411_*2416del; ENST00000454885.6:ARL6IP4:Q66PJ3:inframe_deletion:p.Lys105_Lys106del:c.314_319del; ENST00000536150.5:OGFOD2:Q6N063:2kb_downstream_variant::c.*2411_*2416del; ENST00000538755.5:OGFOD2:Q6N063:2kb_downstream_variant::c.*2411_*2416del; ENST00000539770.5:ARL6IP4::inframe_deletion,NMD_transcript_variant:p.Arg211_Arg212del:c.631_636del; ENST00000540324.5:OGFOD2:Q6N063:2kb_downstream_variant,NMD_transcript_variant::c.*3155_*3160del; ENST00000542678.5:ABCB9:Q9NP78:2kb_upstream_variant::c.-2941_-2936del; ENST00000542749.5:PITPNM2:Q9BZ72:2kb_downstream_variant::c.*4276_*4281del; ENST00000543566.5:ARL6IP4:Q66PJ3:inframe_deletion:p.Lys281_Lys282del:c.842_847del	1	NA00002	TRI	122981745	GGAAGAAGAA	G	3	13		T			50	PASS	het	4	6	0.6666666666666666		
+13	chr12	122981752	GAA	-		Yes	ARL6IP4	ENST00000315580.9	inframe_deletion	c.902_904del	p.Lys301del	ENST00000228922.11:OGFOD2:Q6N063:2kb_downstream_variant::c.*2414_*2416del; ENST00000280562.9:PITPNM2:Q9BZ72:2kb_downstream_variant::c.*4279_*4281del; ENST00000315580.9:ARL6IP4:Q66PJ3:inframe_deletion:p.Lys301del:c.902_904del; ENST00000320201.8:PITPNM2:Q9BZ72:2kb_downstream_variant::c.*4279_*4281del; ENST00000357866.4:ARL6IP4::inframe_deletion:p.Lys109del:c.326_328del; ENST00000392435.6:ARL6IP4:Q66PJ3:inframe_deletion:p.Lys282del:c.845_847del; ENST00000397389.6:OGFOD2:Q6N063:2kb_downstream_variant::c.*2414_*2416del; ENST00000412505.6:ARL6IP4::inframe_deletion:p.Lys98del:c.293_295del; ENST00000426960.6:ARL6IP4::inframe_deletion:p.Lys98del:c.293_295del; ENST00000439686.6:ARL6IP4::inframe_deletion:p.Lys109del:c.326_328del; ENST00000453766.6:ARL6IP4:Q66PJ3:inframe_deletion:p.Lys293del:c.878_880del; ENST00000454694.6:OGFOD2:Q6N063:2kb_downstream_variant::c.*2414_*2416del; ENST00000454885.6:ARL6IP4:Q66PJ3:inframe_deletion:p.Lys106del:c.317_319del; ENST00000536150.5:OGFOD2:Q6N063:2kb_downstream_variant::c.*2414_*2416del; ENST00000538755.5:OGFOD2:Q6N063:2kb_downstream_variant::c.*2414_*2416del; ENST00000539770.5:ARL6IP4::inframe_deletion,NMD_transcript_variant:p.Arg212del:c.634_636del; ENST00000540324.5:OGFOD2:Q6N063:2kb_downstream_variant,NMD_transcript_variant::c.*3158_*3160del; ENST00000542678.5:ABCB9:Q9NP78:2kb_upstream_variant::c.-2938_-2936del; ENST00000542749.5:PITPNM2:Q9BZ72:2kb_downstream_variant::c.*4279_*4281del; ENST00000543566.5:ARL6IP4:Q66PJ3:inframe_deletion:p.Lys282del:c.845_847del	1	NA00003	TRI	122981745	GGAAGAAGAA	GGAA	3	13		T			50	PASS	het	5	8	0.625		
+#CRAVAT Report
+#Created at Tuesday 03/16/2021 07:41:59
+#Report level: gene
+#
+Variant Annotation					
+Gene	Note	Number of Coding Variants	Number of Noncoding Variants	Sequence Ontology	All Sequence Ontologies
+DEFB125		0	1	2kb_upstream_variant	processed_transcript(2)
+PSMF1		0	2	intron_variant	intron_variant(5),NMD_transcript_variant(5),processed_transcript(5)
+RAD21L1		0	2	intron_variant	intron_variant(3)
+MTMR3		1	0	missense_variant	missense_variant(2)
+ZNRF3		1	0	missense_variant	missense_variant(2)
+MRTFA		2	0	missense_variant	intron_variant(3),missense_variant(3)
+ARL6IP4		3	0	inframe_deletion	inframe_deletion(5),NMD_transcript_variant(5)
+#CRAVAT Report
+#Created at Tuesday 03/16/2021 07:41:59
+#Report level: sample
+#
+Variant Annotation									
+UID	Sample	Phred	VCF filter	Zygosity	Alternate reads	Total reads	Variant allele frequency	Haplotype block ID	Haplotype strand ID
+1	NA00002	3	q10	het		5			
+2	NA00002	29	PASS	het	4	8	0.5		
+2	NA00003	29	PASS	hom	4	5	0.8		
+3	NA00001	67	PASS	het		6			
+4	NA00001	67	PASS	het		6			
+4	NA00002	67	PASS	het		0			
+3	NA00002	67	PASS	het		0			
+4	NA00003	67	PASS	hom		4			
+5	NA00001	50	PASS	het	2	4	0.5		
+6	NA00002	50	PASS	het	3	5	0.6		
+5	NA00003	50	PASS	hom	2	3	0.6666666666666666		
+7	NA00002	29	PASS	het		8			
+7	NA00003	29	PASS	hom		5			
+8	NA00001	67	PASS	het		6			
+8	NA00003	67	PASS	hom		4			
+9	NA00002	3	q10	het		5			
+10	NA00001	47	PASS	het		7			
+10	NA00002	47	PASS	het		4			
+11	NA00001	50	PASS	het	1	4	0.25		
+11	NA00002	50	PASS	het	2	6	0.3333333333333333		
+12	NA00002	50	PASS	het	4	6	0.6666666666666666		
+13	NA00003	50	PASS	het	5	8	0.625		
+11	NA00003	50	PASS	het	3	8	0.375		
+#CRAVAT Report
+#Created at Tuesday 03/16/2021 07:41:59
+#Report level: mapping
+#
+Variant Annotation			
+Original Line	User Tags	UID	Input File Number
+22		1	0
+23	rs6054257	2	0
+24	rs6040355	3	0
+24	rs6040355	4	0
+26	microsat1	5	0
+26	microsat1	6	0
+27	TR1	7	0
+28		8	0
+29	TR3	9	0
+30		10	0
+31	TRI	11	0
+31	TRI	12	0
+31	TRI	13	0
