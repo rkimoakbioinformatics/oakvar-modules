@@ -1,0 +1,23 @@
+title: CyVCF Converter
+version: 1.0.1
+no_data: true
+type: converter
+description: Converter for VCF format input
+developer:
+  module:
+    name: 'Ryangguk Kim'
+    organization: 'Oak Bioinformatics, LLC'
+    email: 'info@oakvar.com'
+    website: 'https://oakvar.com'
+    citation: ''
+  data:
+    name: ''
+    organization: ''
+    email: ''
+    website: ''
+    citation: ''
+requires_oakvar: '>=2.5.39'
+pypi_dependencies:
+  - CyVCF2
+release_note:
+  1.0.1: written by Giabao Tonthat
