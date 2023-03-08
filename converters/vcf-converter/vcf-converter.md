@@ -1,3 +1,3 @@
-#VCF Converter
+# VCF Converter
 
 Converts vcf files
