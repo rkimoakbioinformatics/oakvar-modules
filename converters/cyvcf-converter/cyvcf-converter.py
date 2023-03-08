@@ -253,8 +253,8 @@ class Converter(BaseConverter):
         Args:
             file (TextIOWrapper): A VCF file read as a text stream.
         """
-        line_no = 0
         cyvcf_file = VCF(file)
+        line_no = cyvcf_file.raw_header.count("\n") - 1  # Count number of lines in the header
         for variant in cyvcf_file:
             line_no += 1
             try:
