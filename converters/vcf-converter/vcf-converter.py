@@ -1,7 +1,4 @@
 from typing import Any
-from typing import Iterator
-from typing import List
-from typing import Tuple
 from oakvar import BaseConverter
 import re
 from collections import defaultdict
@@ -23,7 +20,7 @@ class Converter(BaseConverter):
 
     def __init__(self):
         super().__init__()
-        self.format_name = "cyvcf"
+        self.format_name = "vcf"
         self._in_header = True
         self._first_variant = True
         self._buffer = StringIO()
@@ -118,7 +115,7 @@ class Converter(BaseConverter):
             self.include_info = set()
         import vcf
 
-        reader = vcf.Reader(f, compressed=False)
+        reader = vcf.Reader(f.name)
         self.open_extra_info(reader)
         self.input_assembly = self.detect_genome_assembly(reader, f)
 
@@ -130,10 +127,9 @@ class Converter(BaseConverter):
 
         if genome_assembly != "hg19":
             return do_liftover
-        f.seek(0)
-        reader = vcf.Reader(f)
+        fpath = f.name
+        reader = vcf.Reader(fpath)
         if not reader.contigs:
-            f.seek(0)
             return do_liftover
         for contig in reader.contigs.values():
             if contig.id in ["M", "MT", "Mt"]:
@@ -143,7 +139,6 @@ class Converter(BaseConverter):
                 elif contig.length == 16569:
                     f.seek(0)
                     return False
-        f.seek(0)
         return do_liftover
 
     def open_extra_info(self, reader):
@@ -224,8 +219,8 @@ class Converter(BaseConverter):
             info_cols = []
             for col in temp:
                 if (
-                        col["name"] in self.include_info
-                        and col["name"] not in self.exclude_info
+                    col["name"] in self.include_info
+                    and col["name"] not in self.exclude_info
                 ):
                     col["hidden"] = False
                     info_cols.append(col)
@@ -460,7 +455,6 @@ class Converter(BaseConverter):
         row_data = {"uid": wdict["uid"]}
         if not self.curvar:
             return
-
         for info_name, info_val in self.curvar.INFO:
             if info_name not in self.info_cols:
                 continue
