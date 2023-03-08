@@ -1,5 +1,5 @@
 title: VCF Converter
-version: 2.2.0
+version: 2.4.4
 no_data: true
 type: converter
 description: Converter for VCF format input
@@ -16,10 +16,44 @@ developer:
     email: ''
     website: ''
     citation: ''
-requires_oakvar: '>=2.5.39'
+requires_oakvar: '2.7.1'
 pypi_dependencies:
   - PyVCF3
+extra_output_columns:
+  - name: genotype
+    title: Genotype
+    type: string
+  - name: phred
+    title: Phred
+    type: string
+  - name: filter
+    title: VCF Filter
+    type: string
+  - name: zygosity
+    title: Zygosity
+    type: string
+  - name: alt_reads
+    title: Alternate reads
+    type: int
+  - name: tot_reads
+    title: Total reads
+    type: int
+  - name: af
+    title: Variant allele frequency
+    type: float
+  - name: hap_block
+    title: Haplotype block ID
+    type: int
+  - name: hap_strand
+    title: Haplotype strand ID
+    type: int
 release_note:
+  2.4.4: fix for unique variants.
+  2.4.3: fix for multiple non-vcf and vcf input files
+  2.4.2: Torrent Variant Caller support
+  2.4.1: another star allele to be ignored
+  2.4.0: genotype is written to crs.
+  2.3.0: chrM liftover handled properly for hg19
   2.2.0: PyVCF3 version
   2.1.7: auto-detect of genome assembly
   2.1.6: instead of badformat error, ignoredvariant
