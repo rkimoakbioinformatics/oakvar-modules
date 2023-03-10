@@ -188,10 +188,15 @@ class Converter(BaseConverter):
         typemap = {"Integer": "int", "Float": "float"}
         if reader.infos:
             for info in reader.infos.values():
+                # Ensure no duplicate column names exist (case-insensitive)
+                if info.id.lower() in [x["name"].lower() for x in info_cols]:
+                    info_id = info.id + "_"
+                else:
+                    info_id = info.id
                 info_cols.append(
                     {
-                        "name": info.id,
-                        "title": info.id,
+                        "name": info_id,
+                        "title": info_id,
                         "desc": info.desc,
                         "type": typemap.get(info.type, "string"),
                         "hidden": True,
