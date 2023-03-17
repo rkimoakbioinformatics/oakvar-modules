@@ -1,0 +1,16 @@
+title: parquet-converter
+version: 0.0.1
+type: converter
+description: File converter for old architecture cravat input
+developer:
+  name: Akash Rampersad
+  organization: Oak Bioinformatics
+  email: akashjrampersad@gmail.com
+  website:
+  itation: ''
+developer:
+  name: Ryangguk Kim
+  organization: Oak Bioinformatics
+  email: rkim@oakbioinformatics.com
+  website: https://rkimoakbioinformatics.github.io/oakvar/
+requires_opencravat: 'duckdb'
