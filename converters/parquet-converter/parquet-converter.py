@@ -3,6 +3,7 @@ from typing import List
 from typing import Dict
 from typing import Iterator
 import duckdb
+import os,ntpath
 from oakvar import BaseConverter
 
 
@@ -32,11 +33,19 @@ class Converter(BaseConverter):
     # you may want to start with modifying
     # convert_file method. In that case, uncomment
     # the below convert_file method and add your implementation.
-    #
-    def convert_file(self, file, *__args__, exc_handler=None, **__kwargs__) -> Iterator[Tuple[int, List[dict]]]:
+    def convert_file(
+        self, file, *__args__, exc_handler=None, input_path=None, **__kwargs__
+    ) -> Iterator[Tuple[int, List[dict]]]:
+        
+        def file_name_acq(path) -> str:
+            head,tail = ntpath.split(path)
+            return tail or ntpath.basename(head)
+        
+        file_name = file_name_acq(input_path)
+
         conn = duckdb.connect()
         row_q = 'row_group_num_rows'
-        rows = conn.execute(f'SELECT row_group_num_rows FROM parquet_metadata({file})').df().to_dict()
+        rows = conn.execute(f'SELECT row_group_num_rows FROM parquet_metadata({file_name})').df().to_dict()
         num_rows = rows[row_q][0]
 
 
