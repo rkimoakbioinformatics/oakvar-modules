@@ -504,12 +504,12 @@ class Converter(BaseConverter):
                 val = info_val[gt] if not somatic else info_val[gt - 1]  # First index is REF if not somatic VCF
                 oc_val = self.oc_info_val(info_desc["Type"], val)
             elif info_desc["Number"] == ".":  # Number=.
-                tmp = lambda val: self.oc_info_val(info_desc.type, val, force_str=True)
+                tmp = lambda val: self.oc_info_val(info_desc["Type"], val, force_str=True)
                 oc_val = ",".join(map(tmp, info_val))
             elif info_desc["Number"] == "1":
-                oc_val = self.oc_info_val(info_desc.type, info_val)
+                oc_val = self.oc_info_val(info_desc["Type"], info_val)
             else:  # Number>1
-                tmp = lambda val: self.oc_info_val(info_desc.type, val, force_str=True)
+                tmp = lambda val: self.oc_info_val(info_desc["Type"], val, force_str=True)
                 oc_val = ",".join(map(tmp, info_val))
             row_data[info_name] = oc_val
         alt = self.curvar.ALT[gt - 1]  # pyright: ignore
