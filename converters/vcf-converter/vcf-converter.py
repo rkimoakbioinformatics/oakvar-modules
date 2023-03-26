@@ -327,26 +327,35 @@ class Converter(BaseConverter):
         except Exception:
             no_genotype = True  # Somatic variants with no genotypes
         no_sample = len(self.cyvcf_samples) == 0
-        if no_sample or no_genotype:
+        if no_sample or ignore_sample:
             for gt in wdict_blanks:
-                wdicts.append(wdict_blanks[gt])
                 self.gt_occur.append(gt)
+                wdicts.append(wdict_blanks[gt])
         else:
             all_gt_zero = True
             for i in range(self.len_cyvcf_samples):
-                gt_sample = var_genotypes[i]
-                var_ploidy = (
-                    variant.ploidy
-                )  # Length of genotype array is (ploidy + 1), where the last value is phase
-                # Dedup gt but maintain order
-                for gt in list(OrderedDict.fromkeys(gt_sample[:var_ploidy])):
-                    if gt in [None, 0, -1]:
-                        continue
-                    all_gt_zero = False
-                    self.gt_occur.append(gt)
-                    if ignore_sample and gt not in self.gt_occur:
-                        wdicts.append(wdict_blanks[gt])
-                    else:
+                if no_genotype:  # Address Strelka VCFs with no genotypes
+                    for gt in wdict_blanks:
+                        wdict = copy.copy(wdict_blanks[gt])
+                        wdict["sample_id"] = self.cyvcf_samples[i]
+                        (
+                            wdict["tot_reads"],
+                            wdict["alt_reads"],
+                            wdict["af"],
+                        ) = self.extract_read_info(variant, i, None)
+                        self.gt_occur.append(gt)
+                        wdicts.append(wdict)
+                else:
+                    gt_sample = var_genotypes[i]
+                    var_ploidy = (
+                        variant.ploidy
+                    )  # Length of genotype array is (ploidy + 1), where the last value is phase
+                    # Dedup gt but maintain order
+                    for gt in list(OrderedDict.fromkeys(gt_sample[:var_ploidy])):
+                        if gt in [None, 0, -1]:
+                            continue
+                        all_gt_zero = False
+                        self.gt_occur.append(gt)
                         wdict = copy.copy(wdict_blanks[gt])
                         wdict["sample_id"] = self.cyvcf_samples[i]
                         if var_gt_types[i] == 1:
@@ -364,8 +373,6 @@ class Converter(BaseConverter):
                         wdict["hap_strand"] = None  # TODO
                         wdict["genotype"] = var_gt_bases[i]
                         wdicts.append(wdict)
-                if ignore_sample and not all_gt_zero:
-                    break
             if all_gt_zero:
                 raise NoAlternateAllele()
         self.curvar = variant
@@ -408,11 +415,19 @@ class Converter(BaseConverter):
                 tot_reads = var_depths
             # Compute alternate allele reads if possible
             if -1 in var_depths[sample_num]:
-                alt_reads = None
+                pass
             else:
                 alt_reads = var_depths[sample_num][gt]
         else:
-            alt_reads = variant.gt_alt_depths[sample_num]
+            if variant.INFO.get("SOMATIC"):
+                alt_reads = 0
+                for alt in variant.ALT:  # Collect Strelka reads from AU, CU, GU, and TU
+                    if alt + "U" in variant.FORMAT:
+                        alt_strelka = variant.format(alt + "U")
+                        tier_1 = alt_strelka[sample_num][0]  # Tier 1 reads is the first index
+                        alt_reads += tier_1
+            else:
+                alt_reads = variant.gt_alt_depths[sample_num]
         # DP is total depth
         if "DP" in variant.FORMAT:
             variant_dp = variant.format("DP")
@@ -497,7 +512,8 @@ class Converter(BaseConverter):
             if info_desc["Number"] == "0":
                 oc_val = self.oc_info_val(info_desc["Type"], info_val)
             elif info_desc["Number"] in ["-1", "A"]:  # Number=A
-                oc_val = self.oc_info_val(info_desc["Type"], info_val[alt_index])
+                val = info_val[alt_index] if hasattr(info_val, "__iter__") else info_val  # If not a list
+                oc_val = self.oc_info_val(info_desc["Type"], val)
             elif info_desc["Number"] in ["-2", "G"]:  # Number=G
                 oc_val = None  # TODO handle Number=G
             elif info_desc["Number"] in ["-3", "R"]:  # Number=R
@@ -505,7 +521,8 @@ class Converter(BaseConverter):
                 oc_val = self.oc_info_val(info_desc["Type"], val)
             elif info_desc["Number"] == ".":  # Number=.
                 tmp = lambda val: self.oc_info_val(info_desc["Type"], val, force_str=True)
-                oc_val = ",".join(map(tmp, info_val))
+                val = info_val if hasattr(info_val, "__iter__") else [info_val]  # If not a list
+                oc_val = ",".join(map(tmp, val))
             elif info_desc["Number"] == "1":
                 oc_val = self.oc_info_val(info_desc["Type"], info_val)
             else:  # Number>1
