@@ -117,7 +117,7 @@ class Converter(BaseConverter):
             self.include_info = set()
         import vcf
 
-        reader = vcf.Reader(f.name)
+        reader = vcf.Reader(f)
         self.open_extra_info(reader)
         self.input_assembly = self.detect_genome_assembly(reader, f)
 
@@ -262,13 +262,13 @@ class Converter(BaseConverter):
         Args:
             file (TextIOWrapper): A VCF file read as a text stream.
         """
-        cyvcf_file = VCF(file)
+        self._reader = VCF(file)
         line_no = (
-            cyvcf_file.raw_header.count("\n") - 1
+            self._reader.raw_header.count("\n") - 1
         )  # Count number of lines in the header
-        self.cyvcf_samples = cyvcf_file.samples
+        self.cyvcf_samples = self._reader.samples
         self.len_cyvcf_samples = len(self.cyvcf_samples)
-        for variant in cyvcf_file:
+        for variant in self._reader:
             line_no += 1
             try:
                 yield line_no, self.convert_line(variant, ignore_sample=ignore_sample)
@@ -318,12 +318,16 @@ class Converter(BaseConverter):
                 "filter": filter_val,
             }
         self.gt_occur: List[int] = []
-        # Preload data since cyvcf2 is slow otherwise
-        var_genotypes = variant.genotypes
-        var_gt_types = variant.gt_types
-        var_gt_bases = variant.gt_bases
+        try:
+            # Preload data since cyvcf2 is slow otherwise
+            var_genotypes = variant.genotypes
+            var_gt_types = variant.gt_types
+            var_gt_bases = variant.gt_bases
+            no_genotype = False
+        except Exception:
+            no_genotype = True  # Somatic variants with no genotypes
         no_sample = len(self.cyvcf_samples) == 0
-        if no_sample:
+        if no_sample or no_genotype:
             for gt in wdict_blanks:
                 wdicts.append(wdict_blanks[gt])
                 self.gt_occur.append(gt)
@@ -483,25 +487,26 @@ class Converter(BaseConverter):
         row_data = {"uid": wdict["uid"]}
         if not self.curvar:
             return
+        somatic = True if self.curvar.INFO.get("SOMATIC") else False
         for info_name, info_val in self.curvar.INFO:
             if info_name not in self.info_cols:
                 continue
-            if not self._reader or not self._reader.infos:
+            if not self._reader:
                 continue
-            info_desc = self._reader.infos[info_name]
-            if info_desc.num == 0:
-                oc_val = self.oc_info_val(info_desc.type, info_val)
-            elif info_desc.num == -1:  # Number=A
-                oc_val = self.oc_info_val(info_desc.type, info_val[alt_index])
-            elif info_desc.num == -2:  # Number=G
+            info_desc = self._reader.get_header_type(info_name)
+            if info_desc["Number"] == "0":
+                oc_val = self.oc_info_val(info_desc["Type"], info_val)
+            elif info_desc["Number"] in ["-1", "A"]:  # Number=A
+                oc_val = self.oc_info_val(info_desc["Type"], info_val[alt_index])
+            elif info_desc["Number"] in ["-2", "G"]:  # Number=G
                 oc_val = None  # TODO handle Number=G
-            elif info_desc.num == -3:  # Number=R
-                val = info_val[gt]  # TODO find an example and make sure this is right
-                oc_val = self.oc_info_val(info_desc.type, val)
-            elif info_desc.num is None:  # Number=.
+            elif info_desc["Number"] in ["-3", "R"]:  # Number=R
+                val = info_val[gt] if not somatic else info_val[gt - 1]  # First index is REF if not somatic VCF
+                oc_val = self.oc_info_val(info_desc["Type"], val)
+            elif info_desc["Number"] == ".":  # Number=.
                 tmp = lambda val: self.oc_info_val(info_desc.type, val, force_str=True)
                 oc_val = ",".join(map(tmp, info_val))
-            elif info_desc.num == 1:
+            elif info_desc["Number"] == "1":
                 oc_val = self.oc_info_val(info_desc.type, info_val)
             else:  # Number>1
                 tmp = lambda val: self.oc_info_val(info_desc.type, val, force_str=True)
