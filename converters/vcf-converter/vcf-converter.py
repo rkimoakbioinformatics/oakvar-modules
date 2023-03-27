@@ -27,6 +27,8 @@ class Converter(BaseConverter):
         self._first_variant = True
         self._buffer = StringIO()
         self._reader = None
+        self.cyvcf_samples = None
+        self.len_cyvcf_samples = None
         self.ex_info_writer = None
         self.curvar = None
         self.csq_fields = None
@@ -268,10 +270,13 @@ class Converter(BaseConverter):
         )  # Count number of lines in the header
         self.cyvcf_samples = self._reader.samples
         self.len_cyvcf_samples = len(self.cyvcf_samples)
-        for variant in self._reader:
-            line_no += 1
+        while True:
             try:
+                variant = next(self._reader)
+                line_no += 1
                 yield line_no, self.convert_line(variant, ignore_sample=ignore_sample)
+            except StopIteration:
+                break
             except Exception as e:
                 if exc_handler:
                     exc_handler(line_no, e)
@@ -373,7 +378,7 @@ class Converter(BaseConverter):
                         wdict["hap_strand"] = None  # TODO
                         wdict["genotype"] = var_gt_bases[i]
                         wdicts.append(wdict)
-            if all_gt_zero:
+            if not no_genotype and all_gt_zero:
                 raise NoAlternateAllele()
         self.curvar = variant
         self.cur_csq = {}
