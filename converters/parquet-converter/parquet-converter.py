@@ -3,11 +3,17 @@ from typing import List
 from typing import Dict
 from typing import Iterator
 import duckdb
+import pandas
+import pyarrow.dataset as ds
 import os,ntpath
 from oakvar import BaseConverter
 
 
 class Converter(BaseConverter):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args,**kwargs)
+        self.format_name = "parquet"
+        
     def check_format(self, f) -> bool:
         """
         Detect the format of an input file.
@@ -34,14 +40,15 @@ class Converter(BaseConverter):
     # convert_file method. In that case, uncomment
     # the below convert_file method and add your implementation.
     def convert_file(
-        self, file, *__args__, exc_handler=None, input_path=None, **__kwargs__
+        self, file, *__args__, exc_handler=None, input_path : str="", **__kwargs__
     ) -> Iterator[Tuple[int, List[dict]]]:
         
         def file_name_acq(path) -> str:
             head,tail = ntpath.split(path)
             return tail or ntpath.basename(head)
         
-        file_name = file_name_acq(input_path)
+        file_name = str(file_name_acq(input_path))
+        print(file_name)
 
         conn = duckdb.connect()
         row_q = 'row_group_num_rows'
@@ -50,13 +57,15 @@ class Converter(BaseConverter):
 
 
         start = 0
-        chunk = 10000
+        chunk = 1000
         end = chunk
+        
+        #dataset = ds.dataset(file_name, format="parquet",partitioning="hive")
+        #conn.register(file_name, dataset)
 
         
         while start < num_rows:
-            print(start)
-            QUERY = f'SELECT * FROM parquet_scan("{file}*") LIMIT {chunk} OFFSET {start}'
+            QUERY = f'SELECT * FROM parquet_scan("{file_name}") LIMIT {chunk} OFFSET {start}'
             count = conn.execute(QUERY).df().to_dict('index')
             for variant in count:
                 count.update({variant+start:count[variant]})
