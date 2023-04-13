@@ -9,13 +9,13 @@ level: variant
 output_columns:
 - name: score
   title: MetaRNN score
-  type: float
+  type: string
   width: 55
   hidden: false
   desc: RNN-based ensemble prediction score. Larger value means the SNV is more likely to be damaging. Scores range from 0 to 1.
 - name: rankscore
   title: MetaRNN rank-score
-  type: float
+  type: string
   width: 55
   hidden: false
   desc: Ratio of the rank of the score (among all MetaRNN scores in dbNSFP) over the total number of MetaRNN scores in dbNSFP.
