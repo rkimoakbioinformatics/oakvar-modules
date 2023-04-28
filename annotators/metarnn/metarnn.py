@@ -37,13 +37,15 @@ class Annotator(BaseAnnotator):
             return None
         chrom = input_data["chrom"]
         self.cursor.execute(
-            f"select score, rankscore, pred from {chrom} where pos=? and ref=? and alt=?;",
+            f"select transcript, score, rankscore, pred, all_info from {chrom} where pos=? and ref=? and alt=?;",
             (input_data["pos"], input_data["ref_base"], input_data["alt_base"]),
         )
         qr = self.cursor.fetchone()
         if qr is not None:
             return {
-                "score": qr[0],
-                "rankscore": qr[1],
-                "pred": qr[2]
+                "transcript": qr[0],
+                "score": qr[1],
+                "rankscore": qr[2],
+                "pred": qr[3],
+                "all_info": qr[4]
             }
