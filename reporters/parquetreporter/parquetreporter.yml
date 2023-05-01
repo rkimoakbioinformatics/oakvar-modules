@@ -1,0 +1,21 @@
+title: Parquet Reporter
+version: 1.0.0
+no_data: true
+type: reporter
+description: Apache Parquet reporter
+requires_oakvar: "2.9.12"
+output_filename_schema:
+- '{run_name}{batch_num}.parquet'
+pypi_dependencies:
+- duckdb
+- pyarrow
+developer:
+  name: Ryangguk Kim, Akash Rampersad
+  organization: Oak Bioinformatics, LLC
+  email: rkim@oakbioinformatics.com, akashjrampersad@gmail.com
+  website: https://oakbioinformatics.com
+  citation: ''
+tags:
+- input/output
+release_note:
+

@@ -1,4 +1,6 @@
 from oakvar import BaseReporter
+import pyarrow as pa
+import pyarrow.parquet as pq
 import duckdb as db
 import zipfile
 
@@ -56,7 +58,22 @@ class Reporter(BaseReporter):
             zf.close()
         else:
             zipfile_path = self.filenames
-        return zipfile_path
+        conn = db.connect()
+        columns = list(self.batch[0].keys())
+
+        #create a list of data types for the duckDB table. 
+        tbl = pa.Table.from_pylist(self.batch)
+        print(tbl)
+        conn.sql("CREATE TABLE my_tbl AS SELECT * from tbl")
+        conn.sql("INSERT INTO my_tbl SELECT * FROM tbl")
+        print(self.filename)
+        #conn.execute(f"CREATE TABLE my_table ({', '.join(f'{col} {type(val).__name__.upper()}' for col, val in self.batch[0].items())})")
+        #for row in self.batch:
+        #   values = ','.join(f"'{val}" if isinstance(val,str) else str(val) for val in row.values())
+        #    conn.execute(f"INSERT INTO my_table ({', '.join(row.keys())}) VALUES ({values})")
+        result = conn.execute(f"COPY my_tbl to '{self.filename}' (FORMAT 'PARQUET')")
+
+        return self.savepath
     
 
 
@@ -69,12 +86,15 @@ class Reporter(BaseReporter):
             self.wf.close()
 
         #write file name for specific level:
-        self.filename = self.filename_prefix + str(self.chunkno) + self.filename_prefix
+        
+        self.filename = f"{self.filename_prefix}{self.chunkno}{self.filename_postfix}"
         self.filenames.append(self.filename)
         
 
     def write_table_row(self,row):
         if self.rowno == self.batch_size:
+            print(self.batch)
+            conn = db.connect()
             conn.execute(f"COPY tbl TO '{self.filename}' (FORMAT 'PARQUET')")
         else:
             self.batch.append(row)
