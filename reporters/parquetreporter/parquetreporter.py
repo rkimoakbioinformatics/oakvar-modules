@@ -1,4 +1,6 @@
 from oakvar import BaseReporter
+import sqlite3
+import os
 import pyarrow as pa
 import pyarrow.parquet as pq
 import duckdb as db
@@ -12,13 +14,13 @@ class Reporter(BaseReporter):
         self.filename = None
         self.filename_prefix = None
         self.chunkno = 0
-        self.batch_size = 10000
+        self.chunk_size = None
         self.batch = []
-        self.rowno = 0 
+        self.rowno = 1
+        self.list_tbl = []
+        
 
-        conn = db.connect()
-        conn.execute('INSTALL parquet')
-        conn.execute('LOAD parquet')
+
         
         if self.savepath == None:
             self.filename_prefix = "cravat_result"
@@ -27,6 +29,25 @@ class Reporter(BaseReporter):
         self.levels_to_write = self.get_standardized_module_option(
             self.confs.get("pages", "variant")
         )
+
+        #for now use sqlite3 package to get total variant row count and store it for chunking purposes
+        sql_conn = sqlite3.connect(self.dbpath)
+        curs = sql_conn.cursor()
+        curs.execute('SELECT COUNT(*) from "variant"')
+        self.results = curs.fetchone()[0]
+        
+
+        
+        #determine chunk size
+        if self.results > 10000: 
+            self.chunk_size = 10000
+        if self.results < 10000 and self.results> 1000:
+            self.chunk_size = 1000
+        else:
+            self.chunk_size = 100
+
+
+
 
         self.zip = (
             self.get_standardized_module_option(self.confs.get("zip", "false")) == True
@@ -58,21 +79,7 @@ class Reporter(BaseReporter):
             zf.close()
         else:
             zipfile_path = self.filenames
-        conn = db.connect()
-        columns = list(self.batch[0].keys())
-
-        #create a list of data types for the duckDB table. 
-        tbl = pa.Table.from_pylist(self.batch)
-        print(tbl)
-        conn.sql("CREATE TABLE my_tbl AS SELECT * from tbl")
-        conn.sql("INSERT INTO my_tbl SELECT * FROM tbl")
-        print(self.filename)
-        #conn.execute(f"CREATE TABLE my_table ({', '.join(f'{col} {type(val).__name__.upper()}' for col, val in self.batch[0].items())})")
-        #for row in self.batch:
-        #   values = ','.join(f"'{val}" if isinstance(val,str) else str(val) for val in row.values())
-        #    conn.execute(f"INSERT INTO my_table ({', '.join(row.keys())}) VALUES ({values})")
-        result = conn.execute(f"COPY my_tbl to '{self.filename}' (FORMAT 'PARQUET')")
-
+        
         return self.savepath
     
 
@@ -85,17 +92,36 @@ class Reporter(BaseReporter):
         if self.wf is not None:
             self.wf.close()
 
-        #write file name for specific level:
-        
-        self.filename = f"{self.filename_prefix}{self.chunkno}{self.filename_postfix}"
-        self.filenames.append(self.filename)
         
 
     def write_table_row(self,row):
-        if self.rowno == self.batch_size:
-            print(self.batch)
+        self.batch.append(row)
+        if self.rowno % self.chunk_size == 0 or self.rowno ==self.results:
+            
+            #set the file name with correct chunk number
+            self.filename = f"{self.filename_prefix}{self.chunkno}{self.filename_postfix}"
+            self.filenames.append(self.filename)
+
+            #connect to duckDB            
             conn = db.connect()
-            conn.execute(f"COPY tbl TO '{self.filename}' (FORMAT 'PARQUET')")
+
+            #create a pyarrow table so that schema is set for duckDB table
+            tbl = pa.Table.from_pylist(self.batch)
+            tbl_name = f"my_tbl{self.chunkno}"
+
+            #create a duckDB table from pyarrow table 
+            conn.sql(f"CREATE TABLE {tbl_name} AS SELECT * from tbl")
+            conn.sql(f"INSERT INTO {tbl_name} SELECT * FROM tbl")
+
+            #create parquet file from duckDB table 
+            result = conn.execute(f"COPY {tbl_name} to '{self.filename}' (FORMAT 'PARQUET')")
+
+            self.list_tbl.append(tbl_name)
+
+            #reset parameters for next chunk 
+            self.batch = []
+
+            self.rowno += 1
+            self.chunkno += 1
         else:
-            self.batch.append(row)
             self.rowno += 1
