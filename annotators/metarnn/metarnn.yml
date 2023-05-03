@@ -1,0 +1,57 @@
+title: MetaRNN
+description: MetaRNN is a pathogenicity prediction model that identifies rare non-synonymous single nucleotide variants (nsSNVs).
+type: annotator
+version: 2023.04.13
+data_version: 2023.04.13
+datasource: 2023.04.13
+input_format: crx
+level: variant
+output_columns:
+- name: score
+  title: MetaRNN score
+  type: string
+  width: 55
+  hidden: false
+  desc: RNN-based ensemble prediction score. Larger value means the SNV is more likely to be damaging. Scores range from 0 to 1.
+- name: rankscore
+  title: MetaRNN rank-score
+  type: string
+  width: 55
+  hidden: false
+  desc: Ratio of the rank of the score (among all MetaRNN scores in dbNSFP) over the total number of MetaRNN scores in dbNSFP.
+- name: pred
+  title: MetaRNN prediction
+  type: string
+  width: 55
+  hidden: false
+  desc: Prediction from MetaRNN - "T(olerated)" or "D(amaging)".
+developer:
+  module:
+    name: Giabao Tonthat
+    organization: Oak Bioinformatics, LLC
+    email: giabaot@hotmail.com
+    website: https://oakbioinformatics.com
+    citation: ""
+  data:
+    citation: 'Li C, Zhi D, Wang K, Liu X (2021) MetaRNN: Differentiating Rare Pathogenic and Rare Benign 
+    Missense SNVs and InDels Using Deep Learning. bioRxiv. https://doi.org/10.1101/2021.04.09.438706.'
+    email: ""
+    name: Liu Lab @ USF
+    organization: University of South Florida
+    website: http://www.liulab.science/metarnn.html
+tags:
+- variants
+- clinical relevance
+- literature
+requires_oakvar: "2.8.0"
+requires:
+minify:
+  entry_tables:
+    table_by_chromosome: true
+    match:
+      pos: pos
+      ref_base: ref
+      alt_base: alt
+release_note:
+  2023.04.13: imported MetaRNN annotation data from dbNSFP
+

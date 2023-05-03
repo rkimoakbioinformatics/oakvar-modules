@@ -1,4 +1,6 @@
 from typing import Any
+from typing import Optional
+from typing import List
 from oakvar import BaseConverter
 import re
 from collections import defaultdict
@@ -18,13 +20,15 @@ class Converter(BaseConverter):
     hg19_code = "hg19"
     hg18_code = "hg18"
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.format_name = "vcf"
         self._in_header = True
         self._first_variant = True
         self._buffer = StringIO()
         self._reader = None
+        self.cyvcf_samples = None
+        self.len_cyvcf_samples = None
         self.ex_info_writer = None
         self.curvar = None
         self.csq_fields = None
@@ -115,7 +119,7 @@ class Converter(BaseConverter):
             self.include_info = set()
         import vcf
 
-        reader = vcf.Reader(f.name)
+        reader = vcf.Reader(f)
         self.open_extra_info(reader)
         self.input_assembly = self.detect_genome_assembly(reader, f)
 
@@ -247,18 +251,32 @@ class Converter(BaseConverter):
                 "displayname", "Extra VCF INFO Annotations"
             )
 
-    def convert_file(self, file, *__args__, exc_handler=None, **__kwargs__):
+    def convert_file(
+        self,
+        file,
+        *__args__,
+        exc_handler=None,
+        ignore_sample: bool = False,
+        **__kwargs__,
+    ):
         """Reads a VCF file as a list of dictionaries using cyvcf2.
 
         Args:
             file (TextIOWrapper): A VCF file read as a text stream.
         """
-        cyvcf_file = VCF(file)
-        line_no = cyvcf_file.raw_header.count("\n") - 1  # Count number of lines in the header
-        for variant in cyvcf_file:
-            line_no += 1
+        self._reader = VCF(file)
+        line_no = (
+            self._reader.raw_header.count("\n") - 1
+        )  # Count number of lines in the header
+        self.cyvcf_samples = self._reader.samples
+        self.len_cyvcf_samples = len(self.cyvcf_samples)
+        while True:
             try:
-                yield line_no, self.convert_line(variant, cyvcf_file)
+                variant = next(self._reader)
+                line_no += 1
+                yield line_no, self.convert_line(variant, ignore_sample=ignore_sample)
+            except StopIteration:
+                break
             except Exception as e:
                 if exc_handler:
                     exc_handler(line_no, e)
@@ -266,12 +284,11 @@ class Converter(BaseConverter):
                     raise e
         return None
 
-    def convert_line(self, variant, cyvcf_file):
+    def convert_line(self, variant, ignore_sample: bool = False):
         """Converts a variant from a VCF into a list of dictionaries.
 
         Args:
             variant (cyvcf2.Variant): A single variant parsed from the VCF file using cyvcf2.
-            cyvcf_file (cyvcf2.VCF): The relevant VCF file inputted into cyvcf2's VCF reader.
         """
         try:
             from oakvar.lib.exceptions import NoAlternateAllele  # type: ignore
@@ -305,52 +322,69 @@ class Converter(BaseConverter):
                 "phred": variant.QUAL,
                 "filter": filter_val,
             }
-        self.gt_occur = []
-        # Preload data since cyvcf2 is slow otherwise
-        cyvcf_samples = cyvcf_file.samples
-        var_genotypes = variant.genotypes
-        var_gt_types = variant.gt_types
-        var_gt_bases = variant.gt_bases
-        if len(cyvcf_samples) > 0:
-            all_gt_zero = True
-            for i in range(len(cyvcf_samples)):
-                gt_sample = var_genotypes[i]
-                var_ploidy = variant.ploidy  # Length of genotype array is (ploidy + 1), where the last value is phase
-                # Dedup gt but maintain order
-                for gt in list(OrderedDict.fromkeys(gt_sample[:var_ploidy])):
-                    if gt in [None, 0, -1]:
-                        continue
-                    all_gt_zero = False
-                    wdict = copy.copy(wdict_blanks[gt])
-                    wdict["sample_id"] = cyvcf_samples[i]
-                    if var_gt_types[i] == 1:
-                        wdict["zygosity"] = "het"
-                    elif var_gt_types[i] in [0, 3]:
-                        wdict["zygosity"] = "hom"
-                    else:
-                        wdict["zygosity"] = None
-                    (
-                        wdict["tot_reads"],
-                        wdict["alt_reads"],
-                        wdict["af"],
-                    ) = self.extract_read_info(variant, i, gt)
-                    wdict["hap_block"] = None  # TODO
-                    wdict["hap_strand"] = None  # TODO
-                    wdict["genotype"] = var_gt_bases[i]
-                    wdicts.append(wdict)
-                    self.gt_occur.append(gt)
-            if all_gt_zero:
-                raise NoAlternateAllele()
-        else:
+        self.gt_occur: List[int] = []
+        try:
+            # Preload data since cyvcf2 is slow otherwise
+            var_genotypes = variant.genotypes
+            var_gt_types = variant.gt_types
+            var_gt_bases = variant.gt_bases
+            no_genotype = False
+        except Exception:
+            no_genotype = True  # Somatic variants with no genotypes
+        no_sample = len(self.cyvcf_samples) == 0
+        if no_sample or ignore_sample:
             for gt in wdict_blanks:
-                wdict = copy.copy(wdict_blanks[gt])
-                wdicts.append(wdict)
                 self.gt_occur.append(gt)
+                wdicts.append(wdict_blanks[gt])
+        else:
+            all_gt_zero = True
+            for i in range(self.len_cyvcf_samples):
+                if no_genotype:  # Address Strelka VCFs with no genotypes
+                    for gt in wdict_blanks:
+                        wdict = copy.copy(wdict_blanks[gt])
+                        wdict["sample_id"] = self.cyvcf_samples[i]
+                        (
+                            wdict["tot_reads"],
+                            wdict["alt_reads"],
+                            wdict["af"],
+                        ) = self.extract_read_info(variant, i, None)
+                        self.gt_occur.append(gt)
+                        wdicts.append(wdict)
+                else:
+                    gt_sample = var_genotypes[i]
+                    var_ploidy = (
+                        variant.ploidy
+                    )  # Length of genotype array is (ploidy + 1), where the last value is phase
+                    # Dedup gt but maintain order
+                    for gt in list(OrderedDict.fromkeys(gt_sample[:var_ploidy])):
+                        if gt in [None, 0, -1]:
+                            continue
+                        all_gt_zero = False
+                        self.gt_occur.append(gt)
+                        wdict = copy.copy(wdict_blanks[gt])
+                        wdict["sample_id"] = self.cyvcf_samples[i]
+                        if var_gt_types[i] == 1:
+                            wdict["zygosity"] = "het"
+                        elif var_gt_types[i] in [0, 3]:
+                            wdict["zygosity"] = "hom"
+                        else:
+                            wdict["zygosity"] = None
+                        (
+                            wdict["tot_reads"],
+                            wdict["alt_reads"],
+                            wdict["af"],
+                        ) = self.extract_read_info(variant, i, gt)
+                        wdict["hap_block"] = None  # TODO
+                        wdict["hap_strand"] = None  # TODO
+                        wdict["genotype"] = var_gt_bases[i]
+                        wdicts.append(wdict)
+            if not no_genotype and all_gt_zero:
+                raise NoAlternateAllele()
         self.curvar = variant
         self.cur_csq = {}
-        if self.csq_fields and "CSQ" in variant.FORMAT:
+        if self.csq_fields and "CSQ" in variant.INFO:
             csq_entries = defaultdict(list)
-            for gt_csq in variant.FORMAT["CSQ"]:
+            for gt_csq in variant.INFO["CSQ"]:
                 l = gt_csq.split("|")
                 csq_entries[l[0]].append(l)
             for allele, entries in csq_entries.items():
@@ -364,7 +398,7 @@ class Converter(BaseConverter):
         return wdicts
 
     @staticmethod
-    def extract_read_info(variant, sample_num, gt):
+    def extract_read_info(variant, sample_num: int, gt):
         """Extracts read information from a variant for a particular sample.
 
         Args:
@@ -372,8 +406,8 @@ class Converter(BaseConverter):
             sample_num (int): The index of the relevant sample in the list of samples.
             gt (int): The genotype of the sample.
         """
-        tot_reads = None
-        alt_reads = None
+        tot_reads: Optional[int] = None
+        alt_reads: Optional[int] = None
         # AD is depth for each allele
         if "AD" in variant.FORMAT:
             var_depths = variant.format("AD")
@@ -386,16 +420,29 @@ class Converter(BaseConverter):
                 tot_reads = var_depths
             # Compute alternate allele reads if possible
             if -1 in var_depths[sample_num]:
-                alt_reads = None
+                pass
             else:
                 alt_reads = var_depths[sample_num][gt]
         else:
-            alt_reads = variant.gt_alt_depths[sample_num]
+            if variant.INFO.get("SOMATIC"):
+                alt_reads = 0
+                for alt in variant.ALT:  # Collect Strelka reads from AU, CU, GU, and TU
+                    if alt + "U" in variant.FORMAT:
+                        alt_strelka = variant.format(alt + "U")
+                        tier_1 = alt_strelka[sample_num][0]  # Tier 1 reads is the first index
+                        alt_reads += tier_1
+            else:
+                alt_reads = variant.gt_alt_depths[sample_num]
         # DP is total depth
         if "DP" in variant.FORMAT:
-            variant_dp = variant.format('DP')
+            variant_dp = variant.format("DP")
             tot_reads = variant_dp[sample_num][0]
-        if tot_reads not in [-1, None] and alt_reads not in [-1, None]:
+        if (
+            tot_reads not in [-1, None]
+            and alt_reads not in [-1, None]
+            and tot_reads
+            and alt_reads is not None
+        ):
             try:
                 alt_freq = alt_reads / tot_reads
             except ZeroDivisionError:
@@ -455,33 +502,36 @@ class Converter(BaseConverter):
     def addl_operation_for_unique_variant(self, wdict, wdict_no):
         if self.ex_info_writer is None:
             return
-        gt = self.gt_occur[wdict_no]
+        gt: int = self.gt_occur[wdict_no]
         alt_index = gt - 1
         row_data = {"uid": wdict["uid"]}
         if not self.curvar:
             return
+        somatic = True if self.curvar.INFO.get("SOMATIC") else False
         for info_name, info_val in self.curvar.INFO:
             if info_name not in self.info_cols:
                 continue
-            if not self._reader or not self._reader.infos:
+            if not self._reader:
                 continue
-            info_desc = self._reader.infos[info_name]
-            if info_desc.num == 0:
-                oc_val = self.oc_info_val(info_desc.type, info_val)
-            elif info_desc.num == -1:  # Number=A
-                oc_val = self.oc_info_val(info_desc.type, info_val[alt_index])
-            elif info_desc.num == -2:  # Number=G
+            info_desc = self._reader.get_header_type(info_name)
+            if info_desc["Number"] == "0":
+                oc_val = self.oc_info_val(info_desc["Type"], info_val)
+            elif info_desc["Number"] in ["-1", "A"]:  # Number=A
+                val = info_val[alt_index] if hasattr(info_val, "__iter__") else info_val  # If not a list
+                oc_val = self.oc_info_val(info_desc["Type"], val)
+            elif info_desc["Number"] in ["-2", "G"]:  # Number=G
                 oc_val = None  # TODO handle Number=G
-            elif info_desc.num == -3:  # Number=R
-                val = info_val[gt]  # TODO find an example and make sure this is right
-                oc_val = self.oc_info_val(info_desc.type, val)
-            elif info_desc.num is None:  # Number=.
-                tmp = lambda val: self.oc_info_val(info_desc.type, val, force_str=True)
-                oc_val = ",".join(map(tmp, info_val))
-            elif info_desc.num == 1:
-                oc_val = self.oc_info_val(info_desc.type, info_val)
+            elif info_desc["Number"] in ["-3", "R"]:  # Number=R
+                val = info_val[gt] if not somatic else info_val[gt - 1]  # First index is REF if not somatic VCF
+                oc_val = self.oc_info_val(info_desc["Type"], val)
+            elif info_desc["Number"] == ".":  # Number=.
+                tmp = lambda val: self.oc_info_val(info_desc["Type"], val, force_str=True)
+                val = info_val if hasattr(info_val, "__iter__") else [info_val]  # If not a list
+                oc_val = ",".join(map(tmp, val))
+            elif info_desc["Number"] == "1":
+                oc_val = self.oc_info_val(info_desc["Type"], info_val)
             else:  # Number>1
-                tmp = lambda val: self.oc_info_val(info_desc.type, val, force_str=True)
+                tmp = lambda val: self.oc_info_val(info_desc["Type"], val, force_str=True)
                 oc_val = ",".join(map(tmp, info_val))
             row_data[info_name] = oc_val
         alt = self.curvar.ALT[gt - 1]  # pyright: ignore
