@@ -32,7 +32,7 @@ output_columns:
   hidden: false
   desc: Prediction from MetaRNN - "T(olerated)" or "D(amaging)" - linked to the transcript with the highest score
 - name: all_info
-  title: All
+  title: All MetaRNN transcript data
   type: string
   width: 55
   hidden: false
