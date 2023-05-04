@@ -14,7 +14,7 @@ class Reporter(BaseReporter):
         self.filename = None
         self.filename_prefix = None
         self.chunkno = 0
-        self.chunk_size = None
+        self.chunk_size = 100000
         self.batch = []
         self.rowno = 1
         self.list_tbl = []
@@ -35,18 +35,7 @@ class Reporter(BaseReporter):
         curs = sql_conn.cursor()
         curs.execute('SELECT COUNT(*) from "variant"')
         self.results = curs.fetchone()[0]
-        
-
-        
-        #determine chunk size
-        if self.results > 10000: 
-            self.chunk_size = 10000
-        if self.results < 10000 and self.results> 1000:
-            self.chunk_size = 1000
-        else:
-            self.chunk_size = 100
-
-
+    
 
 
         self.zip = (
@@ -96,7 +85,10 @@ class Reporter(BaseReporter):
 
     def write_table_row(self,row):
         self.batch.append(row)
-        if self.rowno % self.chunk_size == 0 or self.rowno ==self.results:
+        
+
+        if self.rowno % self.chunk_size == 0 or self.rowno == self.results:
+            
             
             #set the file name with correct chunk number
             self.filename = f"{self.filename_prefix}{self.chunkno}{self.filename_postfix}"
@@ -109,16 +101,19 @@ class Reporter(BaseReporter):
             tbl = pa.Table.from_pylist(self.batch)
             tbl_name = f"my_tbl{self.chunkno}"
 
+            
+
             #create a duckDB table from pyarrow table 
             conn.sql(f"CREATE TABLE {tbl_name} AS SELECT * from tbl")
-            conn.sql(f"INSERT INTO {tbl_name} SELECT * FROM tbl")
+            
 
             #create parquet file from duckDB table 
             result = conn.execute(f"COPY {tbl_name} to '{self.filename}' (FORMAT 'PARQUET')")
 
             self.list_tbl.append(tbl_name)
 
-            #reset parameters for next chunk 
+            #reset parameters for next chunk
+            conn.close()
             self.batch = []
 
             self.rowno += 1
