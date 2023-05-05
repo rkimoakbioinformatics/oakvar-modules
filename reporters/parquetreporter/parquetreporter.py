@@ -65,7 +65,7 @@ class Reporter(BaseReporter):
         else:
             zipfile_path = self.filenames
 
-        return self.savepath
+        return self.filenames
 
     def write_preface(self, level):
         # determine if current level needs to be written, if not return
