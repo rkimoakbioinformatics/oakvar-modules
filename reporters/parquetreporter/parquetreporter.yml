@@ -10,7 +10,7 @@ pypi_dependencies:
 - duckdb
 - pyarrow
 developer:
-  name: Ryangguk Kim, Akash Rampersad
+  name:  Akash Rampersad, Ryangguk Kim
   organization: Oak Bioinformatics, LLC
   email: rkim@oakbioinformatics.com, akashjrampersad@gmail.com
   website: https://oakbioinformatics.com
@@ -18,4 +18,5 @@ developer:
 tags:
 - input/output
 release_note:
+  1.0.0: name_format change output file name
 
