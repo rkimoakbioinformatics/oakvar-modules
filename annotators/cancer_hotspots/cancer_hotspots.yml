@@ -1,0 +1,43 @@
+title: Cancer Hotspots
+description: A resource for statistically significant mutations in cancer.
+version: 1.2.2
+data_version: 1.2.0
+datasource: December 2017
+type: annotator
+level: variant
+developer:
+  module:
+    name: Ryangguk Kim
+    organization: Oak Bioinformatics, LLC
+    email: rkim@oakbioinformatics.com
+    website: https://oakbioinformatics.com
+    citation: ""
+  data:
+    name: 'Memorial Sloan Kettering Cancer Center'
+    organization: 'Memorial Sloan Kettering Cancer Center'
+    email: 'support@cravat.us'
+    website: 'https://www.cancerhotspots.org/'
+    citation: 'Chang et al., Accelerating discovery of functional mutant alleles in cancer. Cancer Discovery, 10.1158/2159-8290.CD-17-0321 (2017).'
+output_columns:
+- name: samples
+  title: Cancer Types
+  type: string
+  desc: Distinct cancer type and count associated with each variant. 
+  width: 120
+  table: true
+  table_headers:
+  - name: tissue
+    title: Tissue
+    type: string
+  - name: count
+    title: Count
+    type: int
+requires:
+- wgcancer_hotspots
+tags:
+- cancer
+requires_oakvar: "2.9.0"
+release_note:
+  1.2.1: works with table data
+  1.2.0: Fix in data
+  1.1.0: Updated data to hg38
