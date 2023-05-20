@@ -1,30 +1,56 @@
 title: MetaRNN
 description: MetaRNN is a pathogenicity prediction model that identifies rare non-synonymous single nucleotide variants (nsSNVs).
 type: annotator
-version: 2023.04.13
-data_version: 2023.04.13
-datasource: 2023.04.13
+version: 1.0.0
+data_version: 1.0.0
+datasource: 1.0.0
 input_format: crx
 level: variant
 output_columns:
+- name: transcript
+  title: MetaRNN Ensemble transcript ID
+  type: string
+  width: 55
+  hidden: false
+  desc: Ensembl transcript ID (linked to the highest score if multiple transcripts exist)
 - name: score
   title: MetaRNN score
   type: string
   width: 55
   hidden: false
-  desc: RNN-based ensemble prediction score. Larger value means the SNV is more likely to be damaging. Scores range from 0 to 1.
+  desc: Highest RNN-based ensemble prediction score (if multiple transcripts exist). Larger value means the SNV is more likely to be damaging.
 - name: rankscore
   title: MetaRNN rank-score
   type: string
   width: 55
   hidden: false
-  desc: Ratio of the rank of the score (among all MetaRNN scores in dbNSFP) over the total number of MetaRNN scores in dbNSFP.
+  desc: Ratio of the rank of the score (among all MetaRNN scores in dbNSFP) over the total number of MetaRNN scores in dbNSFP
 - name: pred
   title: MetaRNN prediction
   type: string
   width: 55
   hidden: false
-  desc: Prediction from MetaRNN - "T(olerated)" or "D(amaging)".
+  desc: Prediction from MetaRNN - "T(olerated)" or "D(amaging)" - linked to the transcript with the highest score
+- name: all_info
+  title: All MetaRNN transcript data
+  type: string
+  width: 55
+  hidden: false
+  desc: Nested list containing transcript ID, score, rank-score, and prediction for all transcripts
+  table: true
+  table_headers:
+  - name: transcript
+    title: Transcript
+    type: string
+  - name: score
+    title: Score
+    type: string
+  - name: rankscore
+    title: Rank-score
+    type: string
+  - name: pred
+    title: Prediction
+    type: string
 developer:
   module:
     name: Giabao Tonthat
@@ -53,5 +79,5 @@ minify:
       ref_base: ref
       alt_base: alt
 release_note:
-  2023.04.13: imported MetaRNN annotation data from dbNSFP
+  2023.04.28: imported MetaRNN annotation data from dbNSFP
 
