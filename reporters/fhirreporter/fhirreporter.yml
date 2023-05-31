@@ -1,0 +1,20 @@
+title: FHIR Reporter
+description: HL7 FHIR reporter
+type: reporter
+level: variant
+version: 1.0.0
+no_data: true
+requires_oakvar: "2.9.20"
+output_filename_schema: 
+- "{run_name}"
+developer:
+  name:  Akash Rampersad, Ryangguk Kim
+  organization: Oak Bioinformatics, LLC
+  email: rkim@oakbioinformatics.com, akashjrampersad@gmail.com
+  website: https://oakbioinformatics.com
+  citation: ''
+tags:
+- input/output
+
+release_note:
+  0.0.1: initial version
