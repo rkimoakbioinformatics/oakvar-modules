@@ -4,7 +4,6 @@ from oakvar import BaseReporter
 
 
 class Reporter(BaseReporter):
-
     MAF_COLUMN_MAP = {
         "Hugo_Symbol": "base__hugo",
         "Entrez_Gene_Id": "",
@@ -16,9 +15,9 @@ class Reporter(BaseReporter):
         "Strand": "+",
         "Variant_Classification": "base__so",
         "Variant_Type": "special_case",
-        "Reference_Allele": "ref_base",
-        "Tumor_Seq_Allele1": "alt_base",
-        "Tumor_Seq_Allele2": "alt_base",
+        "Reference_Allele": "base__ref_base",
+        "Tumor_Seq_Allele1": "base__alt_base",
+        "Tumor_Seq_Allele2": "base__alt_base",
         "dbSNP_RS": "dbsnp__rsid",
         "dbSNP_Val_Status": "",
         "Tumor_Sample_Barcode": "tagsampler__samples",
@@ -52,7 +51,7 @@ class Reporter(BaseReporter):
         "n_ref_count": "null",
         "n_alt_count": "null",
         "all_effects": "",
-        "Allele": "alt_base",
+        "Allele": "base__alt_base",
         "Gene": "",
         "Feature": "",
         "Feature_type": "null",
@@ -68,7 +67,7 @@ class Reporter(BaseReporter):
         "DISTANCE": "null",
         "TRANSCRIPT_STRAND": "+",
         "SYMBOL": "base__hugo",
-        "SYMBOL_SOURCE": "HUGO",
+        "SYMBOL_SOURCE": "special_case",
         "HGNC_ID": "base__hugo",
         "BIOTYPE": "",
         "CANONICAL": "null",
@@ -144,6 +143,7 @@ class Reporter(BaseReporter):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # defaults to somatic type if no module options are given
+        self.dictrow = True
         self.maf_file = None
         self.file_writer = None
         self.maf_type = 'somatic'
@@ -165,9 +165,6 @@ class Reporter(BaseReporter):
         if level != 'variant':
             return False
 
-    def end(self):
-        pass
-
     def write_preface(self, level):
         self.filename = f'{self.filename_prefix}{self.extension}'
 
@@ -186,9 +183,17 @@ class Reporter(BaseReporter):
             # somatic files are identical to protected files, except that they have the last 6 columns removed
             self.file_writer.writerow(self.headers[:-6])
 
-
     def write_table_row(self, row):
-        pass
+        col_names = self.extracted_col_names[self.level]
+        new_line = []
+
+        for col, val in self.MAF_COLUMN_MAP.items():
+            try:
+                new_line.append(row[val])
+            except KeyError:
+                new_line.append('empty-for-test-purposes')
+
+        self.file_writer.writerow(new_line)
 
     def set_maf_type(self):
         if 'type' in self.module_options:
@@ -198,3 +203,7 @@ class Reporter(BaseReporter):
                 self.maf_type = 'somatic'
             else:
                 self.maf_type = maf_type
+
+    def end(self):
+        pass
+
