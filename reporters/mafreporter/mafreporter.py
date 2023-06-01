@@ -77,7 +77,7 @@ class Reporter(BaseReporter):
         "TREMBL": "null",
         "UNIPARC": "null",
         "RefSeq": "base__refseq",
-        "SIFT": "sift__prediction (sift__score)",
+        "SIFT": "special_case",
         "PolyPhen": "",
         "EXON": "base__exonno",
         "INTRON": "null",
@@ -85,7 +85,7 @@ class Reporter(BaseReporter):
         "GMAF": "thousandgenomes__af",
         "AFR_MAF": "thousandgenomes__afr_af",
         "AMR_MAF": "thousandgenomes__amr_af",
-        "ASN_MAF": "thousandgenomes__eas_af + thousandgenomes__sas_af",
+        "ASN_MAF": "special_case",
         "EAS_MAF": "thousandgenomes__eas_af",
         "EUR_MAF": "thousandgenomes__eur_af",
         "SAS_MAF": "thousandgenomes__sas_af",
@@ -184,14 +184,20 @@ class Reporter(BaseReporter):
             self.file_writer.writerow(self.headers[:-6])
 
     def write_table_row(self, row):
-        col_names = self.extracted_col_names[self.level]
+        # col_names = self.extracted_col_names[self.level]
         new_line = []
 
         for col, val in self.MAF_COLUMN_MAP.items():
-            try:
+            if val in ['', 'null']:
+                new_line.append('')
+
+            elif val in ['null', 'GRCh38', '+', 'special_case', '1']:
+                new_line.append(val)
+
+            elif col in self.PROTECTED_COLS_TO_EMPTY:
+                new_line.append('')
+            else:
                 new_line.append(row[val])
-            except KeyError:
-                new_line.append('empty-for-test-purposes')
 
         self.file_writer.writerow(new_line)
 
