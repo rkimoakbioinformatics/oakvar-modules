@@ -2,7 +2,7 @@ title: FHIR Reporter
 description: HL7 FHIR reporter
 type: reporter
 level: variant
-version: 1.0.0
+version: 0.0.2
 no_data: true
 requires_oakvar: "2.9.20"
 output_filename_schema: 
@@ -17,4 +17,5 @@ tags:
 - input/output
 
 release_note:
+  0.0.2: added uri for each BundleEntry
   0.0.1: initial version

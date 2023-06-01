@@ -10,7 +10,8 @@ from fhir.resources.humanname import HumanName
 from fhir.resources.codeableconcept import  CodeableConcept
 from fhir.resources.coding import Coding 
 from fhir.resources.reference import Reference
-from fhir.resources.bundle import Bundle
+from fhir.resources.bundle import Bundle, BundleEntry
+from fhir.resources.fhirtypes import Uri
 
 class Reporter(BaseReporter):
     def setup(self):
@@ -136,10 +137,13 @@ class Reporter(BaseReporter):
         if len(self.obs_list) == self.num_rows:
             
             #Turn each observation into a Bundle Entry of type resource
-            entry = []
+            entries = []
             for ind_obs in self.obs_list:
-                entry.append({"resource": ind_obs})
-            self.bundle.entry = entry
+                full_uri= Uri("urn:oakvar-test123")
+                ind_resource = ind_obs
+                converted_entry = BundleEntry(fullUrl=full_uri,resource=ind_resource)
+                entries.append(converted_entry)
+            self.bundle.entry = entries
 
             #create a json_str from FHIR BundleResource
             json_str = self.bundle.json()
