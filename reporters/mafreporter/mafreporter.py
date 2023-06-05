@@ -41,8 +41,8 @@ class Reporter(BaseReporter):
         "Matched_Norm_Sample_UUID": "null",
         "HGVSc": "base__cchange",
         "HGVSp": "base__achange",
-        "HGVSp_Short": "base__achange",
-        "Transcript_ID": "",
+        "HGVSp_Short": "",
+        "Transcript_ID": "ensembl_regulatory_build__ensr",
         "Exon_Number": "base__exonno",
         "t_depth": "null",
         "t_ref_count": "null",
@@ -52,8 +52,8 @@ class Reporter(BaseReporter):
         "n_alt_count": "null",
         "all_effects": "",
         "Allele": "base__alt_base",
-        "Gene": "",
-        "Feature": "",
+        "Gene": "ensembl_regulatory_build__ensr",
+        "Feature": "ensembl_regulatory_build__ensr",
         "Feature_type": "null",
         "One_Consequence": "base__so",
         "Consequence": "",
@@ -147,7 +147,7 @@ class Reporter(BaseReporter):
                          'SYMBOL_SOURCE', 'SWISSPROT', 'PolyPhen', 'VARIANT_CLASS',
                          'ExAC_AF_Adj', 'FILTER', 'vcf_region', 'vcf_info', 'vcf_format',
                          'vcf_tumor_gt', 'vcf_normal_gt', 'NCBI_Build', 'TRANSCRIPT_STRAND', 'MINIMISED', 'Strand',
-                         'SIFT', 'ASN_MAF', 'all_effects', 'SIFT', 'Consequence')
+                         'SIFT', 'ASN_MAF', 'all_effects', 'SIFT', 'Consequence', 'HGVSp_Short')
 
     # TODO: find all base__so equivalents if possible
     SO_TO_MAF_VARIANT_CLASSIFICATION = {
@@ -248,6 +248,33 @@ class Reporter(BaseReporter):
         'disrupted_domain': '',
         'vault_RNA': '',
         'bidirectional_promoter_lncRNA': '',
+    }
+
+    AANUM_TO_AA1 = {
+        'Ala': 'A',
+        'Cys': 'C',
+        'Asp': 'D',
+        'Glu': 'E',
+        'Phe': 'F',
+        'Gly': 'G',
+        'His': 'H',
+        'Ile': 'I',
+        'Lys': 'K',
+        'Leu': 'L',
+        'Met': 'M',
+        'Asn': 'N',
+        'Pro': 'P',
+        'Gln': 'Q',
+        'Arg': 'R',
+        'Ser': 'S',
+        'Thr': 'T',
+        'Val': 'V',
+        'Trp': 'W',
+        'Tyr': 'Y',
+        'Ter': '*',
+        'NOA': '_',
+        'XAA': '?',
+        'NDA': ' ',
     }
 
     def __init__(self, *args, **kwargs):
@@ -371,11 +398,20 @@ class Reporter(BaseReporter):
         if col == 'Tumor_Sample_Barcode':
             return row['tagsampler__samples']
 
+        if col == 'HGVSp_Short':
+            return self.write_hgvsp_short(row)
+
         if col == 'Consequence':
             return self.write_consequence(row)
 
+        if col == 'Amino_acids':
+            return self.write_aa(row)
+
         if col == 'SYMBOL_SOURCE':
             return 'HUGO'
+
+        if col == 'SWISSPROT':
+            return self.write_swissprot(row)
 
         # this is different from what is shown in the variant table because of documentation rules
         # TODO: check if this should be like this
@@ -386,6 +422,29 @@ class Reporter(BaseReporter):
         # TODO: research more which should be used.
         if col == 'PolyPhen':
             return self.write_polyphen2(row)
+
+        # TODO: according to documentation this is a combination of 1000G EAS and SAS
+        #   but example MAF files don't even contain this column. Leaving empty for the moment.
+        if col == 'ASN_MAF':
+            return ''
+
+        if col == 'VARIANT_CLASS':
+            return self.write_variant_class(row)
+
+        # TODO: the same as 'ASN_MAF' - seems to be missing from examples.
+        #   furthermore, as in 'ASN_MAF' the column name is different from the documentation.
+        if col == 'ExAC_AF_Adj':
+            return ''
+
+        # TODO: this relies on VCF file information. Postponed.
+        if col == 'FILTER':
+            return ''
+
+        # TODO: at the moment it just handles 'vcf_region' by mapping:
+        #   original_input__pos, original_input__ref_base, original_input__alt_base
+        #   all others are skipped
+        if col in ['vcf_region', 'vcf_info', 'vcf_format', 'vcf_tumor_gt', 'vcf_normal_gt']:
+            return self.write_vcf_data(row, col)
 
         # TODO: seems to depend on values that are handled AFTER this is run - somehow this has to grab
         #   values and join them in their final state
@@ -488,23 +547,43 @@ class Reporter(BaseReporter):
         else:
             return val
 
-    def write_all_effects(self, row):
-        effects = []
+    def write_hgvsp_short(self, row):
+        base_achange = row['base__achange']
+        if base_achange is None:
+            return ''
 
-        for effect in self.MAF_ALL_EFFECTS:
-            if self.MAF_COLUMN_MAP[effect] in row:
-                result_row = row[self.MAF_COLUMN_MAP[effect]]
+        for aa in self.AANUM_TO_AA1:
+            while aa in base_achange:
 
-                if result_row is None:
-                    effects.append('')
-                else:
-                    effects.append(result_row)
-            else:
-                effects.append('')
+                base_achange = base_achange.replace(aa, self.AANUM_TO_AA1[aa])
 
-        all_effects = f'[{str(";".join(effects))}]'
+        return base_achange
 
-        return all_effects
+    @staticmethod
+    def write_variant_class(row):
+        return
+
+    # TODO: Determine how this is doe in example files. It is not just a simple join of AA by '/'
+    @staticmethod
+    def write_aa(row):
+        # print(row['base__achange'])
+        return
+
+    @staticmethod
+    def write_swissprot(row):
+        all_mappings = row['base__all_mappings']
+        base_transcript = row['base__transcript']
+        swiss_prot = ''
+        if all_mappings is None:
+            return ''
+
+        if base_transcript is None:
+            return ''
+
+        if base_transcript in all_mappings.split(';')[0]:
+            swiss_prot = all_mappings.split(';')[0].split(':')[0]
+
+        return swiss_prot
 
     @staticmethod
     def write_sift(row):
@@ -556,6 +635,35 @@ class Reporter(BaseReporter):
             prediction_rank = f'{polyphen_values_map[prediction]}({rank})'
 
         return prediction_rank
+
+    @staticmethod
+    def write_vcf_data(row, col):
+        vcf_input_pos = row["original_input__pos"] or ''
+        vcf_input_ref = row["original_input__ref_base"] or ''
+        vcf_input_alt = row["original_input__alt_base"] or ''
+
+        if col == 'vcf_region':
+            return f'{vcf_input_pos}:{vcf_input_ref}:{vcf_input_alt}'
+        else:
+            return ''
+
+    def write_all_effects(self, row):
+        effects = []
+
+        for effect in self.MAF_ALL_EFFECTS:
+            if self.MAF_COLUMN_MAP[effect] in row:
+                result_row = row[self.MAF_COLUMN_MAP[effect]]
+
+                if result_row is None:
+                    effects.append('')
+                else:
+                    effects.append(result_row)
+            else:
+                effects.append('')
+
+        all_effects = f'[{str(";".join(effects))}]'
+
+        return all_effects
 
     def end(self):
         pass
