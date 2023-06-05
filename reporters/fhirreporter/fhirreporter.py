@@ -8,10 +8,11 @@ from fhir.resources.observation import Observation
 from fhir.resources.observation import ObservationComponent
 from fhir.resources.humanname import HumanName
 from fhir.resources.codeableconcept import  CodeableConcept
-from fhir.resources.coding import Coding 
+from fhir.resources.coding import Coding
 from fhir.resources.reference import Reference
 from fhir.resources.bundle import Bundle, BundleEntry
 from fhir.resources.fhirtypes import Uri
+from fhir.resources import codesystem
 
 class Reporter(BaseReporter):
     def setup(self):
@@ -58,8 +59,7 @@ class Reporter(BaseReporter):
 
         #create CodingResource for row ObservationResources to Use
         coding = Coding()
-        coding.system = "http://loinc.org"
-        coding.code = "8480-6"
+        coding.system = Uri("http://loinc.org")
         self.code = CodeableConcept()
         self.code.coding = [coding]
 
@@ -97,7 +97,7 @@ class Reporter(BaseReporter):
         
         #create codingType for row Observation
         coding = Coding()
-        coding.system = "loinc"
+        coding.system = Uri("http://loinc.org")
         coding.code = "8480-6"
         code = CodeableConcept()
         code.coding = [coding]
@@ -111,7 +111,7 @@ class Reporter(BaseReporter):
 
         #Make Component for reference allele 
         coding_ref = Coding()
-        coding_ref.system = "loinc"
+        coding_ref.system = Uri("http://loinc.org")
         coding_ref.code = "69547-8" #always code for reference allele
         code_ref = CodeableConcept()
         code_ref.coding = [coding_ref]
@@ -120,7 +120,7 @@ class Reporter(BaseReporter):
 
         #Make Component for (alt)ernate allele
         coding_alt = Coding()
-        coding_alt.system = "loinc"
+        coding_alt.system = Uri("http://loinc.org")
         coding_alt.code = "69551-0"
         code_alt = CodeableConcept()
         code_alt.coding = [coding_alt]
@@ -139,7 +139,7 @@ class Reporter(BaseReporter):
             #Turn each observation into a Bundle Entry of type resource
             entries = []
             for ind_obs in self.obs_list:
-                full_uri= Uri("urn:oakvar-test123")
+                full_uri= Uri("urn:oakvar/test123")
                 ind_resource = ind_obs
                 converted_entry = BundleEntry(fullUrl=full_uri,resource=ind_resource)
                 entries.append(converted_entry)
