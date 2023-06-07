@@ -1,4 +1,5 @@
 import csv
+import re
 
 from oakvar import BaseReporter
 
@@ -147,7 +148,7 @@ class Reporter(BaseReporter):
                          'SYMBOL_SOURCE', 'SWISSPROT', 'PolyPhen', 'VARIANT_CLASS',
                          'ExAC_AF_Adj', 'FILTER', 'vcf_region', 'vcf_info', 'vcf_format',
                          'vcf_tumor_gt', 'vcf_normal_gt', 'NCBI_Build', 'TRANSCRIPT_STRAND', 'MINIMISED', 'Strand',
-                         'SIFT', 'ASN_MAF', 'all_effects', 'SIFT', 'Consequence', 'HGVSp_Short')
+                         'SIFT', 'ASN_MAF', 'all_effects', 'SIFT', 'Consequence', 'HGVSp_Short', 'BIOTYPE')
 
     # TODO: find all base__so equivalents if possible
     SO_TO_MAF_VARIANT_CLASSIFICATION = {
@@ -178,77 +179,15 @@ class Reporter(BaseReporter):
     MAF_ALL_EFFECTS = ('SYMBOL', 'Consequence', 'HGVSp_Short', 'Transcript_ID', 'RefSeq', 'HGVSc', 'IMPACT',
                        'CANONICAL', 'SIFT', 'PolyPhen', 'Strand')
 
-    SO_TO_BIOTYPE = {
-        'processed_transcript': 'SO_PTR',
-        'transcribed_unprocessed_pseudogene': 'SO_TU1',
-        'unprocessed_pseudogene': 'SO_UNP',
-        'miRNA': 'SO_MIR',
-        'lncRNA': 'SO_LNC',
-        'processed_pseudogene': 'SO_PPS',
-        'snRNA': 'SO_SNR',
-        'transcribed_processed_pseudogene': 'SO_TPR',
-        'retained_intron': 'SO_RTI',
-        'nonsense_mediated_decay': 'SO_NMD',
-        'misc_RNA': 'SO_MCR',
-        'TEC': 'SO_UNT',
-        'pseudogene': 'SO_PSE',
-        'transcribed_unitary_pseudogene': 'SO_TU2',
-        'non_stop_decay': 'SO_NSD',
-        'snoRNA': 'SO_SNO',
-        'scaRNA': 'SO_SCA',
-        'rRNA_pseudogene': 'SO_PRR',
-        'unitary_pseudogene': 'SO_UPG',
-        'polymorphic_pseudogene': 'SO_PPG',
-        'rRNA': 'SO_RRN',
-        'IG_V_pseudogene': 'SO_IVP',
-        'ribozyme': 'SO_RIB',
-        'sRNA': 'SO_SRN',
-        'TR_V_gene': 'SO_TVG',
-        'TR_V_pseudogene': 'SO_TVP',
-        'TR_D_gene': 'SO_TDG',
-        'TR_J_gene': 'SO_TJG',
-        'TR_C_gene': 'SO_TCG',
-        'TR_J_pseudogene': 'SO_TJP',
-        'IG_C_gene': 'SO_ICG',
-        'IG_C_pseudogene': 'SO_ICP',
-        'IG_J_gene': 'SO_IJG',
-        'IG_J_pseudogene': 'SO_IJP',
-        'IG_D_gene': 'SO_IDG',
-        'IG_V_gene': 'SO_IVG',
-        'IG_pseudogene': 'SO_IGP',
-        'translated_processed_pseudogene': 'SO_TPP',
-        'scRNA': 'SO_SCR',
-        'vaultRNA': 'SO_VLR',
-        'translated_unprocessed_pseudogene': 'SO_TUP',
-        'Mt_tRNA': 'SO_MTR',
-        'Mt_rRNA': 'SO_MRR',
-        'IG_LV_gene': '',
-        'Mt_tRNA_pseudogene': '',
-        'tRNA_pseudogene': '',
-        'snoRNA_pseudogene': '',
-        'snRNA_pseudogene': '',
-        'scRNA_pseudogene': '',
-        'misc_RNA_pseudogene': '',
-        'miRNA_pseudogene': '',
-        'protein_coding': '',
-        'protein_coding_LoF': '',
-        'protein_coding_CDS_not_defined': '',
-        'non_coding': '',
-        'ambiguous_orf': '',
-        'sense_intronic': '',
-        'sense_overlapping': '',
-        'antisense': '',
-        'antisense_RNA': '',
-        'known_ncrna': '',
-        'retrotransposed': '',
-        'artifact': '',
-        'lincRNA': '',
-        'macro_lncRNA': '',
-        '3prime_overlapping_ncRNA': '',
-        'disrupted_domain': '',
-        'vault_RNA': '',
-        'bidirectional_promoter_lncRNA': '',
-    }
+    SO_BIOTYPE = ('processed_transcript', 'transcribed_unprocessed_pseudogene', 'unprocessed_pseudogene', 'miRNA',
+                  'lncRNA', 'processed_pseudogene', 'snRNA', 'transcribed_processed_pseudogene', 'retained_intron',
+                  'nonsense_mediated_decay', 'misc_RNA', 'TEC', 'pseudogene',
+                  'transcribed_unitary_pseudogene', 'non_stop_decay', 'snoRNA', 'scaRNA', 'rRNA_pseudogene',
+                  'unitary_pseudogene', 'polymorphic_pseudogene', 'rRNA', 'IG_V_pseudogene', 'ribozyme', 'sRNA',
+                  'TR_V_gene', 'TR_V_pseudogene', 'TR_D_gene', 'TR_J_gene', 'TR_C_gene', 'TR_J_pseudogene', 'IG_C_gene',
+                  'IG_C_pseudogene', 'IG_J_gene', 'IG_J_pseudogene', 'IG_D_gene', 'IG_V_gene', 'IG_pseudogene',
+                  'translated_processed_pseudogene', 'scRNA', 'vaultRNA', 'translated_unprocessed_pseudogene',
+                  'Mt_tRNA', 'Mt_rRNA')
 
     AANUM_TO_AA1 = {
         'Ala': 'A',
@@ -275,6 +214,43 @@ class Reporter(BaseReporter):
         'NOA': '_',
         'XAA': '?',
         'NDA': ' ',
+    }
+
+    SO_TO_VARIANT_CLASS = {
+        'SNV': '',
+        'substitution': '',
+        'Alu_deletion': '',
+        'Alu_insertion': '',
+        'HERV_deletion': '',
+        'HERV_insertion': '',
+        'LINE1_deletion': '',
+        'LINE1_insertion': '',
+        'SVA_deletion': '',
+        'SVA_insertion': '',
+        'complex_chromosomal_rearrangement': '',
+        'complex_structural_alteration': '',
+        'complex_substitution': 'complex_substitution',
+        'copy_number_gain': '',
+        'copy_number_loss': '',
+        'copy_number_variation': '',
+        'duplication': '',
+        'interchromosomal_breakpoint': '',
+        'interchromosomal_translocation': '',
+        'intrachromosomal_breakpoint': '',
+        'intrachromosomal_translocation': '',
+        'inversion': '',
+        'loss_of_heterozygosity': '',
+        'mobile_element_deletion': '',
+        'mobile_element_insertion': '',
+        'novel_sequence_insertion': '',
+        'short_tandem_repeat_variation': '',
+        'tandem_duplication': '',
+        'translocation': '',
+        'deletion': '',
+        'indel': '',
+        'insertion': '',
+        'sequence_alteration': '',
+        'probe': '',
     }
 
     def __init__(self, *args, **kwargs):
@@ -399,7 +375,7 @@ class Reporter(BaseReporter):
             return row['tagsampler__samples']
 
         if col == 'HGVSp_Short':
-            return self.write_hgvsp_short(row)
+            return self.write_hgvsp_short(row['base__achange'])
 
         if col == 'Consequence':
             return self.write_consequence(row)
@@ -409,6 +385,13 @@ class Reporter(BaseReporter):
 
         if col == 'SYMBOL_SOURCE':
             return 'HUGO'
+
+        if col == 'BIOTYPE':
+
+            if row['base__so'] in self.SO_BIOTYPE:
+                return row['base__so']
+            else:
+                return ''
 
         if col == 'SWISSPROT':
             return self.write_swissprot(row)
@@ -548,26 +531,32 @@ class Reporter(BaseReporter):
             return val
 
     def write_hgvsp_short(self, row):
-        base_achange = row['base__achange']
-        if base_achange is None:
+        if row is None:
             return ''
 
         for aa in self.AANUM_TO_AA1:
-            while aa in base_achange:
+            while aa in row:
+                row = row.replace(aa, self.AANUM_TO_AA1[aa])
 
-                base_achange = base_achange.replace(aa, self.AANUM_TO_AA1[aa])
+        return row
 
-        return base_achange
+    def write_variant_class(self, row):
+        if row['base__so'] is None:
+            return ''
 
-    @staticmethod
-    def write_variant_class(row):
-        return
+        if row['base__so'] in self.SO_TO_VARIANT_CLASS:
+            return self.SO_TO_VARIANT_CLASS[row['base__so']]
 
     # TODO: Determine how this is doe in example files. It is not just a simple join of AA by '/'
-    @staticmethod
-    def write_aa(row):
-        # print(row['base__achange'])
-        return
+    def write_aa(self, row):
+        base_achange = row['base__achange']
+
+        short_aa = self.write_hgvsp_short(base_achange)
+        min_aa_re = re.compile('[A-Z*](?![a-z]+)')
+
+        short_aa_only = re.findall(min_aa_re, short_aa)
+
+        return '/'.join(short_aa_only)
 
     @staticmethod
     def write_swissprot(row):
