@@ -160,6 +160,7 @@ class Reporter(BaseReporter):
             entries = []
             num = 0 
             for ind_obs in self.obs_list:
+                num +=1
                 id_maker = int(self.str_id) + 100*num
                 uri_maker =  Uri(f"urn:uuid:{str(id_maker)}")
 
