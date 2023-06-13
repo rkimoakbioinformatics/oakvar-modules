@@ -13,6 +13,7 @@ from fhir.resources.reference import Reference
 from fhir.resources.bundle import Bundle, BundleEntry
 from fhir.resources.fhirtypes import Uri
 from fhir.resources import codesystem
+from fhir.resources.fhirtypesvalidators import bundle_validator
 
 class Reporter(BaseReporter):
     def setup(self):
@@ -45,10 +46,24 @@ class Reporter(BaseReporter):
         curs.execute("SELECT COUNT(*) from variant")
         self.num_rows = curs.fetchone()[0]
 
-        #create Reference resource for PatientResource
-        self.subject = Reference()
-        self.subject.reference = "Patient"
 
+
+        #get str for id generation
+        curs = conn.cursor()
+        curs.execute('select colval from info where colkey="input_paths"')
+        #get input_path and split is so that only path is part of id.
+        self.str_id = curs.fetchone()[0].split(" ",1)[-1]
+        print(self.str_id)
+        print(type(self.str_id))
+
+        curs.execute('select colval from info where colkey="annotators"')
+        self.str_id += curs.fetchone()[0][1:-1]
+        self.str_id = self.str_id[1:-1]
+        self.str_id = self.str_id[-32:]
+        self.str_id = str(hash(self.str_id))[1:33]
+        print(self.str_id)
+        print(len(self.str_id))
+    
         #create and fill in PatientResource
         self.patient = Patient()
         name = HumanName()
@@ -56,6 +71,11 @@ class Reporter(BaseReporter):
         name.family = " "
         name.given = [patient_name]
         self.patient.name = [name]
+        self.patient.id = self.str_id
+
+        #create Reference resource for PatientResource
+        self.subject = Reference(type="Patient")
+        self.subject.reference = self.patient.id
 
         #create CodingResource for row ObservationResources to Use
         coding = Coding()
@@ -138,10 +158,15 @@ class Reporter(BaseReporter):
             
             #Turn each observation into a Bundle Entry of type resource
             entries = []
+            num = 0 
             for ind_obs in self.obs_list:
-                full_uri= Uri("urn:oakvar/test123")
+                id_maker = int(self.str_id) + 100*num
+                uri_maker =  Uri(f"urn:uuid:{str(id_maker)}")
+
+
+                #full_uri= Uri(f"{}")
                 ind_resource = ind_obs
-                converted_entry = BundleEntry(fullUrl=full_uri,resource=ind_resource)
+                converted_entry = BundleEntry(resource=ind_resource,fullUrl=uri_maker)
                 entries.append(converted_entry)
             self.bundle.entry = entries
 
