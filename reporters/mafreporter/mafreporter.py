@@ -63,8 +63,7 @@ class Reporter(BaseReporter):
         "Protein_position": "base__achange",
         "Amino_acids": "",
         "Codons": "null",
-        "Existing_variation": "dbsnp__rsid",  # TODO examples say this would be correct, but recheck. In examples
-        #     there are multiple values separated by ';'
+        "Existing_variation": "dbsnp__rsid",
         "ALLELE_NUM": "null",
         "DISTANCE": "null",
         "TRANSCRIPT_STRAND": "+",
@@ -143,14 +142,17 @@ class Reporter(BaseReporter):
     PROTECTED_COLS_TO_EMPTY = ('Match_Norm_Seq_Allele1', 'Match_Norm_Validation_Allele1',
                                'Match_Norm_Validation_Allele2', 'n_ref_count', 'n_alt_count')
 
+    # columns which are considered special case since their values need to be rendered separately
     SPECIAL_CASE_COLS = ('Entrez_Gene_Id', 'Variant_Classification', 'Variant_Type', 'Tumor_Seq_Allele1',
                          'Tumor_Seq_Allele2', 'dbSNP_RS', 'Tumor_Sample_Barcode', 'Amino_acids',
                          'SYMBOL_SOURCE', 'SWISSPROT', 'PolyPhen', 'VARIANT_CLASS',
                          'ExAC_AF_Adj', 'FILTER', 'vcf_region', 'vcf_info', 'vcf_format',
                          'vcf_tumor_gt', 'vcf_normal_gt', 'NCBI_Build', 'TRANSCRIPT_STRAND', 'MINIMISED', 'Strand',
-                         'SIFT', 'ASN_MAF', 'all_effects', 'SIFT', 'Consequence', 'HGVSp_Short', 'BIOTYPE')
+                         'SIFT', 'ASN_MAF', 'SIFT', 'Consequence', 'HGVSp_Short', 'BIOTYPE')
 
     # TODO: find all base__so equivalents if possible
+    # MAF Variant Classification as detailed by the MAF Format Specification.
+    # Used in column 9. Different from Column 96 'VARIANT_CLASS'
     SO_TO_MAF_VARIANT_CLASSIFICATION = {
         '3_prime_UTR_variant': "3'UTR",
         '2': "3'Flank",
@@ -174,21 +176,82 @@ class Reporter(BaseReporter):
         '20': 'De_novo_Start_OutOfFrame'
     }
 
+    # MAF Variant Type as detailed by the MAF Format Specification
     MAF_VARIANT_TYPE = ('SNP', 'DNP', 'TNP', 'ONP', 'INS', 'DEL', 'Consolidated')
 
+    # MAF Effects as detailed by the MAF Format Specification
     MAF_ALL_EFFECTS = ('SYMBOL', 'Consequence', 'HGVSp_Short', 'Transcript_ID', 'RefSeq', 'HGVSc', 'IMPACT',
                        'CANONICAL', 'SIFT', 'PolyPhen', 'Strand')
 
-    SO_BIOTYPE = ('processed_transcript', 'transcribed_unprocessed_pseudogene', 'unprocessed_pseudogene', 'miRNA',
-                  'lncRNA', 'processed_pseudogene', 'snRNA', 'transcribed_processed_pseudogene', 'retained_intron',
-                  'nonsense_mediated_decay', 'misc_RNA', 'TEC', 'pseudogene',
-                  'transcribed_unitary_pseudogene', 'non_stop_decay', 'snoRNA', 'scaRNA', 'rRNA_pseudogene',
-                  'unitary_pseudogene', 'polymorphic_pseudogene', 'rRNA', 'IG_V_pseudogene', 'ribozyme', 'sRNA',
-                  'TR_V_gene', 'TR_V_pseudogene', 'TR_D_gene', 'TR_J_gene', 'TR_C_gene', 'TR_J_pseudogene', 'IG_C_gene',
-                  'IG_C_pseudogene', 'IG_J_gene', 'IG_J_pseudogene', 'IG_D_gene', 'IG_V_gene', 'IG_pseudogene',
-                  'translated_processed_pseudogene', 'scRNA', 'vaultRNA', 'translated_unprocessed_pseudogene',
-                  'Mt_tRNA', 'Mt_rRNA')
+    # base__so to biotype map from gencode
+    SO_TO_BIOTYPE = {
+        'processed_transcript': 'processed_transcript',
+        'transcribed_unprocessed_pseudogene': 'transcribed_unprocessed_pseudogene',
+        'unprocessed_pseudogene': 'unprocessed_pseudogene',
+        'miRNA': 'miRNA',
+        'lnc_RNA': 'lnc_RNA',  # lncRNA in gencode biotype
+        'processed_pseudogene': 'processed_pseudogene',
+        'snRNA': 'snRNA',
+        'transcribed_processed_pseudogene': 'transcribed_processed_pseudogene',
+        'retained_intron': 'retained_intron',
+        'NMD_transcript_variant': 'NMD_transcript',
+        'misc_RNA': 'misc_RNA',  # miscRNA in gencode biotype
+        'unconfirmed_transcript': 'TEC',
+        'pseudogene': 'pseudogene',
+        'transcribed_unitary_pseudogene': 'transcribed_unitary_pseudogene',
+        'NSD_transcript': 'NSD_transcript',
+        'snoRNA': 'snoRNA',
+        'scaRNA': 'scaRNA',
+        'pseudogene_rRNA': 'pseudogene_rRNA',  # rRNA_pseudogene in gencode biotype
+        'unitary_pseudogene': 'unitary_pseudogene',
+        'polymorphic_pseudogene': 'polymorphic_pseudogene',
+        'rRNA': 'rRNA',
+        'IG_V_pseudogene': 'IG_V_pseudogene',
+        'ribozyme': 'ribozyme',
+        'sRNA': 'sRNA',
+        'TR_V_gene': 'TR_V_gene',
+        'TR_V_pseudogene': 'TR_V_pseudogene',
+        'TR_D_gene': 'TR_D_gene',
+        'TR_J_gene': 'TR_J_gene',
+        'TR_C_gene': 'TR_C_gene',
+        'TR_J_pseudogene': 'TR_J_pseudogene',
+        'IG_C_gene': 'IG_C_gene',
+        'IG_C_pseudogene': 'IG_C_pseudogene',
+        'IG_J_gene': 'IG_J_gene',
+        'IG_J_pseudogene': 'IG_J_pseudogene',
+        'IG_D_gene': 'IG_D_gene',
+        'IG_V_gene': 'IG_V_gene',
+        'IG_pseudogene': 'IG_pseudogene',
+        'translated_processed_pseudogene': 'translated_processed_pseudogene',
+        'scRNA': 'scRNA',
+        'vault_RNA': 'vault_RNA',
+        'translated_unprocessed_pseudogene': 'translated_unprocessed_pseudogene',
+        'Mt_tRNA': 'Mt_tRNA',
+        'Mt_rRNA': 'Mt_rRNA',
+        '2kb_downstream_variant': 'protein_coding',
+        '2kb_upstream_variant': 'protein_coding',
+        '3_prime_UTR_variant': 'protein_coding',
+        '5_prime_UTR_variant': 'protein_coding',
+        'intron_variant': 'protein_coding',
+        'unknown': 'unknown',
+        'synonymous_variant': 'protein_coding',
+        'start_retained_variant': 'protein_coding',
+        'stop_retained_variant': 'protein_coding',
+        'missense_variant': 'protein_coding',
+        'complex_substitution': 'protein_coding',
+        'stop_lost': 'protein_coding',
+        'splice_site_variant': 'protein_coding',
+        'stop_gained': 'protein_coding',
+        'frameshift_truncation': 'protein_coding',
+        'frameshift_elongation': 'protein_coding',
+        'inframe_insertion': 'protein_coding',
+        'inframe_deletion': 'protein_coding',
+        'start_lost': 'protein_coding',
+        'exon_loss_variant': 'protein_coding',
+        'transcript_ablation': 'protein_coding'
+    }
 
+    # used in AA minification
     AANUM_TO_AA1 = {
         'Ala': 'A',
         'Cys': 'C',
@@ -216,9 +279,11 @@ class Reporter(BaseReporter):
         'NDA': ' ',
     }
 
+    # Mapping of base__so to Variant_Class values
+    # Used in column 96. Different from column 9 'Variant_Classification'
     SO_TO_VARIANT_CLASS = {
         'SNV': '',
-        'substitution': '',
+        'substitution': 'complex_substitution',
         'Alu_deletion': '',
         'Alu_insertion': '',
         'HERV_deletion': '',
@@ -247,8 +312,8 @@ class Reporter(BaseReporter):
         'tandem_duplication': '',
         'translocation': '',
         'deletion': '',
-        'indel': '',
-        'insertion': '',
+        'indel': 'inframe_deletion',
+        'insertion': 'inframe_insertion',
         'sequence_alteration': '',
         'probe': '',
     }
@@ -276,6 +341,7 @@ class Reporter(BaseReporter):
         self.levels_to_write = ['variant']
 
     def set_maf_type(self):
+        # sets the MAF file type property
         if 'type' in self.module_options:
             maf_type = self.module_options['type']
             if maf_type not in ['protected', 'somatic']:
@@ -318,6 +384,9 @@ class Reporter(BaseReporter):
     def write_table_row(self, row):
         new_row = {}
         for col, val in self.MAF_COLUMN_MAP.items():
+            # by default in our reporter these are empty
+            # they are also empty in a Somatic MAF
+            # according to rules these should be populated in Protected MAF
             if col in self.PROTECTED_COLS_TO_EMPTY:
                 new_row[col] = ''
             # checks if column is a special case and handles accordingly
@@ -329,11 +398,16 @@ class Reporter(BaseReporter):
             else:
                 new_row[col] = row[val]
 
+        # all_effects is an exception from SPECIAL_CASE_COLS and from the empty string mapping
+        # writing all_effects requires values from multiple converted columns.
+        new_row['all_effects'] = self.write_all_effects(new_row)
+
         self.file_writer.writerow(new_row)
 
     def handle_special_cases(self, row, col):
         """
-        Main function to handle rows which do not contain straight-forward data
+        Main function to handle rows which do not contain straight-forward data.
+        Contains a series of calls to different functions that handle data transformation
         :param row: database row to handle
         :param col: database column
         :return:
@@ -350,89 +424,101 @@ class Reporter(BaseReporter):
         if col == 'MINIMISED':
             return '1'
 
-        # TODO: after all is finished, check the notes for
-        #   'base__so values without a MAF mapping can be converted by capitalizing'
-        # as stated above, not found values are capitalized
+
+        # Not found values are capitalized
+        # Column 9
         if col == 'Variant_Classification':
             return self.write_variant_classification(row)
 
         # TODO: Undocumented case: 'Consolidated' option for column Variant_Type
+        # Column 10
         if col == 'Variant_Type':
             variant_ref_base = row['base__ref_base']
             variant_alt_base = row['base__alt_base']
             return self.write_variant_type(variant_ref_base, variant_alt_base)
 
         # TODO: document the case covered by note 3
+        # Columns 12, 13
         if col in ['Tumor_Seq_Allele1', 'Tumor_Seq_Allele2']:
             return self.write_tumor_seq_alleles(row, col)
 
         # TODO: here also used to be the former special case 'dbSNP_Val_Status'
-        #   for the moment I will leave it empty as I can not find references for Validation Statuses
+        #   for the moment it is empty since no references for Validation Statuses have been found
+        # Column 14
         if col == 'dbSNP_RS':
             return self.write_dbsnp(row)
 
+        # Column 16
         if col == 'Tumor_Sample_Barcode':
             return row['tagsampler__samples']
 
+        # Column 37
         if col == 'HGVSp_Short':
             return self.write_hgvsp_short(row['base__achange'])
 
+        # Column 52
         if col == 'Consequence':
             return self.write_consequence(row)
 
+        # Column 56
         if col == 'Amino_acids':
             return self.write_aa(row)
 
+        # Column 63
         if col == 'SYMBOL_SOURCE':
             return 'HUGO'
 
+        # Column 65
         if col == 'BIOTYPE':
 
-            if row['base__so'] in self.SO_BIOTYPE:
-                return row['base__so']
+            if row['base__so'] in self.SO_TO_BIOTYPE:
+                return self.SO_TO_BIOTYPE[row['base__so']]
             else:
                 return ''
 
+        # Column 69
         if col == 'SWISSPROT':
             return self.write_swissprot(row)
 
         # this is different from what is shown in the variant table because of documentation rules
-        # TODO: check if this should be like this
+        # Column 73
         if col == 'SIFT':
             return self.write_sift(row)
 
         # used the polyphen2 HDIV algorithm data. Multiple sources seem to have the same rules for both algorithms
         # TODO: research more which should be used.
+        # Column 74
         if col == 'PolyPhen':
             return self.write_polyphen2(row)
 
         # TODO: according to documentation this is a combination of 1000G EAS and SAS
         #   but example MAF files don't even contain this column. Leaving empty for the moment.
+        # Column 81
         if col == 'ASN_MAF':
             return ''
 
+        # TODO this still needs to be worked on
+        # Column 96
         if col == 'VARIANT_CLASS':
             return self.write_variant_class(row)
 
         # TODO: the same as 'ASN_MAF' - seems to be missing from examples.
         #   furthermore, as in 'ASN_MAF' the column name is different from the documentation.
+        # Column 102
         if col == 'ExAC_AF_Adj':
             return ''
 
         # TODO: this relies on VCF file information. Postponed.
+        # Column 111
         if col == 'FILTER':
             return ''
 
         # TODO: at the moment it just handles 'vcf_region' by mapping:
         #   original_input__pos, original_input__ref_base, original_input__alt_base
         #   all others are skipped
+        # Column 122-126
         if col in ['vcf_region', 'vcf_info', 'vcf_format', 'vcf_tumor_gt', 'vcf_normal_gt']:
             return self.write_vcf_data(row, col)
-
-        # TODO: seems to depend on values that are handled AFTER this is run - somehow this has to grab
-        #   values and join them in their final state
-        if col == 'all_effects':
-            return self.write_all_effects(row)
 
     def write_variant_classification(self, row):
         base_so = row['base__so']
@@ -456,6 +542,7 @@ class Reporter(BaseReporter):
         len_alt_base = len(alt_base)
         variant_type = ''
 
+        # The rules can be consulted at the MAF File Specification Site
         if (len_ref_base == len_alt_base == 1 or len_ref_base == 1 < len_alt_base) and ref_base != alt_base != '-':
             variant_type = 'SNP'
         elif (len_ref_base == len_alt_base == 2 or len_ref_base == 2 < len_alt_base) and ref_base != alt_base != '-':
@@ -478,6 +565,7 @@ class Reporter(BaseReporter):
         zygosity = ''
         genotype = False
 
+        # The rules can be consulted at the MAF File Specification Site
         if ref_base == alt_base and variant_type == 'SNP':
             zygosity = f'{ref_base}{alt_base}'
             genotype = True
@@ -547,7 +635,6 @@ class Reporter(BaseReporter):
         if row['base__so'] in self.SO_TO_VARIANT_CLASS:
             return self.SO_TO_VARIANT_CLASS[row['base__so']]
 
-    # TODO: Determine how this is doe in example files. It is not just a simple join of AA by '/'
     def write_aa(self, row):
         base_achange = row['base__achange']
 
@@ -615,7 +702,7 @@ class Reporter(BaseReporter):
         if prediction is None:
             return ''
 
-        # TODO: the check seems to be in variant anyway, the conditionals are redundant
+        # The rules can be consulted at the MAF File Specification Site
         if rank >= 0.957:
             prediction_rank = f'{polyphen_values_map[prediction]}({rank})'
         elif 0.453 <= rank <= 0.956:
@@ -636,23 +723,23 @@ class Reporter(BaseReporter):
         else:
             return ''
 
+
+    # Column 46
     def write_all_effects(self, row):
         effects = []
-
         for effect in self.MAF_ALL_EFFECTS:
-            if self.MAF_COLUMN_MAP[effect] in row:
-                result_row = row[self.MAF_COLUMN_MAP[effect]]
+            result_row = row[effect]
 
-                if result_row is None:
-                    effects.append('')
-                else:
-                    effects.append(result_row)
-            else:
-                effects.append('')
+            if result_row:
+                effects.append(result_row)
 
-        all_effects = f'[{str(";".join(effects))}]'
+        all_effects = ";".join(effects)
 
-        return all_effects
+        if not all_effects:
+            return ''
+        else:
+            all_effects = f'[{str(all_effects)}]'
+            return all_effects
 
     def end(self):
         pass
