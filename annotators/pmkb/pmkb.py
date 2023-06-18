@@ -6,7 +6,7 @@ class Annotator(BaseAnnotator):
         assert input_data is not None
         if not self.cursor:
             return None
-        gene_name = input_data["Gene"]
+        gene_name = input_data["Description"]
         #query interpretations database
         self.cursor.execute(
             """SELECT 
@@ -24,16 +24,15 @@ class Annotator(BaseAnnotator):
         qr = self.cursor.fetchone()
         if qr is not None:
             return{
-              "Gene": qr[0],  
-              "TumorType(s)":qr[1],
-              "TissueType(s)":qr[2],
-              "Variant(s)": qr[3],
-              "Tier":qr[4],
-              "PMKBURL": qr[5],
-              "Interpretations":qr[6],
-              "Citations": qr[7],
-              "Description": qr[8],
-              "PMKBURL": qr[9]
+              "gene_name": qr[0],  
+              "tumor_type":qr[1],
+              "tissue_type":qr[2],
+              "tier": qr[3],
+              "pmkb_url":qr[4],
+              "interpretations": qr[5],
+              "citations":qr[6],
+              "gene_description": qr[7],
+              "pmkb_url": qr[8]
             }
         _ = secondary_data
         # out = {}
