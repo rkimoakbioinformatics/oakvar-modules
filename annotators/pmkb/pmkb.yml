@@ -39,10 +39,13 @@ output_columns:
   type: string
 - name: gene
   title: Gene description
+  type: string
 - name: achange
   title: Amino Acid Change
+  type: string
 - name: pmkb_url
-  title: PMKB variant URL 
+  title: PMKB variant URL
+  type: string 
 developer:
   module:
     name: Gehad Kamel
