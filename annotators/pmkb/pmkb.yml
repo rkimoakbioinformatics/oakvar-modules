@@ -14,29 +14,35 @@ datasource: 1.7.0
 # remove data_version field and uncomment no_data field.
 # no_data: true
 
-input_format: csv
+input_format: crx
 output_columns:
-- name: Gene name
-  title: gene_name
+- name: gene_name
+  title: Gene name
   type: string
-- name: Tumor type
-  title: tumor_type
+- name: tumor_type
+  title: Tumor type
   type: string
-- name: tissue type
-  title: tissue_type
+- name: tissue_type
+  title: Tissue type
   type: string
 - name: tier
-  title: tier
+  title: Tier
   type: string
-- name: PMKB URL 
-  title: PMKB_URL
+- name: pmkb_url 
+  title: PMKB URL
   type: string
-- name: Interpretations
+- name: interpretations
   title: interpretations
   type: string
 - name: citations
   title: citations
   type: string
+- name: gene
+  title: Gene description
+- name: achange
+  title: Amino Acid Change
+- name: pmkb_url
+  title: PMKB variant URL 
 developer:
   module:
     name: Gehad Kamel
