@@ -279,45 +279,6 @@ class Reporter(BaseReporter):
         'NDA': ' ',
     }
 
-    # Mapping of base__so to Variant_Class values
-    # Used in column 96. Different from column 9 'Variant_Classification'
-    SO_TO_VARIANT_CLASS = {
-        'SNV': '',
-        'substitution': 'complex_substitution',
-        'Alu_deletion': '',
-        'Alu_insertion': '',
-        'HERV_deletion': '',
-        'HERV_insertion': '',
-        'LINE1_deletion': '',
-        'LINE1_insertion': '',
-        'SVA_deletion': '',
-        'SVA_insertion': '',
-        'complex_chromosomal_rearrangement': '',
-        'complex_structural_alteration': '',
-        'complex_substitution': 'complex_substitution',
-        'copy_number_gain': '',
-        'copy_number_loss': '',
-        'copy_number_variation': '',
-        'duplication': '',
-        'interchromosomal_breakpoint': '',
-        'interchromosomal_translocation': '',
-        'intrachromosomal_breakpoint': '',
-        'intrachromosomal_translocation': '',
-        'inversion': '',
-        'loss_of_heterozygosity': '',
-        'mobile_element_deletion': '',
-        'mobile_element_insertion': '',
-        'novel_sequence_insertion': '',
-        'short_tandem_repeat_variation': '',
-        'tandem_duplication': '',
-        'translocation': '',
-        'deletion': '',
-        'indel': 'inframe_deletion',
-        'insertion': 'inframe_insertion',
-        'sequence_alteration': '',
-        'probe': '',
-    }
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # defaults to somatic type if no module options are given
@@ -497,7 +458,6 @@ class Reporter(BaseReporter):
         if col == 'ASN_MAF':
             return ''
 
-        # TODO this still needs to be worked on
         # Column 96
         if col == 'VARIANT_CLASS':
             return self.write_variant_class(row)
@@ -629,11 +589,25 @@ class Reporter(BaseReporter):
         return row
 
     def write_variant_class(self, row):
-        if row['base__so'] is None:
-            return ''
+        ref_base = row['base__ref_base']
+        alt_base = row['base__alt_base']
 
-        if row['base__so'] in self.SO_TO_VARIANT_CLASS:
-            return self.SO_TO_VARIANT_CLASS[row['base__so']]
+        if len(ref_base) == 1 and len(alt_base) == 1:
+            return 'SNV'
+
+        if len(ref_base) == len(alt_base) and len(ref_base) >= 2 and len(alt_base) >= 2:
+            return 'substitution'
+
+        if ref_base != '-' and alt_base == '-':
+            return 'deletion'
+
+        if ref_base != '-' and 1 < len(alt_base) and alt_base != '-' and len(ref_base) != len(alt_base):
+            return 'indel'
+
+        if ref_base == '-' and alt_base != '-':
+            return 'insertion'
+
+        pass
 
     def write_aa(self, row):
         base_achange = row['base__achange']
