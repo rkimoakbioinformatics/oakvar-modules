@@ -1,5 +1,7 @@
 import zipfile
 import os
+import uuid
+import hashlib
 import sqlite3
 from pathlib import Path
 from oakvar import BaseReporter
@@ -33,7 +35,7 @@ class Reporter(BaseReporter):
         self.levels_to_write = self.confs.get("pages","variant")
 
         #create FHIR bundle resource
-        self.bundle = Bundle(type="batch")
+        self.bundle = Bundle(type="collection")
 
         #get patient name 
         conn = sqlite3.connect(self.dbpath)
@@ -60,7 +62,6 @@ class Reporter(BaseReporter):
         self.str_id += curs.fetchone()[0][1:-1]
         self.str_id = self.str_id[1:-1]
         self.str_id = self.str_id[-32:]
-        self.str_id = str(hash(self.str_id))[1:33]
         print(self.str_id)
         print(len(self.str_id))
     
@@ -71,7 +72,8 @@ class Reporter(BaseReporter):
         name.family = " "
         name.given = [patient_name]
         self.patient.name = [name]
-        self.patient.id = self.str_id
+        id = hashlib.md5(self.str_id.encode("utf-8")).hexdigest()
+        self.patient.id = str(uuid.UUID(hex=id))
 
         #create Reference resource for PatientResource
         self.subject = Reference(type="Patient")
@@ -89,7 +91,9 @@ class Reporter(BaseReporter):
 
 
 
-        
+    def uuid_maker(self,val:str): 
+        hex_str = hashlib.md5(val.encode("utf-8")).hexdigest()
+        return uuid.UUID(hex=hex_str)        
 
     def should_write_level(self,level):
         if self.levels_to_write is None:
@@ -160,9 +164,11 @@ class Reporter(BaseReporter):
             entries = []
             num = 0 
             for ind_obs in self.obs_list:
-                num +=1
-                id_maker = int(self.str_id) + 100*num
-                uri_maker =  Uri(f"urn:uuid:{str(id_maker)}")
+                num += 1
+                id_maker = (self.str_id) + str(100*num)
+                id = self.uuid_maker(id_maker+self.str_id)
+                uri_maker =  Uri(f"urn:uuid:{id}")
+                print(uri_maker)
 
 
                 #full_uri= Uri(f"{}")
@@ -176,4 +182,5 @@ class Reporter(BaseReporter):
             
             #write json_file
             self.wf.write(json_str)
+
     
