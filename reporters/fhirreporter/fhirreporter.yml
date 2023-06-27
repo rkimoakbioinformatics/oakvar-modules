@@ -1,21 +1,23 @@
-title: FHIR Reporter
-description: HL7 FHIR reporter
+title: fhirreporter
+versionL: 0.1.0
+no_data: true
 type: reporter
 level: variant
-version: 0.0.2
-no_data: true
+description: FHIR JSON file reporter
 requires_oakvar: "2.9.20"
-output_filename_schema: 
-- "{run_name}"
+pypi_dependencies:
+- sqlite3
+- fhir.resources
+- uuid
+- hashlib
+output_filename_schema:
+- "{run_name}.fhir.json"
 developer:
-  name:  Akash Rampersad, Ryangguk Kim
-  organization: Oak Bioinformatics, LLC
-  email: rkim@oakbioinformatics.com, akashjrampersad@gmail.com
-  website: https://oakbioinformatics.com
-  citation: ''
-tags:
-- input/output
-
+    name: Akash Rampersad, Ryangguk Kim 
+    organization: Oak Bioinformatics, LLC
+    email: akashjrampersad@gmail.com, rkim@oakbioinformatics.com
+    website: https://www.oakbioinformatics.com
+    citation: ''
 release_note:
-  0.0.2: added uri for each BundleEntry
+  0.1.0: working FHIR reporter with proper references and validation
   0.0.1: initial version
