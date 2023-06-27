@@ -54,7 +54,6 @@ class Reporter(BaseReporter):
         self.str_id += curs.fetchone()[0][1:-1]
         self.str_id = self.str_id[1:-1]
         self.str_id = self.str_id[-32:]
-        self.obs_list = []
         self.entries = []
         self.counter = 0
 
@@ -140,7 +139,7 @@ class Reporter(BaseReporter):
         obs_row.component = [comp_ref, comp_alt]
 
         # add row observation to list of observations
-        self.obs_list.append(obs_row)
+
 
         self.counter += 1
         id_maker = (self.str_id) + str(100 * self.counter)
@@ -150,7 +149,7 @@ class Reporter(BaseReporter):
         self.entries.append(converted_ent)
 
         # check if all rows are done
-        if len(self.obs_list) == self.num_rows:
+        if len(self.entries) == self.num_rows:
             self.bundle.entry = self.entries
 
             # create a json_str from FHIR BundleResource
