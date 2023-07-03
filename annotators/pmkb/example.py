@@ -37,8 +37,9 @@ def data_manipulation():
                 if len(d) > 1 and 'exon' in pos:
                     pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_exon:{",".join(d).strip()}:missense',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
+                    print(pos)
                 elif len(d) > 1 and 'codon' in pos:
-                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s[missense|nonsense]$',f'_codon:{",".join(d).strip()}:missense',pos)
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_codon:{",".join(d).strip()}:missense',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
                     print(variant)
                     print(pos)
