@@ -336,27 +336,22 @@ class Reporter(BaseReporter):
             self.file_writer = csv.DictWriter(self.maf_file, delimiter='\t', fieldnames='')
 
     def write_header(self, level):
+
+        all_variant_cols = self.extracted_col_names[level]
+
+        for col in all_variant_cols:
+            if col not in self.MAF_COLUMN_MAP.values():
+                self.MAF_COLUMN_MAP.update({re.sub('__', '.', col): col})
+
+        column_map = self.MAF_COLUMN_MAP
+
         if self.maf_type == 'protected':
-            self.file_writer.fieldnames = self.MAF_COLUMN_MAP
+            self.file_writer.fieldnames = column_map
 
             self.file_writer.writeheader()
         else:
             # first step to creating Somatic MAF files
             # TODO: after protected maf is done, somatic will require some filtration still
-
-            # Extra cols section
-            # This section modifies MAF_COLUMN_MAP to also contain the columns
-            # from the variant level that are NOT used in the base MAF instructions.
-            # Since the somatic file is a "modified" protected MAF file the option to report the extra columns
-            # is only given in the somatic file type, which is the standard file.
-            all_variant_cols = self.extracted_col_names[level]
-
-            for col in all_variant_cols:
-                if col not in self.MAF_COLUMN_MAP.values():
-                    self.MAF_COLUMN_MAP.update({re.sub('__', ':', col): col})
-            # End extra cols section
-
-            column_map = self.MAF_COLUMN_MAP
 
             for col_to_del in self.PROTECTED_COLS_TO_DELETE:
                 column_map.pop(col_to_del)
