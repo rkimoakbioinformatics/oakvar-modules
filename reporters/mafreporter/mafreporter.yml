@@ -16,4 +16,5 @@ developer:
 tags:
 - input/output
 release_note:
+  0.0.2: Somatic MAF now contains additional previously unused variant columns
   0.0.1: initial version
