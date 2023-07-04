@@ -134,6 +134,17 @@ class Reporter(BaseReporter):
         "vcf_normal_gt": ""
     }
 
+    VARIANT_COLS_IN_USE = ('base__hugo', 'ncbigene__entrez', 'base__chrom', 'base__pos', 'base__pos_end',
+                           'base__so', 'base__ref_base', 'base__alt_base', 'base__alt_base', 'tagsampler__samples',
+                           'base__cchange', 'base__achange', 'ensembl_regulatory_build__ensr', 'base__exonno',
+                           'base__alt_base', 'ensembl_regulatory_build__ensr', 'ensembl_regulatory_build__ensr',
+                           'base__so', 'base__cchange', 'base__achange', 'dbsnp__rsid', 'base__hugo', 'base__hugo',
+                           'base__all_mappings', 'base__refseq', 'base__exonno', 'thousandgenomes__af',
+                           'thousandgenomes__afr_af', 'thousandgenomes__amr_af', 'thousandgenomes__eas_af',
+                           'thousandgenomes__eur_af', 'thousandgenomes__sas_af', 'clinvar__sig', 'base__so',
+                           'gnomad__af', 'gnomad__af_afr', 'gnomad__af_amr', 'gnomad__af_eas', 'gnomad__af_fin',
+                           'gnomad__af_nfe', 'gnomad__af_oth', 'gnomad__af_sas', 'cosmic__cosmic_id')
+
     # the columns that need to be skipped/deleted from the final file, if the 'somatic' type is selected.
     PROTECTED_COLS_TO_DELETE = ('vcf_region', 'vcf_info', 'vcf_format', 'vcf_tumor_gt',
                                 'vcf_normal_gt', 'GDC_Valid_Somatic')
@@ -288,9 +299,9 @@ class Reporter(BaseReporter):
         self.maf_type = 'somatic'
         self.filename_prefix = None
         self.filename = None
-        # for test purposes it is .tsv - to be removed in the future
-        self.extension = '.maf.tsv'
+        self.extension = '.maf'
         self.headers = None
+        self.variant_columns = None
 
     def setup(self):
         self.set_maf_type()
@@ -325,14 +336,26 @@ class Reporter(BaseReporter):
             self.file_writer = csv.DictWriter(self.maf_file, delimiter='\t', fieldnames='')
 
     def write_header(self, level):
-
         if self.maf_type == 'protected':
-            self.file_writer.fieldnames = self.MAF_COLUMN_MAP.keys()
+            self.file_writer.fieldnames = self.MAF_COLUMN_MAP
 
             self.file_writer.writeheader()
         else:
             # first step to creating Somatic MAF files
             # TODO: after protected maf is done, somatic will require some filtration still
+
+            # Extra cols section
+            # This section modifies MAF_COLUMN_MAP to also contain the columns
+            # from the variant level that are NOT used in the base MAF instructions.
+            # Since the somatic file is a "modified" protected MAF file the option to report the extra columns
+            # is only given in the somatic file type, which is the standard file.
+            all_variant_cols = self.extracted_col_names[level]
+
+            for col in all_variant_cols:
+                if col not in self.MAF_COLUMN_MAP.values():
+                    self.MAF_COLUMN_MAP.update({re.sub('__', ':', col): col})
+            # End extra cols section
+
             column_map = self.MAF_COLUMN_MAP
 
             for col_to_del in self.PROTECTED_COLS_TO_DELETE:
@@ -384,7 +407,6 @@ class Reporter(BaseReporter):
 
         if col == 'MINIMISED':
             return '1'
-
 
         # Not found values are capitalized
         # Column 9
@@ -588,7 +610,8 @@ class Reporter(BaseReporter):
 
         return row
 
-    def write_variant_class(self, row):
+    @staticmethod
+    def write_variant_class(row):
         ref_base = row['base__ref_base']
         alt_base = row['base__alt_base']
 
@@ -696,7 +719,6 @@ class Reporter(BaseReporter):
             return f'{vcf_input_pos}:{vcf_input_ref}:{vcf_input_alt}'
         else:
             return ''
-
 
     # Column 46
     def write_all_effects(self, row):
