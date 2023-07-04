@@ -8,3 +8,6 @@ documentation and details from [GDC MAF Format](https://docs.gdc.cancer.gov/Data
 
 The MAF Reporter works by mapping values from previously run OakVar modules, such as clinvar, dbSNP, ensembl etc.
 If these modules were not previously run some columns might result in being empty.
+
+The Protected MAF file contains raw data which is used as a reference and for data conservation. The Somatic MAF file is a filtered Protected MAF File.
+Since version 0.0.2 of the MAF Reporter, the Somatic MAF file also contains columns previously unused in the MAF File Generation.
