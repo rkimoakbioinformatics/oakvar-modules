@@ -20,12 +20,12 @@ def data_manipulation():
     variant_pmkb['achange'] = variant_pmkb['achange'].str.join(" ")
     variant_pmkb_missense = variant_pmkb.query('Variant == "missense"')
     variant_pmkb_missense = variant_pmkb_missense.reset_index(drop = True)
-    #aa = variant_pmkb_missense['achange'][~variant_pmkb_missense['achange'].str.contains('codon|exon|anymutation')]
+    aa = variant_pmkb_missense['achange'][~variant_pmkb_missense['achange'].str.contains('codon|exon|anymutation')]
 
     #iterate through specific column 
     for variant in range(len(variant_pmkb.loc[:,"achange"])):
         pos = variant_pmkb.loc[variant,"achange"]
-        get_missense  = re.search(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',pos)
+        get_missense  = re.search(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense|frameshift)$',pos)
         if get_missense:
             get_missense = get_missense.group()
             match = re.search(r'(\d.*)[^A-Za-z]',get_missense)
@@ -44,8 +44,18 @@ def data_manipulation():
                 elif 'codon' in pos and 'nonsense' in pos:
                     pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_codon:{",".join(d).strip()}:nonsense',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
+                elif 'codon' in pos and 'frameshift' in pos:
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sframeshift$',f'_codon:{",".join(d).strip()}:frameshift',pos)
+                    variant_pmkb.at[variant, 'achange'] = pos
+                elif 'exon' in pos and 'frameshift' in pos:
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sframeshift$',f'_exon:{",".join(d).strip()}:frameshift',pos)
+                    variant_pmkb.at[variant, 'achange'] = pos
+                
+                    
+
         elif 'any' not in pos and 'copy' not in pos and 'rearrangement' not in pos and 'exon' not in pos and 'codon' not in pos:
             pos = "p." + pos
+            variant_pmkb.at[variant,'achange'] = pos
     variant_pmkb.to_csv('variant.csv')
 
 if __name__ == "__main__":
