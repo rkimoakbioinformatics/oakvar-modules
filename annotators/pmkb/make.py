@@ -25,7 +25,8 @@ def data_manipulation():
     #iterate through specific column 
     for variant in range(len(variant_pmkb.loc[:,"achange"])):
         pos = variant_pmkb.loc[variant,"achange"]
-        get_missense  = re.search(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense|frameshift)$',pos)
+        get_missense  = re.search(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense|frameshift|insertion|deletion)$',pos)
+        
         if get_missense:
             get_missense = get_missense.group()
             match = re.search(r'(\d.*)[^A-Za-z]',get_missense)
@@ -50,9 +51,18 @@ def data_manipulation():
                 elif 'exon' in pos and 'frameshift' in pos:
                     pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sframeshift$',f'_exon:{",".join(d).strip()}:frameshift',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
-                
-                    
-
+                elif 'codon' in pos and 'insertion' in pos:
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sinsertion$',f'_codon:{",".join(d).strip()}:insertion',pos)
+                    variant_pmkb.at[variant, 'achange'] = pos
+                elif 'exon' in pos and 'insertion' in pos:
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sinsertion$',f'_exon:{",".join(d).strip()}:insertion',pos)
+                    variant_pmkb.at[variant, 'achange'] = pos
+                elif 'codon' in pos and 'deletion' in pos:
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sdeletion$',f'_codon:{",".join(d).strip()}:deletion',pos)
+                    variant_pmkb.at[variant, 'achange'] = pos
+                elif 'exon' in pos and 'deletion' in pos:
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sdeletion$',f'_exon:{",".join(d).strip()}:deletion',pos)
+                    variant_pmkb.at[variant, 'achange'] = pos
         elif 'any' not in pos and 'copy' not in pos and 'rearrangement' not in pos and 'exon' not in pos and 'codon' not in pos:
             pos = "p." + pos
             variant_pmkb.at[variant,'achange'] = pos
