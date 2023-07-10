@@ -350,9 +350,6 @@ class Reporter(BaseReporter):
 
             self.file_writer.writeheader()
         else:
-            # first step to creating Somatic MAF files
-            # TODO: after protected maf is done, somatic will require some filtration still
-
             for col_to_del in self.PROTECTED_COLS_TO_DELETE:
                 column_map.pop(col_to_del)
 
@@ -387,7 +384,7 @@ class Reporter(BaseReporter):
         """
         Main function to handle rows which do not contain straight-forward data.
         Contains a series of calls to different functions that handle data transformation
-        :param row: database row to handle
+        :param row: database row
         :param col: database column
         :return:
         """
@@ -408,19 +405,19 @@ class Reporter(BaseReporter):
         if col == 'Variant_Classification':
             return self.write_variant_classification(row)
 
-        # TODO: Undocumented case: 'Consolidated' option for column Variant_Type
+        # TODO Undocumented case: 'Consolidated' option for column Variant_Type
         # Column 10
         if col == 'Variant_Type':
             variant_ref_base = row['base__ref_base']
             variant_alt_base = row['base__alt_base']
             return self.write_variant_type(variant_ref_base, variant_alt_base)
 
-        # TODO: document the case covered by note 3
+        # TODO document the case covered by note 3
         # Columns 12, 13
         if col in ['Tumor_Seq_Allele1', 'Tumor_Seq_Allele2']:
             return self.write_tumor_seq_alleles(row, col)
 
-        # TODO: here also used to be the former special case 'dbSNP_Val_Status'
+        # TODO here also used to be the former special case 'dbSNP_Val_Status'
         #   for the moment it is empty since no references for Validation Statuses have been found
         # Column 14
         if col == 'dbSNP_RS':
@@ -464,7 +461,7 @@ class Reporter(BaseReporter):
             return self.write_sift(row)
 
         # used the polyphen2 HDIV algorithm data. Multiple sources seem to have the same rules for both algorithms
-        # TODO: research more which should be used.
+        # TODO research which should be used.
         # Column 74
         if col == 'PolyPhen':
             return self.write_polyphen2(row)
