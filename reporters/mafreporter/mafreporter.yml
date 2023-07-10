@@ -2,7 +2,7 @@ title: MAF Reporter
 description: Mutation Annotation File (MAF) Reporter
 type: reporter
 level: variant
-version: 1.0.0
+version: 0.0.3
 no_data: true
 requires_oakvar: "2.9.12"
 output_filename_schema:
