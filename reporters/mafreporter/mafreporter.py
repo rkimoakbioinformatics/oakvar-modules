@@ -1,5 +1,6 @@
 import csv
 import re
+import sqlite3
 
 from oakvar import BaseReporter
 
@@ -144,6 +145,9 @@ class Reporter(BaseReporter):
                            'thousandgenomes__eur_af', 'thousandgenomes__sas_af', 'clinvar__sig', 'base__so',
                            'gnomad__af', 'gnomad__af_afr', 'gnomad__af_amr', 'gnomad__af_eas', 'gnomad__af_fin',
                            'gnomad__af_nfe', 'gnomad__af_oth', 'gnomad__af_sas', 'cosmic__cosmic_id')
+
+    ANNOTATORS = ('dbsnp', 'ensembl_regulatory_build', 'sift', 'clinvar', 'cosmic',
+                  'gnomad', 'polyphen2', 'sift', 'thousandgenomes', 'encode_tfbs', 'hg19')
 
     # the columns that need to be skipped/deleted from the final file, if the 'somatic' type is selected.
     PROTECTED_COLS_TO_DELETE = ('vcf_region', 'vcf_info', 'vcf_format', 'vcf_tumor_gt',
@@ -302,6 +306,8 @@ class Reporter(BaseReporter):
         self.extension = '.maf'
         self.headers = None
         self.variant_columns = None
+        self.existing_annotators = None
+        self.missing_annotators = None
 
     def setup(self):
         self.set_maf_type()
@@ -311,6 +317,34 @@ class Reporter(BaseReporter):
             self.filename_prefix = self.maf_type
 
         self.levels_to_write = ['variant']
+
+        self.get_existing_annotators()
+
+        self.missing_annotator_warning()
+
+    # query the database for required annotator-specific columns and report on the existing annotators inferred from
+    #   column names
+    def get_existing_annotators(self):
+        conn = sqlite3.connect(self.dbpath)
+        c = conn.cursor()
+        c.execute(f'pragma table_info ({self.levels_to_write[0]})')
+
+        self.existing_annotators = set(item[1].split('__')[0] for item in c.fetchall())
+
+    # check if the current installed annotators fit the annotator requirements for a MAF file. Issues warning if not.
+    def missing_annotator_warning(self):
+
+        self.missing_annotators = set()
+
+        for anno in self.ANNOTATORS:
+            if anno in ['base', 'original_input', 'tagsampler']:
+                continue
+            if anno not in self.existing_annotators:
+                self.missing_annotators.add(anno)
+
+        if self.missing_annotators:
+            self.logger.warning(f'Warning: Missing annotators ({", ".join(self.missing_annotators)}). '
+                                f'Missing annotator-specific columns will be left empty.')
 
     def set_maf_type(self):
         # sets the MAF file type property
@@ -360,19 +394,23 @@ class Reporter(BaseReporter):
     def write_table_row(self, row):
         new_row = {}
         for col, val in self.MAF_COLUMN_MAP.items():
-            # by default in our reporter these are empty
-            # they are also empty in a Somatic MAF
-            # according to rules these should be populated in Protected MAF
-            if col in self.PROTECTED_COLS_TO_EMPTY:
-                new_row[col] = ''
-            # checks if column is a special case and handles accordingly
-            elif col in self.SPECIAL_CASE_COLS:
-                proc_value = self.handle_special_cases(row, col)
-                new_row[col] = proc_value
-            elif val in ['', 'null']:
-                new_row[col] = ''
-            else:
-                new_row[col] = row[val]
+            try:
+                # by default in our reporter these are empty
+                # they are also empty in a Somatic MAF
+                # according to rules these should be populated in Protected MAF
+                if col in self.PROTECTED_COLS_TO_EMPTY:
+                    new_row[col] = ''
+                # checks if column is a special case and handles accordingly
+                elif col in self.SPECIAL_CASE_COLS:
+                    proc_value = self.handle_special_cases(row, col)
+                    new_row[col] = proc_value
+                elif val in ['', 'null']:
+                    new_row[col] = ''
+                else:
+                    new_row[col] = row[val]
+            except KeyError as e:
+                if str(e)[1:].split('__')[0] in self.missing_annotators:
+                    new_row[col] = ''
 
         # all_effects is an exception from SPECIAL_CASE_COLS and from the empty string mapping
         # writing all_effects requires values from multiple converted columns.

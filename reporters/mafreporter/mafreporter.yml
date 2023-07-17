@@ -5,6 +5,19 @@ level: variant
 version: 0.0.3
 no_data: true
 requires_oakvar: "2.9.12"
+requires:
+  - ncbigene
+  - dbsnp
+  - ensembl_regulatory_build
+  - sift
+  - clinvar
+  - cosmic
+  - gnomad
+  - polyphen2
+  - sift
+  - thousandgenomes
+  - encode_tfbs
+  - hg19
 output_filename_schema:
 - '{run_name}.*.maf'
 developer:
