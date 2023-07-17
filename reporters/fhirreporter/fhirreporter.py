@@ -22,8 +22,6 @@ class Reporter(BaseReporter):
         self.wf = None
         self.filenames = []
 
-
-
         self.levels_to_write = self.confs.get("pages", "variant")
         self.samples = []
         self.bundles = []
@@ -35,10 +33,17 @@ class Reporter(BaseReporter):
         for sample in curs.fetchall():
             self.samples.append(sample[0])
         print(self.samples)
-        self.dict_bundles = dict.fromkeys(self.samples)
-        self.dict_entries = dict.fromkeys(self.samples,[])
-        self.dict_patient = dict.fromkeys(self.samples)
 
+        def create_dict(keys):
+            unique_dict = {}
+            for key in keys:
+                if key not in unique_dict:
+                    unique_dict[key] = []
+            return unique_dict
+
+        self.dict_entries = create_dict(self.samples)
+        self.dict_bundles = create_dict(self.samples)
+        self.dict_patient = create_dict(self.samples)
 
         # get number of rows
         curs = conn.cursor()
@@ -60,48 +65,47 @@ class Reporter(BaseReporter):
         curs = conn.cursor()
         curs.execute('select colval from info where colkey="mapper"')
         self.str_id += curs.fetchone()[0]
-        #make this bundle UUID
-
+        # make this bundle UUID
 
         for sample in self.samples:
-            #print(type(sample))
-            #id_er = uuid.UUID(sample)
-            #print(id_er)
+            # print(type(sample))
+            # id_er = uuid.UUID(sample)
+            # print(id_er)
             print(sample)
-            
-            #create sample id 
+
+            # create sample id
             sample_name = f"{self.str_id} + {sample}"
             hex_sample = hashlib.md5(sample_name.encode("utf-8")).hexdigest()
 
-
-            #create patient 
+            # create patient
             sample_2_patient = Patient()
             name = HumanName()
-            name.use = "offical"
+            name.use = "official"
             name.given = [sample]
-            sample_2_patient.name  = [name]
-            patient_id = hex_sample
-            #add to patient dict for reference in row observations 
-            subject = Reference(type="Patient")
-            subject.reference = f"urn:uuid:{patient_id}"
-            self.dict_patient[sample] = subject
+            sample_2_patient.name = [name]
+            patient_id = str(uuid.UUID(hex=hex_sample))
+            # add to patient dict for reference in row observations
+            # if for future cases a reference is needed it is here otherwise for the MVP it is not needed
+            # subject = Reference(type="Patient")
+            # subject.resource_type = "Reference"
+            # subject.reference = f"urn:uuid:{patient_id}"
+            # self.dict_patient[sample] = subject
 
-            patient_entry = BundleEntry(resource = sample_2_patient)
+            patient_entry = BundleEntry(
+                resource=sample_2_patient, fullUrl=f"urn:uuid:{patient_id}"
+            )
             self.dict_entries[sample].append(patient_entry)
 
-
-
-            #create sample bundle and and it to dictionar
-            name = f"bundle + {sample}" 
-            bundle= Bundle(type="collection",identifier=Identifier(value=str(uuid.UUID(hex=hex_sample))))
+            # create sample bundle and and it to dictionary
+            name = f"bundle + {sample} + self.str_id"
+            hex_sample = hashlib.md5(name.encode("utf-8")).hexdigest()
+            bundle = Bundle(
+                type="collection",
+                identifier=Identifier(value=str(uuid.UUID(hex=hex_sample))),
+            )
             self.dict_bundles[sample] = bundle
-            self.dict_entries[sample].append(BundleEntry(resource=subject))
+            # self.dict_entries[sample].append(BundleEntry(resource=subject))
         print(self.dict_patient["s0"])
-
-
-            
-        self.counter = 0
-
 
         # create CodingResource for row ObservationResources to Use
         coding = Coding()
@@ -122,50 +126,46 @@ class Reporter(BaseReporter):
             return False
 
     def end(self):
-        print(len(self.dict_entries["s0"]))
-        print(len(self.dict_entries["s1"]))
-        print(self.dict_entries.keys())
-
         for sample in self.samples:
             filename = str(self.prefix) + f"__{sample}.fhir.json"
-            self.wf = open(filename,"w",encoding="utf-8")
+            self.wf = open(filename, "w", encoding="utf-8")
             self.dict_bundles[sample].entry = self.dict_entries[sample]
             obs = self.dict_bundles[sample]
             json_str = obs.json(indent=2)
             self.wf.write(json_str)
-            print("works")
             self.filenames.append(filename)
         print(self.filenames)
         self.wf.close()
         return self.filenames
 
-        #assign entries to correct bundles
-        #self.bundle.entry = self.entries
+        # assign entries to correct bundles
+        # self.bundle.entry = self.entries
 
         # create a json_str from FHIR BundleResource
-        #for x in self.bundles:
+        # for x in self.bundles:
         #    json_str = x.json(indent=2)
         #    self.wf.write(json_str)
-        #return[str(self.savepath)]
-        #json_str = self.bundles.json(indent=2)
+        # return[str(self.savepath)]
+        # json_str = self.bundles.json(indent=2)
 
         # write json_file
-        #self.wf.write(json_str)
+        # self.wf.write(json_str)
 
-        #self.wf.close()
-        #return [str(self.savepath)]
+        # self.wf.close()
+        # return [str(self.savepath)]
 
     def write_preface(self, level: str):
         if level not in self.levels_to_write:
             return
 
     def write_table_row(self, row):
-        #get samples that have variant(row)
+        # get samples that have variant(row)
         sample_with_variants = row["tagsampler__samples"].split(":")
-
+        print(f"this variant is found in samples {sample_with_variants}")
 
         for sample in sample_with_variants:
-            
+            self.counter += 1
+
             # create codingType for row Observation
             coding = Coding()
             coding.system = Uri("http://loinc.org")
@@ -174,13 +174,15 @@ class Reporter(BaseReporter):
             code.coding = [coding]
 
             # Get Alleles from sqlite file
-            ref = row["base__ref_base"] 
+            ref = row["base__ref_base"]
             alt = row["base__alt_base"]
 
             # create Observation Resource for row
-            obs_row = Observation(status="final", code=code, subject=self.dict_patient[sample])
-            #obs_row.meta = MetaType()
-            #obs_row.meta.profile = ["http://hl7.org/fhir/uv/genomics-reporting/StructureDefinition/variant"]
+            obs_row = Observation(
+                status="final", code=code, subject=self.dict_patient[sample]
+            )
+            # obs_row.meta = MetaType()
+            # obs_row.meta.profile = ["http://hl7.org/fhir/uv/genomics-reporting/StructureDefinition/variant"]
 
             # Make Component for reference allele
             coding_ref = Coding()
@@ -208,16 +210,12 @@ class Reporter(BaseReporter):
             curs.execute("SELECT COUNT(*) from variant")
             self.num_rows = curs.fetchone()[0]
 
-
-
-            self.counter += 1
-            id_maker = (self.str_id) + f"{str(row['base__chrom']) + str(row['base__pos']) + str(row['base__ref_base']) + str(row['base__alt_base'])}"
+            id_maker = (
+                (self.str_id)
+                + f"{str(row['base__chrom']) + str(row['base__pos']) + str(row['base__ref_base']) + str(row['base__alt_base'])}"
+            )
             id = self.uuid_maker(id_maker + self.str_id)
             uri_maker = Uri(f"urn:uuid:{id}")
             converted_ent = BundleEntry(resource=obs_row, fullUrl=uri_maker)
 
-
-            print(len(self.dict_entries[sample]))
             self.dict_entries[sample].append(converted_ent)
-
-
