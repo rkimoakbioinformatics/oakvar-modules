@@ -11,7 +11,7 @@ from fhir.resources.codeableconcept import CodeableConcept
 from fhir.resources.coding import Coding
 from fhir.resources.reference import Reference
 from fhir.resources.bundle import Bundle, BundleEntry
-from fhir.resources.fhirtypes import Uri, MetaType, IdentifierType
+from fhir.resources.fhirtypes import Uri, MetaType, IdentifierType, String
 from fhir.resources.identifier import Identifier
 
 
@@ -107,10 +107,7 @@ class Reporter(BaseReporter):
             # self.dict_entries[sample].append(BundleEntry(resource=subject))
 
         # create CodingResource for row ObservationResources to Use
-        coding = Coding()
-        coding.system = Uri("http://loinc.org")
-        self.code = CodeableConcept()
-        self.code.coding = [coding]
+        self.fhir_system = Uri("http://loinc.org")
 
     def uuid_maker(self, val: str):
         hex_str = hashlib.md5(val.encode("utf-8")).hexdigest()
@@ -163,6 +160,7 @@ class Reporter(BaseReporter):
         for sample in sample_with_variants:
             self.dict_nums[sample].append(self.counter)
 
+
             # create codingType for row Observation
             coding = Coding()
             coding.system = Uri("http://loinc.org")
@@ -173,6 +171,12 @@ class Reporter(BaseReporter):
             # Get Alleles from sqlite file
             ref = row["base__ref_base"]
             alt = row["base__alt_base"]
+
+            #get chrom and pos information
+            chrom_location = row["base__chrom"]
+            print(chrom_location)
+            pos = row["base__pos"]
+            print(pos)
 
             # create Observation Resource for row
             obs_row = Observation(
@@ -199,8 +203,33 @@ class Reporter(BaseReporter):
             comp_alt = ObservationComponent(code=code_alt)
             comp_alt.valueString = alt
 
+            ##Make Component for Chrom 
+            coding_chrom = Coding()
+            coding_chrom.system = Uri("http://loinc.org")
+            coding_chrom.code = "48001-2"
+            coding_chrom.display = "Cytogenetic (chromosome) location"
+            code_chrom = CodeableConcept()
+            code_chrom.coding = [coding_chrom]
+            comp_chrom = ObservationComponent(code=code_chrom)
+            comp_chrom.valueCodeableConcept = CodeableConcept(text=String(f"{chrom_location}"))
+#
+            ##Make Component for Pos 
+            coding_pos = Coding()
+            coding_pos.system = Uri("http://loinc.org")
+            coding_pos.code = "92822-6"
+            code_pos = CodeableConcept()
+            code_pos.coding = [coding_pos]
+            comp_pos = ObservationComponent(code=code_pos)
+            cc_pos = CodeableConcept(coding=
+                                     [(Coding(system=Uri("http://loinc.org"),
+                                             code="LA30102-0",
+                                             display=String("1-based character counting")
+            ))])
+            comp_pos.valueCodeableConcept = cc_pos
+            
+
             # add componenets to row observation
-            obs_row.component = [comp_ref, comp_alt]
+            obs_row.component = [comp_ref, comp_alt,comp_chrom,comp_pos]
 
             conn = sqlite3.connect(self.dbpath)
             curs = conn.cursor()
