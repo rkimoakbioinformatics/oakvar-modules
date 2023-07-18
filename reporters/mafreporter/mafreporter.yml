@@ -2,7 +2,7 @@ title: MAF Reporter
 description: Mutation Annotation File (MAF) Reporter
 type: reporter
 level: variant
-version: 0.0.3
+version: 0.0.4
 no_data: true
 requires_oakvar: "2.9.12"
 requires:
@@ -29,6 +29,7 @@ developer:
 tags:
 - input/output
 release_note:
+  0.0.4: Added missing annotator warnings
   0.0.3: Additional columns added to the Protected MAF file format
   0.0.2: Somatic MAF now contains additional previously unused variant columns
   0.0.1: initial version
