@@ -21,6 +21,7 @@ class Reporter(BaseReporter):
         self.prefix = self.savepath
         self.wf = None
         self.filenames = []
+        self.counter = 0
 
         self.levels_to_write = self.confs.get("pages", "variant")
         self.samples = []
@@ -32,7 +33,6 @@ class Reporter(BaseReporter):
         curs.execute("SELECT DISTINCT base__sample_id FROM 'sample' ")
         for sample in curs.fetchall():
             self.samples.append(sample[0])
-        print(self.samples)
 
         def create_dict(keys):
             unique_dict = {}
@@ -44,6 +44,7 @@ class Reporter(BaseReporter):
         self.dict_entries = create_dict(self.samples)
         self.dict_bundles = create_dict(self.samples)
         self.dict_patient = create_dict(self.samples)
+        self.dict_nums = create_dict(self.samples)
 
         # get number of rows
         curs = conn.cursor()
@@ -86,10 +87,10 @@ class Reporter(BaseReporter):
             patient_id = str(uuid.UUID(hex=hex_sample))
             # add to patient dict for reference in row observations
             # if for future cases a reference is needed it is here otherwise for the MVP it is not needed
-            # subject = Reference(type="Patient")
-            # subject.resource_type = "Reference"
-            # subject.reference = f"urn:uuid:{patient_id}"
-            # self.dict_patient[sample] = subject
+            subject = Reference(type="Patient")
+            subject.resource_type = "Reference"
+            subject.reference = f"urn:uuid:{patient_id}"
+            self.dict_patient[sample] = subject
 
             patient_entry = BundleEntry(
                 resource=sample_2_patient, fullUrl=f"urn:uuid:{patient_id}"
@@ -111,6 +112,7 @@ class Reporter(BaseReporter):
         coding.system = Uri("http://loinc.org")
         self.code = CodeableConcept()
         self.code.coding = [coding]
+        print(self.dict_patient)
 
     def uuid_maker(self, val: str):
         hex_str = hashlib.md5(val.encode("utf-8")).hexdigest()
@@ -160,9 +162,9 @@ class Reporter(BaseReporter):
     def write_table_row(self, row):
         # get samples that have variant(row)
         sample_with_variants = row["tagsampler__samples"].split(":")
-        print(f"this variant is found in samples {sample_with_variants}")
 
         for sample in sample_with_variants:
+            self.dict_nums[sample].append(self.counter)
 
             # create codingType for row Observation
             coding = Coding()
