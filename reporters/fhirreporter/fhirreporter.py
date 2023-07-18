@@ -72,7 +72,6 @@ class Reporter(BaseReporter):
             # print(type(sample))
             # id_er = uuid.UUID(sample)
             # print(id_er)
-            print(sample)
 
             # create sample id
             sample_name = f"{self.str_id} + {sample}"
