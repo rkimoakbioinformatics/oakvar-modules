@@ -105,7 +105,6 @@ class Reporter(BaseReporter):
             )
             self.dict_bundles[sample] = bundle
             # self.dict_entries[sample].append(BundleEntry(resource=subject))
-        print(self.dict_patient["s0"])
 
         # create CodingResource for row ObservationResources to Use
         coding = Coding()
@@ -164,7 +163,6 @@ class Reporter(BaseReporter):
         print(f"this variant is found in samples {sample_with_variants}")
 
         for sample in sample_with_variants:
-            self.counter += 1
 
             # create codingType for row Observation
             coding = Coding()
