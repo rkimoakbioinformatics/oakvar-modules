@@ -599,12 +599,12 @@ class Reporter(BaseReporter):
     @staticmethod
     def write_consequence(row):
         all_mappings = row['base__all_mappings']
-
         if not all_mappings:
             return ''
 
         split_collection = all_mappings.split(';')
         split_terms = [so.split(':')[3] for so in split_collection]
+
         all_split_terms = [so.split(',') if ',' in so else so for so in split_terms]
         all_so = []
 
@@ -615,7 +615,7 @@ class Reporter(BaseReporter):
             else:
                 all_so.append(term)
 
-        all_so = set(all_so)
+        all_so = list(dict.fromkeys(all_so))
 
         return str(';'.join(all_so))
 
