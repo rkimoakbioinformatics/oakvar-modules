@@ -112,7 +112,6 @@ class Reporter(BaseReporter):
         coding.system = Uri("http://loinc.org")
         self.code = CodeableConcept()
         self.code.coding = [coding]
-        print(self.dict_patient)
 
     def uuid_maker(self, val: str):
         hex_str = hashlib.md5(val.encode("utf-8")).hexdigest()
@@ -135,7 +134,6 @@ class Reporter(BaseReporter):
             json_str = obs.json(indent=2)
             self.wf.write(json_str)
             self.filenames.append(filename)
-        print(self.filenames)
         self.wf.close()
         return self.filenames
 
