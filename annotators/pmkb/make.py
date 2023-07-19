@@ -4,9 +4,39 @@ import re
 
 conn = sqlite3.connect('pmkb.sqlite')
 variant_pmkb = pd.read_csv('pmkb_variants.csv')
-
+interpretations_pmkb = pd.read_csv('pmkb_interpretations.csv')
 def main():
-    data_manipulation()
+    # data_manipulation()
+    interpretations_manipulation()
+
+def interpretations_manipulation():
+    c = conn.cursor()
+    s = "CSF3R T618I|CSF3R any nonsense|CSF3R any frameshift".split("|")
+    l = []
+    for i in range(len(s)):
+        l.append(" ".join(s[i].split(" ")[1:]))
+    # print("|".join(l))
+    #Filling null values 
+    variants_null = interpretations_pmkb[interpretations_pmkb['Variant(s)'].isnull()]['Gene']
+    # print(variants_null.loc[0])
+    c.execute("SELECT achange FROM variants WHERE gene = 'CSF1R'")
+    g = c.fetchone()[0]
+    # print(g)
+    c.execute("SELECT gene FROM variants")
+    rows = c.fetchall()
+    all_genes = [list(row) for row in rows]
+    # print(all_genes)
+    for ind in interpretations_pmkb[interpretations_pmkb['Variant(s)'].isnull()].index:
+        l = []
+        l.append(variants_null.loc[ind])
+        if l in all_genes:
+            c.execute("SELECT achange FROM pmkb_variants WHERE Gene = ? AND (achange LIKE '_codon%' OR achange LIKE '_exon%')", (variants_null.loc[ind],))
+            variant = c.fetchone()
+            if variant:
+                interpretations_pmkb.at[ind, 'Variant(s)'] = variant[0]
+                # print(interpretations_pmkb.loc[ind, 'Gene'])
+    interpretations_pmkb.to_csv('interpretations.csv')
+
 
 def data_manipulation():
     a_change = variant_pmkb.insert(
@@ -25,13 +55,14 @@ def data_manipulation():
     #iterate through specific column 
     for variant in range(len(variant_pmkb.loc[:,"achange"])):
         pos = variant_pmkb.loc[variant,"achange"]
-        get_missense  = re.search(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense|frameshift|insertion|deletion)$',pos)
+        get_missense  = re.search(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense|frameshift|insertion|deletion|any)$',pos)
         
         if get_missense:
             get_missense = get_missense.group()
             match = re.search(r'(\d.*)[^A-Za-z]',get_missense)
             if match:
                 d = match.group().split(',')
+                #misssense / nonsense
                 if 'exon' in pos and 'missense' in pos:
                     pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_exon:{",".join(d).strip()}:missense',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
@@ -42,26 +73,37 @@ def data_manipulation():
                 elif 'codon' in pos and'missense' in pos:
                     pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_codon:{",".join(d).strip()}:missense',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
+
                 elif 'codon' in pos and 'nonsense' in pos:
                     pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_codon:{",".join(d).strip()}:nonsense',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
+                #Frameshift
                 elif 'codon' in pos and 'frameshift' in pos:
                     pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sframeshift$',f'_codon:{",".join(d).strip()}:frameshift',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
                 elif 'exon' in pos and 'frameshift' in pos:
                     pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sframeshift$',f'_exon:{",".join(d).strip()}:frameshift',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
+                #insertion
                 elif 'codon' in pos and 'insertion' in pos:
                     pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sinsertion$',f'_codon:{",".join(d).strip()}:insertion',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
                 elif 'exon' in pos and 'insertion' in pos:
                     pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sinsertion$',f'_exon:{",".join(d).strip()}:insertion',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
+                #deletion
                 elif 'codon' in pos and 'deletion' in pos:
                     pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sdeletion$',f'_codon:{",".join(d).strip()}:deletion',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
                 elif 'exon' in pos and 'deletion' in pos:
                     pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sdeletion$',f'_exon:{",".join(d).strip()}:deletion',pos)
+                    variant_pmkb.at[variant, 'achange'] = pos
+                #any 
+                elif 'exon' in pos and 'any' in pos:
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sany$',f'_exon:{",".join(d).strip()}:any',pos)
+                    variant_pmkb.at[variant, 'achange'] = pos
+                elif 'codon' in pos and 'any' in pos:
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sany$',f'_codon:{",".join(d).strip()}:any',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
         elif 'any' not in pos and 'copy' not in pos and 'rearrangement' not in pos and 'exon' not in pos and 'codon' not in pos:
             pos = "p." + pos
