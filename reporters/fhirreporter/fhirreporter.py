@@ -11,7 +11,8 @@ from fhir.resources.codeableconcept import CodeableConcept
 from fhir.resources.coding import Coding
 from fhir.resources.reference import Reference
 from fhir.resources.bundle import Bundle, BundleEntry
-from fhir.resources.fhirtypes import Uri, MetaType, IdentifierType, String
+from fhir.resources.fhirtypes import Uri, MetaType, IdentifierType, String, RangeType
+from fhir.resources.quantity import Quantity
 from fhir.resources.identifier import Identifier
 
 
@@ -174,9 +175,7 @@ class Reporter(BaseReporter):
 
             #get chrom and pos information
             chrom_location = row["base__chrom"]
-            print(chrom_location)
             pos = row["base__pos"]
-            print(pos)
 
             # create Observation Resource for row
             obs_row = Observation(
@@ -226,10 +225,55 @@ class Reporter(BaseReporter):
                                              display=String("1-based character counting")
             ))])
             comp_pos.valueCodeableConcept = cc_pos
+
+            #Make Component for Sequence Ontology 
+
+            SO = row["base__so"]
+            print(SO)
+            #if SO is not None:
+             #   coding_so = Coding()
+              #  coding_so.system = Uri(" http://loinc.org")
+               # coding_so.code = "69551-0"
+                #code_so = CodeableConcept(coding=[coding_so])
+                #so_val_coding = Coding()
+                #so_val_coding.system = ("http://sequenceontology.org")
+                #so_val_coding.code = ""
+                #ov so_value = CodeableConcept()
+
+
+            #Make Component for Start and End (sne)
+
+            coding_st_sne = Coding()
+            coding_st_sne.system = Uri("http://loinc.org")
+            coding_st_sne.code = "81254-5"
+            coding_st_sne.display = "Genomic allele start-end"
+            st_sne_value_low = Quantity(value=row["base__pos"])
+            st_sne_value_high = Quantity(value=row["base__pos_end"])
+            code_sne = CodeableConcept(coding=[coding_st_sne])
+            comp_sne = ObservationComponent(code=code_sne)
+            comp_sne.valueRange= RangeType(low=st_sne_value_low, high = st_sne_value_high)
+
+            #Make Component for cchange (change)
+            aa_change = row["base__achange"]
+            c_change = row["base__cchange"]
+
+            coding_change = Coding()
+            coding_change.system = Uri("http://loinc.org")
+            coding_change.code = '48006-1'
+            coding_change.display  = "Amino Acid Change [type]"
+            code_change = CodeableConcept(coding=[coding_change])
+            comp_change = ObservationComponent(code=code_change)
+            comp_change.valueString = f"{aa_change}, {c_change}"
+
+
+
+
+
+
             
 
             # add componenets to row observation
-            obs_row.component = [comp_ref, comp_alt,comp_chrom,comp_pos]
+            obs_row.component = [comp_ref, comp_alt,comp_chrom,comp_pos, comp_sne,comp_change]
 
             conn = sqlite3.connect(self.dbpath)
             curs = conn.cursor()
