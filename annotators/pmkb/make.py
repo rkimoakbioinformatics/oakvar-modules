@@ -1,5 +1,6 @@
 import sqlite3
 import pandas as pd
+import numpy as np
 import re
 
 conn = sqlite3.connect('pmkb.sqlite')
@@ -7,16 +8,17 @@ variant_pmkb = pd.read_csv('pmkb_variants.csv')
 interpretations_pmkb = pd.read_csv('pmkb_interpretations.csv')
 def main():
     # data_manipulation()
-    interpretations_manipulation()
-
-def interpretations_manipulation():
+    interpretations =interpretations_cleaning(interpretations_pmkb)
+    interpretations_manipulation(interpretations)
+def interpretations_cleaning(interpretations_pmkb):
     c = conn.cursor()
-    s = "CSF3R T618I|CSF3R any nonsense|CSF3R any frameshift".split("|")
-    l = []
-    for i in range(len(s)):
-        l.append(" ".join(s[i].split(" ")[1:]))
+    # s = "CSF3R T618I|CSF3R any nonsense|CSF3R any frameshift".split("|")
+    # l = []
+    # for i in range(len(s)):
+    #     l.append(" ".join(s[i].split(" ")[1:]))
     # print("|".join(l))
     #Filling null values 
+
     variants_null = interpretations_pmkb[interpretations_pmkb['Variant(s)'].isnull()]['Gene']
     # print(variants_null.loc[0])
     c.execute("SELECT achange FROM variants WHERE gene = 'CSF1R'")
@@ -34,10 +36,96 @@ def interpretations_manipulation():
             variant = c.fetchone()
             if variant:
                 interpretations_pmkb.at[ind, 'Variant(s)'] = variant[0]
+    
                 # print(interpretations_pmkb.loc[ind, 'Gene'])
-    interpretations_pmkb.to_csv('interpretations.csv')
+    # print(interpretations_pmkb['Variant(s)'].isnull().sum())
+    interpretations_pmkb = interpretations_pmkb.dropna(subset=["Variant(s)"])
+    interpretations_pmkb = interpretations_pmkb.reset_index(drop = True)
+    # interpretations_pmkb.to_csv('interpretations.csv')
+    return interpretations_pmkb
+    
+def interpretations_manipulation(inter):
+    # print(inter.loc[8,'Variant(s)'].split("|"))
+    # print(inter['Variant(s)'].isnull().sum())
+    for ind in inter.index:
+        variants = inter.loc[ind,'Variant(s)'].split("|")
+        l = []
+        for j in variants:
 
+            if "_codon:" in j or "_exon:" in j:
+                
+                description  = " ".join(j.split(" "))
+                inter.loc[ind,'Variant(s)'] = description
+                if ind == 259:
+                    print(description)
+            else:
+                description = " ".join(j.split(" ")[1:])
 
+                if 'any' not in description and 'copy' not in description and 'rearrangement' not in description and 'exon' not in description and 'codon' not in description and "_codon" not in description and "_exon" not in description:
+                    description = "p." + description
+                    l.append(description)
+                else:
+                # print(description)
+                    match = re.search(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense|frameshift|insertion|deletion|any)$',description)
+                    if match:
+                        get_v = match.group()
+                        get_v = re.search(r'(\d.*)[^A-Za-z]',get_v)
+                        if get_v:
+                        # print(get_v)
+                    # print(match)
+                            d = get_v.group().split(',')
+                            if 'exon' in description and 'missense' in description:
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_exon:{",".join(d).strip()}:missense',description)
+                                l.append(description)
+                            elif 'codon' in description and 'missense' in description:
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_codon:{",".join(d).strip()}:missense',description)
+                                l.append(description)
+                            #nonsense
+                            elif 'exon' in description and 'nonsense' in description:
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_exon:{",".join(d).strip()}:nonsense',description)
+                                l.append(description)
+                            elif 'codon' in description and 'nonsense' in description:
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'codon:{",".join(d).strip()}:nonsense',description)
+                                l.append(description)
+                            #Frameshift
+                            elif 'exon' in description and 'frameshift' in description:
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(frameshift)$',f'_exon:{",".join(d).strip()}:frameshift',description)
+                                l.append(description)
+                            elif 'codon' in description and 'frameshift' in description:
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(frameshift)$',f'_codon:{",".join(d).strip()}:frameshift',description)
+                                l.append(description)
+                            #insertion
+                            elif 'codon' in description and 'insertion' in description:
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(insertion)$',f'_codon:{",".join(d).strip()}:insertion',description)
+                                l.append(description)
+                            elif 'exon' in description and 'insertion' in description:
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(insertion)$',f'_exon:{",".join(d).strip()}:insertion',description)
+                                l.append(description)
+                                    
+                            #deletion
+                            elif 'codon' in description and 'deletion' in description:
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(deletion)$',f'_codon:{",".join(d).strip()}:deletion',description)
+                                l.append(description)
+                            elif 'exon' in description and 'deletion' in description:
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(deletion)$',f'_exon:{",".join(d).strip()}:deletion',description)
+                                l.append(description)
+                            #any
+                            elif 'codon' in description and 'any' in description:
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(any)$',f'_codon:_{",".join(d).strip()}:any',description)
+                                l.append(description)
+                            elif 'exon' in description and 'any' in description:
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(any)$',f'_exon:_{",".join(d).strip()}:any',description)        
+                                l.append(description)
+                    else:
+                        match_any = re.search(r'^any\s.*',description)
+                        if match_any:
+                            description = "_codon:" + ":".join(match_any.group().split(" "))
+                            l.append(description)
+        inter.loc[ind,'Variant(s)'] = ("|").join(l)
+    inter['Variant(s)'].replace('', np.nan, inplace= True)
+    inter.dropna(subset = ['Variant(s)'], inplace = True)
+    inter = inter.reset_index(drop = True)
+    inter.to_csv("interpretations.csv")
 def data_manipulation():
     a_change = variant_pmkb.insert(
         loc = 2,
