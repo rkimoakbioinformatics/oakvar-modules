@@ -21,10 +21,10 @@ def interpretations_cleaning(interpretations_pmkb):
 
     variants_null = interpretations_pmkb[interpretations_pmkb['Variant(s)'].isnull()]['Gene']
     # print(variants_null.loc[0])
-    c.execute("SELECT achange FROM variants WHERE gene = 'CSF1R'")
-    g = c.fetchone()[0]
+    # c.execute("SELECT achange FROM variants WHERE gene = 'CSF1R'")
+    # g = c.fetchone()[0]
     # print(g)
-    c.execute("SELECT gene FROM variants")
+    c.execute("SELECT Gene FROM pmkb_variants")
     rows = c.fetchall()
     all_genes = [list(row) for row in rows]
     # print(all_genes)
@@ -32,16 +32,19 @@ def interpretations_cleaning(interpretations_pmkb):
         l = []
         l.append(variants_null.loc[ind])
         if l in all_genes:
-            c.execute("SELECT achange FROM pmkb_variants WHERE Gene = ? AND (achange LIKE '_codon%' OR achange LIKE '_exon%')", (variants_null.loc[ind],))
+            c.execute("SELECT achange FROM variants WHERE Gene = ? AND (achange LIKE '_codon%' OR achange LIKE '_exon%')", (variants_null.loc[ind],))
+            if variants_null.loc[ind] == "AKT1":
+                print(l)
+                print(c.fetchone()[0])
             variant = c.fetchone()
             if variant:
-                interpretations_pmkb.at[ind, 'Variant(s)'] = variant[0]
-    
+                interpretations_pmkb.at[ind, 'Variant(s)'] = variant[0]                    
                 # print(interpretations_pmkb.loc[ind, 'Gene'])
     # print(interpretations_pmkb['Variant(s)'].isnull().sum())
     interpretations_pmkb = interpretations_pmkb.dropna(subset=["Variant(s)"])
     interpretations_pmkb = interpretations_pmkb.reset_index(drop = True)
     # interpretations_pmkb.to_csv('interpretations.csv')
+    # print(interpretations_pmkb)
     return interpretations_pmkb
     
 def interpretations_manipulation(inter):
@@ -51,16 +54,18 @@ def interpretations_manipulation(inter):
         variants = inter.loc[ind,'Variant(s)'].split("|")
         l = []
         for j in variants:
-
-            if "_codon:" in j or "_exon:" in j:
-                
+            if "_codon:_any" in j or "_exon:_any" in j:
                 description  = " ".join(j.split(" "))
+                # inter.loc[ind,'Variant(s)'] = description
                 inter.loc[ind,'Variant(s)'] = description
-                if ind == 259:
-                    print(description)
+                # l.append(description)
+                # print(description)
+                # print(ind)
+            elif "copy number" in j:
+                description  = " ".join(j.split(" "))
+                inter.loc[ind,"Variant(s)"] = description
             else:
                 description = " ".join(j.split(" ")[1:])
-
                 if 'any' not in description and 'copy' not in description and 'rearrangement' not in description and 'exon' not in description and 'codon' not in description and "_codon" not in description and "_exon" not in description:
                     description = "p." + description
                     l.append(description)
@@ -111,21 +116,46 @@ def interpretations_manipulation(inter):
                                 l.append(description)
                             #any
                             elif 'codon' in description and 'any' in description:
-                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(any)$',f'_codon:_{",".join(d).strip()}:any',description)
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(any)$',f'_codon:{",".join(d).strip()}:any',description)
                                 l.append(description)
+                                # print(description)
                             elif 'exon' in description and 'any' in description:
-                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(any)$',f'_exon:_{",".join(d).strip()}:any',description)        
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(any)$',f'_exon:{",".join(d).strip()}:any',description)        
                                 l.append(description)
                     else:
                         match_any = re.search(r'^any\s.*',description)
                         if match_any:
                             description = "_codon:" + ":".join(match_any.group().split(" "))
                             l.append(description)
-        inter.loc[ind,'Variant(s)'] = ("|").join(l)
-    inter['Variant(s)'].replace('', np.nan, inplace= True)
-    inter.dropna(subset = ['Variant(s)'], inplace = True)
+                            
+                        else:
+                            l.append(description)
+                inter.loc[ind,'Variant(s)'] = ("|").join(l)
+    
+    # print(inter)
+    # inter['Variant(s)'].replace('p.', np.nan,inplace = True)
+    
+    # inter = inter[inter['Variant(s)'].notna()]
+    # # print(inter)
+    # inter.dropna(subset = ['Variant(s)'],inplace = True)
     inter = inter.reset_index(drop = True)
-    inter.to_csv("interpretations.csv")
+    # print(inter)
+    # inter.to_csv("interpretations.csv")
+
+# def interpretations_split():
+# CREATE TABLE temporary_interpretations AS
+# 	WITH RECURSIVE split(gene_name, variants, rest, tumor_type, tissue_type, interpretations,citations, pmkb_url) AS(
+# 		SELECT gene_name, "",variants||"|", tumor_type, tissue_type,interpretations, citations, pmkb_url FROM interpretations
+# 		UNION ALL SELECT
+# 		gene_name,
+# 		substr(rest,0,instr(rest,"|")),
+# 		substr(rest, instr(rest,"|")+1),
+# 		tumor_type, tissue_type, interpretations, citations, pmkb_url
+# 		FROM split WHERE rest !=""	)
+# SELECT gene_name, variants, tumor_type, tissue_type, interpretations, citations, pmkb_url FROM split WHERE variants !="" 
+
+
+
 def data_manipulation():
     a_change = variant_pmkb.insert(
         loc = 2,
@@ -144,7 +174,11 @@ def data_manipulation():
     for variant in range(len(variant_pmkb.loc[:,"achange"])):
         pos = variant_pmkb.loc[variant,"achange"]
         get_missense  = re.search(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense|frameshift|insertion|deletion|any)$',pos)
-        
+        any_mutation = re.search(r'any\smutation', pos)
+        if any_mutation:
+            m = any_mutation.group().split(",")
+            pos = re.sub(r'any\smutation', f'_codon:_any:any',pos)
+            variant_pmkb.at[variant,'achange'] = pos
         if get_missense:
             get_missense = get_missense.group()
             match = re.search(r'(\d.*)[^A-Za-z]',get_missense)
@@ -193,6 +227,7 @@ def data_manipulation():
                 elif 'codon' in pos and 'any' in pos:
                     pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sany$',f'_codon:{",".join(d).strip()}:any',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
+                    
         elif 'any' not in pos and 'copy' not in pos and 'rearrangement' not in pos and 'exon' not in pos and 'codon' not in pos:
             pos = "p." + pos
             variant_pmkb.at[variant,'achange'] = pos
