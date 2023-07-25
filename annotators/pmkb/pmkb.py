@@ -9,20 +9,19 @@ class Annotator(BaseAnnotator):
         gene_name = input_data["hugo"]
         a_change = input_data["achange"]
         #query interpretations database
+          
         self.cursor.execute(
             """SELECT 
-	                gene_name, tumor_type, tissue_type, tier, interpretations.pmkb_url,
-	                interpretations, citations, achange, variants.pmkb_url
+                    interpretations.gene_name, variants.achange, interpretations.tumor_type,
+                    interpretations.tissue_type, interpretations.interpretations,
+                    interpretations.citations, interpretations.pmkb_url,
+                    variants.pmkb_url
                 FROM
 	                interpretations
                 LEFT JOIN
-	                variants as variants ON
-	                interpretations.gene_name = variants.gene
-                WHERE
-	                (CASE
-		                WHEN variants.achange IS NULL THEN interpretations.gene_name = :gene
-		                ELSE interpretations.gene_name = :gene AND variants.achange = :achange
-		            END)
+	                variants
+	                    ON variants.achange = interpretations.variants 
+                WHERE variants.gene_name = :gene AND variants.achange = :achange
             """, {"gene": gene_name, "achange":a_change}
         )
         qr = self.cursor.fetchone()
