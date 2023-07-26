@@ -1,4 +1,5 @@
 import uuid
+import requests
 import hashlib
 import sqlite3
 from pathlib import Path
@@ -17,6 +18,8 @@ from fhir.resources.identifier import Identifier
 
 
 class Reporter(BaseReporter):
+    
+    
     def setup(self):
         # establish filename with fhir suffix
         self.prefix = self.savepath
@@ -27,7 +30,27 @@ class Reporter(BaseReporter):
         self.levels_to_write = self.confs.get("pages", "variant")
         self.samples = []
         self.bundles = []
-
+        self.SO_dict = {
+            "start_lost" :"SO:0002012",
+            "intron_variant" : "SO:0001627",
+            "frameshift_elongation" : "SO:0001909",
+            "missense_variant" : "SO:0001583",
+            "stop_lost" : "SO:0001578",
+            "frameshift_truncation" : "SO:0001910",
+            'lnc_RNA': "SO:0002127",
+            "inframe_insertion" : "SO:0001821",
+            "5_prime_UTR_variant" : "SO:0001623",
+            "synonymous_variant" : "SO:0001819",
+            "splice_site_variant" : "SO:0001629",
+            "3_prime_UTR_variant" : "SO:0001624",
+            "2kb_upstream_variant" : "SO:0001636",
+            "2kb_downstream_variant":"SO:0002083",
+            "stop_gained" : "SO:0001587",
+            "retained_intron":"SO:0002113",
+            "inframe_deletion" : "SO:0001822",
+            "misc_RNA" : "SO:0000673",
+            "complex_substitution" : "SO:1000005"
+        }
         # get sample names
         conn = sqlite3.connect(self.dbpath)
         curs = conn.cursor()
@@ -109,6 +132,24 @@ class Reporter(BaseReporter):
 
         # create CodingResource for row ObservationResources to Use
         self.fhir_system = Uri("http://loinc.org")
+    
+        def search_sequence_ontology(term):
+            base_url = "http://www.sequenceontology.org/browser/current_svn/terms"
+            search_url = f"{base_url}/search?q={term}"
+            try:
+                response = requests.get(search_url)
+                response.raise_for_status()
+                data = response.json()
+                if "terms" in data and data["terms"]:
+                    first_result = data["terms"][0]
+                    term_id = first_result["id"]
+                    term_label = first_result["label"]
+                    return term_id, term_label
+                else:
+                    return None, None
+            except requests.exceptions.RequestException as e: 
+                print(f"Error: {e}")
+                return None,None
 
     def uuid_maker(self, val: str):
         hex_str = hashlib.md5(val.encode("utf-8")).hexdigest()
@@ -230,15 +271,12 @@ class Reporter(BaseReporter):
 
             SO = row["base__so"]
             print(SO)
-            #if SO is not None:
-             #   coding_so = Coding()
-              #  coding_so.system = Uri(" http://loinc.org")
-               # coding_so.code = "69551-0"
-                #code_so = CodeableConcept(coding=[coding_so])
-                #so_val_coding = Coding()
-                #so_val_coding.system = ("http://sequenceontology.org")
-                #so_val_coding.code = ""
-                #ov so_value = CodeableConcept()
+            if SO is not None:
+                so_val_coding = Coding()
+                so_val_coding.system = ("http://sequenceontology.org")
+                print(self.SO_dict[SO])
+                so_val_coding.code = self.SO_dict[SO]
+                so_value = CodeableConcept(coding=[so_val_coding])
 
 
             #Make Component for Start and End (sne)
