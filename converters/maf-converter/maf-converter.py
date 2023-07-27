@@ -43,6 +43,9 @@ class Converter(BaseConverter):
         line_list = line.split('\t')
         var_dicts = []
 
+        if line.startswith("Hugo_Symbol"):
+            return self.IGNORE
+
         # inferred from column 5 "Chromosome"
         maf_chrom = line_list[4]
 
@@ -50,10 +53,10 @@ class Converter(BaseConverter):
         maf_pos = line_list[5]
 
         # inferred from column 10 "Reference_Allele"
-        maf_ref = line_list[11]
+        maf_ref = line_list[10]
 
         # inferred from column 11 "Tumor_Seq_Allele1"
-        maf_alt = line_list[10]
+        maf_alt = line_list[11]
 
         # inferred from column 15 "Tumor_Sample_Barcode"
         maf_sample = line_list[15]
@@ -64,7 +67,7 @@ class Converter(BaseConverter):
             'ref_base': maf_ref,
             'alt_base': maf_alt,
             'sample_id': maf_sample,
-            "var_no": '',
+            'var_no': self.line_no
         }
 
         var_dicts.append(var_dict)
