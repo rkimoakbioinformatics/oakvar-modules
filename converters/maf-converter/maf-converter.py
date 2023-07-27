@@ -3,78 +3,70 @@ from typing import Dict
 from oakvar import BaseConverter
 
 
+# TODO the official documentations has 12 steps for validating a file. Maybe implement in the future?
+
+
 class Converter(BaseConverter):
+    MAF_STANDARD_COLS = (
+        "Hugo_Symbol", "Entrez_Gene_Id", "Center", "NCBI_Build", "Chromosome", "Start_Position", "End_Position",
+        "Strand", "Variant_Classification", "Variant_Type", "Reference_Allele", "Tumor_Seq_Allele1",
+        "Tumor_Seq_Allele2", "dbSNP_RS", "dbSNP_Val_Status", "Tumor_Sample_Barcode",
+        "Matched_Norm_Sample_Barcode", "Match_Norm_Seq_Allele1", "Match_Norm_Seq_Allele2",
+        "Tumor_Validation_Allele1", "Tumor_Validation_Allele2", "Match_Norm_Validation_Allele1",
+        "Match_Norm_Validation_Allele2", "Verification_Status", "Validation_Status", "Mutation_Status",
+        "Sequencing_Phase", "Sequence_Source", "Validation_Method",
+        "Score", "BAM_File", "Sequencer", "Tumor_Sample_UUID"
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.format_name = "maf"
+
     def check_format(self, f) -> bool:
-        """
-        Detect the format of an input file.
+        from pathlib import Path
 
-        Arguments:
-            f: a file handle to an input file
-        Returns:
-            bool: True if the input file is for this converter,
-                  False if not.
+        if not Path(f).exists():
+            return False
 
-        The example below checks if the input file's first line indicates
-        VCF file format.
-        """
-        # line = f.readline()
-        # return line.startswith("##fileformat=VCF")
-        print('TEST')
-        return False
+        file = open(f)
+        line = file.readline()
+        file_cols = line.split('\t')
 
-    # If your converter module needs something else than
-    # the standard way of opening a text input file,
-    # read line by line, and coverting each line into
-    # a list of dictionaries of variants,
-    # you may want to start with modifying
-    # convert_file method. In that case, uncomment
-    # the below convert_file method and add your implementation.
-    #
-    # def convert_file(
-    #     self, file, *__args__, exc_handler=None, **__kwargs__
-    # ) -> Iterator[Tuple[int, List[dict]]]:
-    #     line_no = 0
-    #     for line in file:
-    #         line_no += 1
-    #         try:
-    #             yield line_no, self.convert_line(line)
-    #         except Exception as e:
-    #             if exc_handler:
-    #                 exc_handler(line_no, e)
-    #             else:
-    #                 raise e
-    #     return None
+        # if any of the standard columns are not in the file headers, return False
+        for col in self.MAF_STANDARD_COLS:
+            if col not in file_cols:
+                return False
+
+        return True
 
     def convert_line(self, line) -> List[Dict]:
-        """
-        Converts a line from an input file to OakVar's variant dict.
+        line_list = line.split('\t')
+        var_dicts = []
 
-        Arguments:
-            l: a string of a line from an input file
-        Returns:
-            dict: a list of dicts, each dict for a variant collected
-                  from the input line. Each dict should have
-                  the following required fields:
+        # inferred from column 5 "Chromosome"
+        maf_chrom = line_list[4]
 
-                  chrom: chromosome name [str]
-                  pos: chromosomal position [int]
-                  ref_base: reference bases [str]
-                  alt_base: altername bases [str]
+        # inferred from column 6 "Start_Position"
+        maf_pos = line_list[5]
 
-                  Optional fields for each dict are:
+        # inferred from column 10 "Reference_Allele"
+        maf_ref = line_list[11]
 
-                  sample_id: the ID or name of a sample having the variant [list[str]]
-                  tags: a custom tag given to the variant [list[str]]
-        """
-        # _ = line
-        # var_dicts = []
-        # var_dict = {
-        #     "chrom": "chr1",
-        #     "pos": 2878349,
-        #     "ref_base": "A",
-        #     "alt_base": "T",
-        #     "sample_id": "sample1",
-        # }
-        # var_dicts.append(var_dict)
-        # return var_dicts
-        pass
+        # inferred from column 11 "Tumor_Seq_Allele1"
+        maf_alt = line_list[10]
+
+        # inferred from column 15 "Tumor_Sample_Barcode"
+        maf_sample = line_list[15]
+
+        var_dict = {
+            'chrom': maf_chrom,
+            'pos': maf_pos,
+            'ref_base': maf_ref,
+            'alt_base': maf_alt,
+            'sample_id': maf_sample,
+            "var_no": '',
+        }
+
+        var_dicts.append(var_dict)
+
+        return var_dicts
