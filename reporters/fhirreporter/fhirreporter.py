@@ -49,7 +49,48 @@ class Reporter(BaseReporter):
             "retained_intron":"SO:0002113",
             "inframe_deletion" : "SO:0001822",
             "misc_RNA" : "SO:0000673",
-            "complex_substitution" : "SO:1000005"
+            "complex_substitution" : "SO:1000005",
+            "processed_transcript" : "SO:0001503",
+            "transcribed_unprocessed_pseudogene" : "SO:0002107",
+            "unprocessed_pseudogene": "SO:0001760",
+            "miRNA" : "SO:0000276",
+            "processed_pseudogene" : "SO:0000043",
+            "snRNA":"SO:0000274",
+            "transcribed_processed_pseudogene":"SO:0002109",
+            "NMD_transcript_variant" : "SO:0001621",
+            "unconfirmed_transcript": "SO:0002139",
+            "pseudogene" :"SO:0000336",
+            "transcribed_unitary_pseudogene" : "SO:0002108",
+            "NSD_transcript" : "SO:0002130",
+            "snoRNA":"SO:0000275",
+            "scaRNA" : "SO:0002095",
+            "unitary_pseudogene" : "O:0001759",
+            "polymorphic_pseudogene" : "SO:0001841",
+            "rRNA" : "SO:0000252",
+            "IG_V_pseudogene" : "SO:0002102",
+            "ribozyme" : "SO:0000374",
+            "TR_V_gene":"SO:0002137",
+            "TR_V_pseudogene" : "SO:0002103",
+            "TR_D_gene" : "SO:0002135",
+            "TR_J_gene" : "SO:0002136",
+            "TR_C_gene" : "SO:0002134",
+            "TR_J_pseudogene" : "SO:0002104",
+            "IG_C_gene" : "SO:0002123" , 
+            "IG_C_pseudogene" : "SO:0002100",
+            "IG_J_gene" : "SO:0002125",
+            "IG_J_pseudogene" : "SO:0002101",
+            "IG_D_gene" : "SO:0002124",
+            "IG_V_gene" : "SO:0002126",
+            "translated_processed_pseudogene" : "SO:0002105",
+            "scRNA" : "SO:0000013",
+            "vault_RNA":"SO:0000404",
+            "translated_unprocessed_pseudogene" : "SO:0002106",
+            "Mt_tRNA" : "SO:0002129",
+            "Mt_rRNA" : "SO:0002128",
+            "start_retained_variant" : "SO:0002019",
+            "stop_retained_variant" : "SO:0001567",
+            "exon_loss_variant" : "SO:0001572",
+            "transcript_ablation" : "SO:0001893"
         }
         # get sample names
         conn = sqlite3.connect(self.dbpath)
@@ -132,24 +173,6 @@ class Reporter(BaseReporter):
 
         # create CodingResource for row ObservationResources to Use
         self.fhir_system = Uri("http://loinc.org")
-    
-        def search_sequence_ontology(term):
-            base_url = "http://www.sequenceontology.org/browser/current_svn/terms"
-            search_url = f"{base_url}/search?q={term}"
-            try:
-                response = requests.get(search_url)
-                response.raise_for_status()
-                data = response.json()
-                if "terms" in data and data["terms"]:
-                    first_result = data["terms"][0]
-                    term_id = first_result["id"]
-                    term_label = first_result["label"]
-                    return term_id, term_label
-                else:
-                    return None, None
-            except requests.exceptions.RequestException as e: 
-                print(f"Error: {e}")
-                return None,None
 
     def uuid_maker(self, val: str):
         hex_str = hashlib.md5(val.encode("utf-8")).hexdigest()
@@ -270,13 +293,14 @@ class Reporter(BaseReporter):
             #Make Component for Sequence Ontology 
 
             SO = row["base__so"]
-            print(SO)
+            comp_so = None
             if SO is not None:
                 so_val_coding = Coding()
                 so_val_coding.system = ("http://sequenceontology.org")
-                print(self.SO_dict[SO])
                 so_val_coding.code = self.SO_dict[SO]
+                so_val_coding.display = SO
                 so_value = CodeableConcept(coding=[so_val_coding])
+                comp_so = ObservationComponent(code=so_value)
 
 
             #Make Component for Start and End (sne)
@@ -311,7 +335,9 @@ class Reporter(BaseReporter):
             
 
             # add componenets to row observation
-            obs_row.component = [comp_ref, comp_alt,comp_chrom,comp_pos, comp_sne,comp_change]
+            if comp_so is not None:
+                obs_row.component = [comp_ref, comp_alt,comp_chrom,comp_pos, comp_so, comp_sne,comp_change]
+            else:obs_row.component = [comp_ref, comp_alt,comp_chrom,comp_pos, comp_sne,comp_change]
 
             conn = sqlite3.connect(self.dbpath)
             curs = conn.cursor()
