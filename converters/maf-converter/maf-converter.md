@@ -1,30 +1,13 @@
 # maf-converter
+Converts [MAF](https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format/#:~:text=Mutation%20Annotation%20Format%20(MAF)%20is,through%20the%20Somatic%20Aggregation%20Workflow.) format files
 
-This awesome module is for analyzing genomic variants.
 
-## 2nd level title
 
-What you write here will be shown as your module's introduction on OakVar's store.
+A standard MAF file consists of 126 columns which contain tab-delimited values with aggregated mutation information from VCF Files.
+A 10 column example of a MAF file
+```
+Hugo_Symbol	Entrez_Gene_Id	Center	NCBI_Build	Chromosome	Start_Position	End_Position	Strand	Variant_Classification	Variant_Type
+FGFR2			GRCh38	chr10	121593817	121593817	+	Start_Lost	SNP
+```
 
-You can write an URL directly, for example https://oakvar.com. 
-
-Or, using this syntax [Here](https://docs.oakvar.com)
-
-A numbered list:
-
-1. First feature
-2. Second feature
-
-A dotted list:
-
-- First
-- Second
-
-**Bold** with two double-quotation marks around the text to make bold. 
-
-*Italic* with one double-quotation mark around the text to make italic.
-
-Images can be inserted with the following syntax.
-
-![Screenshot](https://url.to/module_screenshot.png)
-
+For a file to be regarded as a MAF file it must pass 12 steps of verification.
