@@ -1,3 +1,4 @@
+import re
 from typing import List
 from typing import Dict
 from oakvar import BaseConverter
@@ -34,7 +35,8 @@ class Converter(BaseConverter):
 
         # if any of the standard columns are not in the file headers, return False
         for col in self.MAF_STANDARD_COLS:
-            if col not in file_cols:
+            if not re.search(col, line, flags=re.IGNORECASE):
+                print('FALSE')
                 return False
 
         return True

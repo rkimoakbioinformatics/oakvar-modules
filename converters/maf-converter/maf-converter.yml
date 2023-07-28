@@ -13,4 +13,5 @@ requires_oakvar: "2.9.0"
 tags:
 - input/output
 release_note:
+  1.0.1: Header check is case insensitive
   1.0.0: initial MAF file converter
