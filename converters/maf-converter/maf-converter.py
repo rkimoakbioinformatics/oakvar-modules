@@ -9,14 +9,7 @@ from oakvar import BaseConverter
 
 class Converter(BaseConverter):
     MAF_STANDARD_COLS = (
-        "Hugo_Symbol", "Entrez_Gene_Id", "Center", "NCBI_Build", "Chromosome", "Start_Position", "End_Position",
-        "Strand", "Variant_Classification", "Variant_Type", "Reference_Allele", "Tumor_Seq_Allele1",
-        "Tumor_Seq_Allele2", "dbSNP_RS", "dbSNP_Val_Status", "Tumor_Sample_Barcode",
-        "Matched_Norm_Sample_Barcode", "Match_Norm_Seq_Allele1", "Match_Norm_Seq_Allele2",
-        "Tumor_Validation_Allele1", "Tumor_Validation_Allele2", "Match_Norm_Validation_Allele1",
-        "Match_Norm_Validation_Allele2", "Verification_Status", "Validation_Status", "Mutation_Status",
-        "Sequencing_Phase", "Sequence_Source", "Validation_Method",
-        "Score", "BAM_File", "Sequencer", "Tumor_Sample_UUID"
+        "Chromosome", "Start_Position", "Reference_Allele", "Tumor_Seq_Allele1"
     )
 
     def __init__(self, *args, **kwargs):
@@ -31,12 +24,10 @@ class Converter(BaseConverter):
 
         file = open(f)
         line = file.readline()
-        file_cols = line.split('\t')
 
         # if any of the standard columns are not in the file headers, return False
         for col in self.MAF_STANDARD_COLS:
             if not re.search(col, line, flags=re.IGNORECASE):
-                print('FALSE')
                 return False
 
         return True

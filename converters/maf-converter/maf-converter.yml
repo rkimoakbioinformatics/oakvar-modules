@@ -1,5 +1,5 @@
 title: MAF Converter
-version: 1.0.0
+version: 1.0.2
 no_data: true
 type: converter
 description: Allows user to input files in MAF format.
@@ -13,5 +13,6 @@ requires_oakvar: "2.9.0"
 tags:
 - input/output
 release_note:
+  1.0.2: Modified Validation rules to accommodate a wider range of MAF files
   1.0.1: Header check is case insensitive
   1.0.0: initial MAF file converter
