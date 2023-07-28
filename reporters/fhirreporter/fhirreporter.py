@@ -90,7 +90,9 @@ class Reporter(BaseReporter):
             "start_retained_variant" : "SO:0002019",
             "stop_retained_variant" : "SO:0001567",
             "exon_loss_variant" : "SO:0001572",
-            "transcript_ablation" : "SO:0001893"
+            "transcript_ablation" : "SO:0001893",
+            "pseudogene_rRNA" : "SO:0002111",
+            "sRNA" : "SO:0002352"
         }
         # get sample names
         conn = sqlite3.connect(self.dbpath)
