@@ -327,7 +327,15 @@ class Reporter(BaseReporter):
             coding_change.display  = "Amino Acid Change [type]"
             code_change = CodeableConcept(coding=[coding_change])
             comp_change = ObservationComponent(code=code_change)
-            comp_change.valueString = f"{aa_change}, {c_change}"
+            comp_change.valueString = f"{aa_change}"
+
+            coding_c_change = Coding()
+            coding_c_change.system = Uri("http://loinc.org")
+            coding_c_change.code = "48004-6"
+            coding_c_change.display = "DNA change (c.HGVS)"
+            code_c_change = CodeableConcept(coding=[coding_c_change])
+            comp_c_change = ObservationComponent(code=code_c_change)
+            comp_c_change.valueString = f"{c_change}"
 
 
 
@@ -338,8 +346,8 @@ class Reporter(BaseReporter):
 
             # add componenets to row observation
             if comp_so is not None:
-                obs_row.component = [comp_ref, comp_alt,comp_chrom,comp_pos, comp_so, comp_sne,comp_change]
-            else:obs_row.component = [comp_ref, comp_alt,comp_chrom,comp_pos, comp_sne,comp_change]
+                obs_row.component = [comp_ref, comp_alt,comp_chrom,comp_pos, comp_so, comp_sne,comp_change,comp_c_change]
+            else:obs_row.component = [comp_ref, comp_alt,comp_chrom,comp_pos, comp_sne,comp_change,comp_c_change]
 
             conn = sqlite3.connect(self.dbpath)
             curs = conn.cursor()
