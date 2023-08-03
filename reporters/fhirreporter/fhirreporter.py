@@ -227,13 +227,9 @@ class Reporter(BaseReporter):
         for sample in sample_with_variants:
             self.dict_nums[sample].append(self.counter)
 
+            #get RefSeq from sqlite file 
+            refseq = row["base__refseq"]
 
-            # create codingType for row Observation
-            coding = Coding()
-            coding.system = Uri("http://loinc.org")
-            coding.code = "8480-6"
-            code = CodeableConcept()
-            code.coding = [coding]
 
             # Get Alleles from sqlite file
             ref = row["base__ref_base"]
@@ -243,17 +239,36 @@ class Reporter(BaseReporter):
             chrom_location = row["base__chrom"]
             pos = row["base__pos"]
 
+
+
+
+            # create codingType for row  Variant Observation
+            coding = Coding()
+            coding.system = Uri("http://loinc.org")
+            coding.code = "69548-6"
+            code = CodeableConcept()
+            code.coding = [coding]
+
+            #create CC for Laboratory 
+            cat_coding = Coding()
+            cat_coding.system = Uri("http://terminology.hl7.org/CodeSystem/observation-category")
+            cat_coding.code = "laboratory"
+            cat_cc = CodeableConcept()
+            cat_cc.coding=[cat_coding]
+
+
             # create Observation Resource for row
             obs_row = Observation(
-                status="final", code=code, subject=self.dict_patient[sample]
+                status="final", code=code, subject=self.dict_patient[sample], category=[cat_cc]
             )
-            # obs_row.meta = MetaType()
-            # obs_row.meta.profile = ["http://hl7.org/fhir/uv/genomics-reporting/StructureDefinition/variant"]
+            #obs_row.meta = MetaType()
+            #obs_row.meta.profile = ["http://hl7.org/fhir/uv/genomics-reporting/StructureDefinition/variant"]
 
             # Make Component for reference allele
             coding_ref = Coding()
             coding_ref.system = Uri("http://loinc.org")
             coding_ref.code = "69547-8"  # always code for reference allele
+            coding_ref.display = "Ref nucleotide"
             code_ref = CodeableConcept()
             code_ref.coding = [coding_ref]
             comp_ref = ObservationComponent(code=code_ref)
@@ -327,7 +342,7 @@ class Reporter(BaseReporter):
             coding_change.display  = "Amino Acid Change [type]"
             code_change = CodeableConcept(coding=[coding_change])
             comp_change = ObservationComponent(code=code_change)
-            comp_change.valueString = f"{aa_change}"
+            comp_change.valueCodeableConcept = CodeableConcept(text=f"{aa_change}")
 
             coding_c_change = Coding()
             coding_c_change.system = Uri("http://loinc.org")
@@ -335,9 +350,10 @@ class Reporter(BaseReporter):
             coding_c_change.display = "DNA change (c.HGVS)"
             code_c_change = CodeableConcept(coding=[coding_c_change])
             comp_c_change = ObservationComponent(code=code_c_change)
-            comp_c_change.valueString = f"{c_change}"
+            comp_c_change.valueCodeableConcept = CodeableConcept(text=f"{refseq}:{c_change}")
 
-
+            
+        
 
 
 
