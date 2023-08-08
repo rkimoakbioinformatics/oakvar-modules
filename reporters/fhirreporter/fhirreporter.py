@@ -228,7 +228,7 @@ class Reporter(BaseReporter):
             self.dict_nums[sample].append(self.counter)
 
             #get RefSeq from sqlite file 
-            refseq = row["base__refseq"]
+            transcript = row["base__transcript"]
 
 
             # Get Alleles from sqlite file
@@ -332,6 +332,7 @@ class Reporter(BaseReporter):
             comp_sne = ObservationComponent(code=code_sne)
             comp_sne.valueRange= RangeType(low=st_sne_value_low, high = st_sne_value_high)
 
+            
             #Make Component for cchange (change)
             aa_change = row["base__achange"]
             c_change = row["base__cchange"]
@@ -350,7 +351,18 @@ class Reporter(BaseReporter):
             coding_c_change.display = "DNA change (c.HGVS)"
             code_c_change = CodeableConcept(coding=[coding_c_change])
             comp_c_change = ObservationComponent(code=code_c_change)
-            comp_c_change.valueCodeableConcept = CodeableConcept(text=f"{refseq}:{c_change}")
+            comp_c_change.valueCodeableConcept = CodeableConcept(text=f"{transcript}:{c_change}")
+
+            #Make Component for Gene ID
+            gene_id = row["base__hugo"]
+            coding_id = Coding()
+            coding_id.system = Uri("http://loinc.org")
+            coding_id.code = "48018-6"
+            coding_id.display = "Gene studied [ID]"
+            code_gene_id = CodeableConcept(coding=[coding_id])
+            comp_gene_id = ObservationComponent(code=code_gene_id)
+            comp_gene_id.valueCodeableConcept = CodeableConcept(text=f"{gene_id}")
+
 
             
         
@@ -362,8 +374,8 @@ class Reporter(BaseReporter):
 
             # add componenets to row observation
             if comp_so is not None:
-                obs_row.component = [comp_ref, comp_alt,comp_chrom,comp_pos, comp_so, comp_sne,comp_change,comp_c_change]
-            else:obs_row.component = [comp_ref, comp_alt,comp_chrom,comp_pos, comp_sne,comp_change,comp_c_change]
+                obs_row.component = [comp_gene_id,comp_ref, comp_alt,comp_chrom, comp_so, comp_sne,comp_change,comp_c_change]
+            else:obs_row.component = [comp_gene_id,comp_ref, comp_alt,comp_chrom,comp_sne]
 
             conn = sqlite3.connect(self.dbpath)
             curs = conn.cursor()
