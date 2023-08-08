@@ -7,7 +7,7 @@ conn = sqlite3.connect('pmkb.sqlite')
 variant_pmkb = pd.read_csv('pmkb_variants.csv')
 interpretations_pmkb = pd.read_csv('pmkb_interpretations.csv')
 def main():
-    # data_manipulation()
+    data_manipulation()
     variant_parsing_new()
     # interpretations =interpretations_cleaning(interpretations_pmkb)
     # interpretations_manipulation(interpretations)
@@ -72,7 +72,7 @@ def interpretations_manipulation(inter):
                     l.append(description)
                 else:
                 # print(description)
-                    match = re.search(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense|frameshift|insertion|deletion|any)$',description)
+                    match = re.search(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense|frameshift|insertion|deletion|any|indel)$',description)
                     if match:
                         get_v = match.group()
                         get_v = re.search(r'(\d.*)[^A-Za-z]',get_v)
@@ -143,19 +143,20 @@ def interpretations_manipulation(inter):
     # print(inter)
     # inter.to_csv("interpretations.csv")
 
+'''
 # def interpretations_split():
-# CREATE TABLE temporary_interpretations AS
-# 	WITH RECURSIVE split(gene_name, variants, rest, tumor_type, tissue_type, interpretations,citations, pmkb_url) AS(
-# 		SELECT gene_name, "",variants||"|", tumor_type, tissue_type,interpretations, citations, pmkb_url FROM interpretations
-# 		UNION ALL SELECT
-# 		gene_name,
-# 		substr(rest,0,instr(rest,"|")),
-# 		substr(rest, instr(rest,"|")+1),
-# 		tumor_type, tissue_type, interpretations, citations, pmkb_url
-# 		FROM split WHERE rest !=""	)
-# SELECT gene_name, variants, tumor_type, tissue_type, interpretations, citations, pmkb_url FROM split WHERE variants !="" 
+CREATE TABLE temporary_interpretations AS
+	WITH RECURSIVE split(gene_name, variants, rest, tumor_type, tissue_type, interpretations,citations, pmkb_url) AS(
+		SELECT gene_name, "",variants||"|", tumor_type, tissue_type,interpretations, citations, pmkb_url FROM interpretations
+		UNION ALL SELECT
+		gene_name,
+		substr(rest,0,instr(rest,"|")),
+		substr(rest, instr(rest,"|")+1),
+		tumor_type, tissue_type, interpretations, citations, pmkb_url
+		FROM split WHERE rest !=""	)
+SELECT gene_name, variants, tumor_type, tissue_type, interpretations, citations, pmkb_url FROM split WHERE variants !="" 
 
-
+'''
 
 def data_manipulation():
     '''
@@ -179,7 +180,7 @@ def data_manipulation():
     #iterate through specific column 
     for variant in range(len(variant_pmkb.loc[:,"achange"])):
         pos = variant_pmkb.loc[variant,"achange"]
-        get_missense  = re.search(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense|frameshift|insertion|deletion|any)$',pos)
+        get_missense  = re.search(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense|frameshift|insertion|deletion|any|indel)$',pos)
         # any_mutation = re.search(r'any\smutation', pos)
         any_category = re.search(r'^any\s*.*',pos)
         #Handling any category ex: any mutation, any frameshift
@@ -239,7 +240,11 @@ def data_manipulation():
                 elif 'codon' in pos and 'any' in pos:
                     pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sany$',f'_codon:{",".join(d).strip()}:any:_any:_any',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
-                    
+                #indel
+                elif 'exon' in pos and 'indel' in pos:
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sindel$',f'_exon:{",".join(d).strip()}:indel:_any:_any',pos)
+                    variant_pmkb.at[variant, 'achange'] = pos
+                         
         # elif 'any' not in pos and 'copy' not in pos and 'rearrangement' not in pos and 'exon' not in pos and 'codon' not in pos:
         #     pos = "p." + pos
         #     variant_pmkb.at[variant,'achange'] = pos
@@ -273,75 +278,38 @@ def variant_parsing_new():
                 variants_ds.loc[variant,'achange'] = v
                 # print(variants_ds.loc[variant,'achange'])
         elif desc == 'indel':
-            pass
-            # print(variants_ds.loc[variant,'achange'])
-            
-    variants_ds.to_csv('variant2.csv')
+            if '_codon' not in v and '_exon' not in v:
+                # print(variants_ds.loc[variant,'achange'])
+                if '_' in v and 'delins' in v:
+                    a_change_indel = re.search(r'(\w)(\d+)_(\w)(\d+)[a-z]+([A-Z0-9\s]+)',v)
+                    groups_indel = a_change_indel.groups()
+                    v = f'_codon:{groups_indel[1]}:{groups_indel[3]}:indel:{groups_indel[0]}X{groups_indel[2]}:{groups_indel[4]}'
+                    variants_ds.loc[variant,'achange'] = v
+                    # print(v)
+                else:
+                    a_change_indel = re.search(r'(\w)(\d+|\d+_\w\d+)[a-z]+(\w+|\s)',v)
+                    groups_indel = a_change_indel.groups()
+                    f = re.search(r'(\w)(\d+)_(\w)(\d+)[a-z]',"".join(groups_indel))
+                    if f:
+                        group_f = f.groups()
+                        v = f'_codon:{group_f[1]}:{group_f[3]}:indel:{group_f[0]}X{group_f[2]}:any'
+                        variants_ds.loc[variant,'achange'] = v
+                    
+                    else:
+                        v = f'_codon:{groups_indel[1]}:indel:{groups_indel[0]}:{groups_indel[2]}'
+                        variants_ds.loc[variant,'achange'] = v
+                    
+        elif desc == 'frameshift':
+            if '_codon' not in v and '_exon' not in v:
+                a_change_fs = re.search(r'(\w)(\d+)(?:\w+|\*)',v)
+                fs_groups = a_change_fs.groups()
+                v = f'_codon:{fs_groups[1]}:{desc}:{fs_groups[0]}:_any'
+                variants_ds.loc[variant, 'achange'] = v
+        elif desc == 'insertion':
+            if '_codon' not in v and '_exon' not in v:
+                print(v)
+    # variants_ds.to_csv('variant2.csv')
                 
 if __name__ == "__main__":
     main()
 
-    # print(variant_pmkb[:,"Variant"])
-    # codons = variant_pmkb['achange'][variant_pmkb['achange'].str.contains('codon')].values.tolist()
-    # variant_pmkb_variant = variant_pmkb[variant_pmkb['Variant']]
-    # codons = variant_pmkb_missense['achange'][variant_pmkb_missense['achange'].str.contains('codon')]
-    # exons = variant_pmkb_missense['achange'][variant_pmkb_missense['achange'].str.contains('exon')]
-    # codons = codons.reset_index(drop = True)
-    # exons = exons.reset_index(drop = True)
-    '''
-    Excerpt from data manipulation
-    
-    codons = variant_pmkb_missense['achange'][variant_pmkb_missense['achange'].str.contains('codon')]
-    exons = variant_pmkb_missense['achange'][variant_pmkb_missense['achange'].str.contains('exon')]
-    codons = codons.reset_index(drop = True)
-    exons = exons.reset_index(drop = True)
-
-    
-    
-    match = re.search(r'(\d.*)[^A-Za-z]',codons[0])
-    cod  = re.search(r'codon...\s\d*\smissense$',codons[0])
-    # print(cod)
-    # print(match)
-    # print(codons)
-    match = re.search(r'codon\(s\)\s(\d*.*[0-9])*\smissense$',codons[5]).groups()[0]
-    # match = re.search(r'codon\(s\)\s(\d+([^\d]?+))+missense$',codons[5]).groups()[0]
-    print(match.split(","))
-
-    print(match)
-    # print(re.sub(r'codon...\s[1-9]\s([,1-9])\smissense$',f'c.{s} missense',codons[20]))
-    # for row in range(len(codons)):
-    #     match = re.search(r'(\d.*)[^A-Za-z]',codons[row])
-    #     d = match.group().split(',')
-    #     # print(d)
-    #     if len(d) == 1:
-    #         codons[row] = re.sub(r'[codon|exon]\(s\)\s(\d*.*[0-9])*\smissense$',f'c.{d[0]} missense',codons[row])
-    #     elif len(d) > 1:
-    #         codons[row] = re.sub(r'[codon|exon]\(s\)\s(\d*.*[0-9])*\smissense$',f'_codon:{",".join(d)}:missense',codons[row])
-    #     print(codons[row])
-    #         # codons[row] = re.sub(r'codon...\s\d*\smissense$',f'_codon:{d}:missense',codons[row])
-        # print(row)
-        # print(codons.str.replace()
-    # example = re.compile(r'^codon...\s\d*.missense$')
-    # print(codons)
-    # p = example.search(codons[0])
-    # print(p)
-
-            # print(d)
-                # if len(d) == 1 and 'exon' in pos:
-                #     pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_exons.{d[0]}',pos)
-                #     variant_pmkb.at[variant, 'achange'] = pos
-                # elif len(d) == 1 and 'codon' in pos:
-                #     pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'c.{d[0]}',pos)
-                #     variant_pmkb.at[variant, 'achange'] = pos
-
-    # working on exons
-    for row in range(len(exons)):
-        match = re.search(r'(\d.*)[^A-Za-z]',exons[row])
-        d = match.group().split(',')
-        # print(d)
-        if len(d) == 1:
-            exons[row] = re.sub(r'[codon|exon]\(s\)\s(\d*.*[0-9])*\smissense$',f'_exons:{d[0]}:missense',exons[row])
-        elif len(d) > 1:
-            exons[row] = re.sub(r'[codon|exon]\(s\)\s(\d*.*[0-9])*\smissense$',f'_exon:{",".join(d).strip()}:missense',exons[row])
-        print(exons[row])
-    '''
