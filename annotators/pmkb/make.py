@@ -4,7 +4,6 @@ import numpy as np
 import re
 
 conn = sqlite3.connect('pmkb.sqlite')
-variant_pmkb = pd.read_csv('pmkb_variants.csv')
 interpretations_pmkb = pd.read_csv('pmkb_interpretations.csv')
 def main():
     data_manipulation()
@@ -163,7 +162,7 @@ def data_manipulation():
     Manipulates pmkb_variant dataset as converting codon(s) pos so to _codon:pos:so:ref_aa:alt_aa
 
         '''
-
+    variant_pmkb = pd.read_csv('pmkb_variants.csv')
     a_change = variant_pmkb.insert(
         loc = 2,
         column = 'achange',
@@ -171,11 +170,15 @@ def data_manipulation():
     )
     # print(variant_pmkb['achange'])
     variant_pmkb.drop('Description',inplace = True, axis = 1)
+    variant_pmkb.drop(variant_pmkb.index[variant_pmkb['Variant'] == 'CNV'], inplace = True)
+    variant_pmkb.drop(variant_pmkb.index[variant_pmkb['Variant'] == 'rearrangement'], inplace = True)
+    variant_pmkb = variant_pmkb[variant_pmkb['Amino Acid Change'] != 'Unknown']
+    variant_pmkb = variant_pmkb.reset_index(drop= True)
     # print(variant_pmkb['achange'].info())
     variant_pmkb['achange'] = variant_pmkb['achange'].str.join(" ")
-    variant_pmkb_missense = variant_pmkb.query('Variant == "missense"')
-    variant_pmkb_missense = variant_pmkb_missense.reset_index(drop = True)
-    aa = variant_pmkb_missense['achange'][~variant_pmkb_missense['achange'].str.contains('codon|exon|anymutation')]
+    # variant_pmkb_missense = variant_pmkb.query('Variant == "missense"')
+    # variant_pmkb_missense = variant_pmkb_missense.reset_index(drop = True)
+    # aa = variant_pmkb_missense['achange'][~variant_pmkb_missense['achange'].str.contains('codon|exon|anymutation')]
 
     #iterate through specific column 
     for variant in range(len(variant_pmkb.loc[:,"achange"])):
@@ -244,10 +247,13 @@ def data_manipulation():
                 elif 'exon' in pos and 'indel' in pos:
                     pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sindel$',f'_exon:{",".join(d).strip()}:indel:_any:_any',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
-                         
+                    print(pos)     
         # elif 'any' not in pos and 'copy' not in pos and 'rearrangement' not in pos and 'exon' not in pos and 'codon' not in pos:
         #     pos = "p." + pos
         #     variant_pmkb.at[variant,'achange'] = pos
+
+        #Delete rows with variant CNV and rearrangement
+    # variant_pmkb = variant_pmkb.drop(variant_pmkb[variant_pmkb['Variant'] == 'CNV'].index,inplace = True )
     variant_pmkb.to_csv('variant.csv')
 
 def variant_parsing_new():
@@ -274,7 +280,7 @@ def variant_parsing_new():
             if "_codon" not in v and '_exon' not in v:
                 a_change_nonsense = re.search(r'(\w)(\d+)(\*)',v)
                 groups_nonsense = a_change_nonsense.groups()
-                v = f'_codon:{groups_nonsense[1]}:{desc}:{groups_nonsense[0]}:stop'
+                v = f'_codon:{groups_nonsense[1]}:{desc}:{groups_nonsense[0]}:Ter'
                 variants_ds.loc[variant,'achange'] = v
                 # print(variants_ds.loc[variant,'achange'])
         elif desc == 'indel':
@@ -285,20 +291,18 @@ def variant_parsing_new():
                     groups_indel = a_change_indel.groups()
                     v = f'_codon:{groups_indel[1]}:{groups_indel[3]}:indel:{groups_indel[0]}X{groups_indel[2]}:{groups_indel[4]}'
                     variants_ds.loc[variant,'achange'] = v
-                    # print(v)
                 else:
                     a_change_indel = re.search(r'(\w)(\d+|\d+_\w\d+)[a-z]+(\w+|\s)',v)
                     groups_indel = a_change_indel.groups()
                     f = re.search(r'(\w)(\d+)_(\w)(\d+)[a-z]',"".join(groups_indel))
                     if f:
+                        
                         group_f = f.groups()
-                        v = f'_codon:{group_f[1]}:{group_f[3]}:indel:{group_f[0]}X{group_f[2]}:any'
+                        v = f'_codon:{group_f[1]}:{group_f[3]}:indel:{group_f[0]}X{group_f[2]}:{group_f[2]}'
                         variants_ds.loc[variant,'achange'] = v
-                    
                     else:
                         v = f'_codon:{groups_indel[1]}:indel:{groups_indel[0]}:{groups_indel[2]}'
                         variants_ds.loc[variant,'achange'] = v
-                    
         elif desc == 'frameshift':
             if '_codon' not in v and '_exon' not in v:
                 a_change_fs = re.search(r'(\w)(\d+)(?:\w+|\*)',v)
@@ -307,8 +311,23 @@ def variant_parsing_new():
                 variants_ds.loc[variant, 'achange'] = v
         elif desc == 'insertion':
             if '_codon' not in v and '_exon' not in v:
-                print(v)
-    # variants_ds.to_csv('variant2.csv')
+                achange_ins = re.search(r'(\w)(\d+)_(\w)(\d+)ins(\w+)',v)
+                groups_ins = achange_ins.groups()
+                v = f'_codon:{groups_ins[1]}:{groups_ins[3]}:{groups_ins[0]}_{groups_ins[2]}:{groups_ins[4]}'
+                variants_ds.loc[variant, 'achange'] = v
+        elif desc == 'deletion':
+            if '_codon' not in v and '_exon' not in v:
+                achange_del = re.search(r'(\w)(\d+)_?(\w?)(\d+)?del',v)
+                groups_del = achange_del.groups()
+                if groups_del[3] == None:
+                    v = f'_codon:{groups_del[1]}:{desc}:{groups_del[0]}'
+                    variants_ds.loc[variant,'achange'] = v
+                    print(v)
+                else:
+                    v = f'_codon:{groups_del[1]}:{groups_del[3]}:{desc}:{groups_del[0]}X{groups_del[2]}'
+                    variants_ds.loc[variant, 'achange'] = v
+                    # print(v)
+    variants_ds.to_csv('variant2.csv')
                 
 if __name__ == "__main__":
     main()
