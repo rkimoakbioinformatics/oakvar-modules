@@ -6,8 +6,9 @@ import re
 conn = sqlite3.connect('pmkb.sqlite')
 interpretations_pmkb = pd.read_csv('pmkb_interpretations.csv')
 def main():
-    data_manipulation()
-    variant_parsing_new()
+    # data_manipulation()
+    # variant_parsing_new()
+    exon_codon_trans()
     # interpretations =interpretations_cleaning(interpretations_pmkb)
     # interpretations_manipulation(interpretations)
 def interpretations_cleaning(interpretations_pmkb):
@@ -189,6 +190,7 @@ def data_manipulation():
         #Handling any category ex: any mutation, any frameshift
         if any_category:
             m = any_category.group().split(' ')
+            m[1] = '_any' if m[1] == 'mutation' else m[1]
             pos = re.sub(r'any\s*.*', f'_codon:_any:{m[1]}:_any:_any',pos)
             variant_pmkb.at[variant,'achange'] = pos
         # if any_mutation:
@@ -202,52 +204,52 @@ def data_manipulation():
                 d = match.group().split(',')
                 #misssense / nonsense
                 if 'exon' in pos and 'missense' in pos:
-                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_exon:{",".join(d).strip()}:missense:_any:_any',pos)
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_exon:{",".join(d).replace(" ","")}:missense:_any:_any',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
                 elif 'exon' in pos and 'nonsense' in pos:
-                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_exon:{",".join(d).strip()}:nonsense:_any:_any',pos)
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_exon:{",".join(d).replace(" ","")}:nonsense:_any:_any',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
                 
                 elif 'codon' in pos and'missense' in pos:
-                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_codon:{",".join(d).strip()}:missense:_any:_any',pos)
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_codon:{",".join(d).replace(" ","")}:missense:_any:_any',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
 
                 elif 'codon' in pos and 'nonsense' in pos:
-                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_codon:{",".join(d).strip()}:nonsense:_any:_any',pos)
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_codon:{",".join(d).replace(" ","")}:nonsense:_any:_any',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
                 #Frameshift
                 elif 'codon' in pos and 'frameshift' in pos:
-                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sframeshift$',f'_codon:{",".join(d).strip()}:frameshift:_any:_any',pos)
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sframeshift$',f'_codon:{",".join(d).replace(" ","")}:frameshift:_any:_any',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
                 elif 'exon' in pos and 'frameshift' in pos:
-                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sframeshift$',f'_exon:{",".join(d).strip()}:frameshift:_any:_any',pos)
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sframeshift$',f'_exon:{",".join(d).replace(" ","")}:frameshift:_any:_any',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
                 #insertion
                 elif 'codon' in pos and 'insertion' in pos:
-                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sinsertion$',f'_codon:{",".join(d).strip()}:insertion:_any:_any',pos)
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sinsertion$',f'_codon:{",".join(d).replace(" ","")}:insertion:_any:_any',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
                 elif 'exon' in pos and 'insertion' in pos:
-                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sinsertion$',f'_exon:{",".join(d).strip()}:insertion:_any:_any',pos)
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sinsertion$',f'_exon:{",".join(d).replace(" ","")}:insertion:_any:_any',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
                 #deletion
                 elif 'codon' in pos and 'deletion' in pos:
-                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sdeletion$',f'_codon:{",".join(d).strip()}:deletion:_any:_any',pos)
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sdeletion$',f'_codon:{",".join(d).replace(" ","")}:deletion:_any:_any',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
                 elif 'exon' in pos and 'deletion' in pos:
-                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sdeletion$',f'_exon:{",".join(d).strip()}:deletion:_any:_any',pos)
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sdeletion$',f'_exon:{",".join(d).replace(" ","")}:deletion:_any:_any',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
                 #any 
                 elif 'exon' in pos and 'any' in pos:
-                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sany$',f'_exon:{",".join(d).strip()}:any:_any:_any',pos)
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sany$',f'_exon:{",".join(d).replace(" ","")}:_any:_any:_any',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
                 elif 'codon' in pos and 'any' in pos:
-                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sany$',f'_codon:{",".join(d).strip()}:any:_any:_any',pos)
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sany$',f'_codon:{",".join(d).replace(" ","")}:_any:_any:_any',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
                 #indel
                 elif 'exon' in pos and 'indel' in pos:
-                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sindel$',f'_exon:{",".join(d).strip()}:indel:_any:_any',pos)
+                    pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sindel$',f'_exon:{",".join(d).replace(" ","")}:indel:_any:_any',pos)
                     variant_pmkb.at[variant, 'achange'] = pos
-                    print(pos)     
+                    
         # elif 'any' not in pos and 'copy' not in pos and 'rearrangement' not in pos and 'exon' not in pos and 'codon' not in pos:
         #     pos = "p." + pos
         #     variant_pmkb.at[variant,'achange'] = pos
@@ -268,19 +270,27 @@ def variant_parsing_new():
             if '_codon' not in v and '_exon' not in v:
                 ex = re.search(r'([a-zA-Z])([0-9]*_[A-Za-z0-9]*|[0-9]*)([A-Za-z]*.)',v)
                 groups = ex.groups()
-                f = re.search(r'(\w)(\d+)_(\w)(\d+).*',"".join(groups))
+                f = re.search(r'(\w)(\d+)_?(\w?)(\d+)?(delins|del)(\w)?',"".join(groups))
                 if f:
+                    
                     group_f = f.groups()
-                    v = f'_codon:{group_f[1]}:{group_f[3]}:indel:{group_f[0]}X{group_f[2]}:Y'
-                    variants_ds.loc[variant,'achange'] = v
+                    if group_f[4] == 'delins':
+                        v = f'_codon:{group_f[1]}:{group_f[3]}:indel:{group_f[0]}X{group_f[2]}:Y'
+                        variants_ds.loc[variant,'achange'] = v
+                    else:
+                        #D419del
+                        v = f'_codon:{group_f[1]}:{group_f[1]}:{group_f[4]}etion:{group_f[0]}:-'
+                        variants_ds.loc[variant, 'achange'] = v
+
                 else:
-                    v = f'_codon:{groups[1]}:{desc}:{groups[0]}:{groups[2]}'
+                    v = f'_codon:{groups[1]}:{groups[1]}:{desc}:{groups[0]}:{groups[2]}'
                     variants_ds.loc[variant,'achange'] = v
+                    
         elif desc == 'nonsense':
             if "_codon" not in v and '_exon' not in v:
                 a_change_nonsense = re.search(r'(\w)(\d+)(\*)',v)
                 groups_nonsense = a_change_nonsense.groups()
-                v = f'_codon:{groups_nonsense[1]}:{desc}:{groups_nonsense[0]}:Ter'
+                v = f'_codon:{groups_nonsense[1]}:{groups_nonsense[1]}:{desc}:{groups_nonsense[0]}:*'
                 variants_ds.loc[variant,'achange'] = v
                 # print(variants_ds.loc[variant,'achange'])
         elif desc == 'indel':
@@ -291,12 +301,12 @@ def variant_parsing_new():
                     groups_indel = a_change_indel.groups()
                     v = f'_codon:{groups_indel[1]}:{groups_indel[3]}:indel:{groups_indel[0]}X{groups_indel[2]}:{groups_indel[4]}'
                     variants_ds.loc[variant,'achange'] = v
+                    
                 else:
                     a_change_indel = re.search(r'(\w)(\d+|\d+_\w\d+)[a-z]+(\w+|\s)',v)
                     groups_indel = a_change_indel.groups()
                     f = re.search(r'(\w)(\d+)_(\w)(\d+)[a-z]',"".join(groups_indel))
                     if f:
-                        
                         group_f = f.groups()
                         v = f'_codon:{group_f[1]}:{group_f[3]}:indel:{group_f[0]}X{group_f[2]}:{group_f[2]}'
                         variants_ds.loc[variant,'achange'] = v
@@ -305,30 +315,98 @@ def variant_parsing_new():
                         variants_ds.loc[variant,'achange'] = v
         elif desc == 'frameshift':
             if '_codon' not in v and '_exon' not in v:
-                a_change_fs = re.search(r'(\w)(\d+)(?:\w+|\*)',v)
+                a_change_fs = re.search(r'(\w)(\d+)(?:\w+|(\*)?)',v)
                 fs_groups = a_change_fs.groups()
-                v = f'_codon:{fs_groups[1]}:{desc}:{fs_groups[0]}:_any'
-                variants_ds.loc[variant, 'achange'] = v
+                if fs_groups[2]:
+                    v = f'_codon:{fs_groups[1]}:{desc}:{fs_groups[0]}:*'
+                    variants_ds.loc[variant,'achange'] = v
+                else:
+                    v = f'_codon:{fs_groups[1]}:{desc}:{fs_groups[0]}:-'
+                    variants_ds.loc[variant, 'achange'] = v
+
         elif desc == 'insertion':
             if '_codon' not in v and '_exon' not in v:
                 achange_ins = re.search(r'(\w)(\d+)_(\w)(\d+)ins(\w+)',v)
                 groups_ins = achange_ins.groups()
-                v = f'_codon:{groups_ins[1]}:{groups_ins[3]}:{groups_ins[0]}_{groups_ins[2]}:{groups_ins[4]}'
+                v = f'_codon:{groups_ins[3]}:{groups_ins[3]}:{desc}:-:{groups_ins[4]}'
                 variants_ds.loc[variant, 'achange'] = v
         elif desc == 'deletion':
             if '_codon' not in v and '_exon' not in v:
                 achange_del = re.search(r'(\w)(\d+)_?(\w?)(\d+)?del',v)
                 groups_del = achange_del.groups()
                 if groups_del[3] == None:
-                    v = f'_codon:{groups_del[1]}:{desc}:{groups_del[0]}'
+                    v = f'_codon:{groups_del[1]}:{desc}:{groups_del[0]}:-'
                     variants_ds.loc[variant,'achange'] = v
-                    print(v)
                 else:
-                    v = f'_codon:{groups_del[1]}:{groups_del[3]}:{desc}:{groups_del[0]}X{groups_del[2]}'
+                    v = f'_codon:{groups_del[1]}:{groups_del[3]}:{desc}:{groups_del[0]}X{groups_del[2]}:-'
                     variants_ds.loc[variant, 'achange'] = v
-                    # print(v)
     variants_ds.to_csv('variant2.csv')
-                
+
+def exon_codon_trans():
+    conn = sqlite3.connect('../../../oakvar_modules/mappers/gencode/data/gene_43_10000.sqlite')
+    conn_pmkb = sqlite3.connect('pmkb.sqlite')
+    variants_ds = pd.read_csv('variant2.csv')
+    c = conn.cursor()
+    pmkb = conn_pmkb.cursor()
+    for row in variants_ds.index:
+        if '_exon' in variants_ds.loc[row , 'achange']:
+            data = variants_ds.loc[row,'achange'].split(":")
+            print(data)
+            if "," in variants_ds.loc[row,'achange']:
+                exon = variants_ds.loc[row,'achange'].split(":")[1].split(",")
+            elif "-" in variants_ds.loc[row,'achange']:
+                exon = variants_ds.loc[row,'achange'].split(":")[1].split("-")
+            else:
+                exon = variants_ds.loc[row,'achange'].split(":")[1]
+            print(exon)
+            cstart = []
+            for exon_no in exon:
+                exon_no = int(exon_no)
+                print(exon_no)
+            # print(variants_ds.loc[row,'Transcript ID (GRCh37/hg19)'])
+                t = variants_ds.loc[row, 'Transcript ID (GRCh37/hg19)']
+                # print(t)
+                c.execute("""
+                SELECT
+                    chrom
+                FROM
+                    chroms
+                WHERE 
+                    chromid = (
+                    SELECT 
+                        chromid
+                    FROM 
+                        transcript
+                    WHERE 
+                        name LIKE :transcript)
+                """, {"transcript": t+"%"})
+                chromd = c.fetchmany()[0]
+                c.execute(
+                    """
+                    SELECT 
+                        tid
+                    FROM 
+                        transcript
+                    WHERE 
+                        name LIKE :transcript
+                    """, {"transcript": t+"%"}
+                )
+                tid = c.fetchall()[0][0]
+                # print(tid)
+                t_name = f'transcript_frags_{chromd[0]}'
+                # print(t_name)
+                f = f'SELECT cstart FROM {t_name} WHERE tid = {tid} AND kind = 8 AND exonno = {exon_no - 1}'
+                c.execute(f)
+                f_f = c.fetchmany()
+                cstart.append(f_f[0][0]//3  + 1)
+                # print(f_f)
+            codon_no = ",".join([str(i) for i in cstart])
+            variants_ds.loc[row,'achange'] = f'_codon:{codon_no}:{data[2]}:{data[3]}:{data[4]}'
+            print(variants_ds.loc[row,'achange'])
+            # print(codon_no)
+            # print(cstart)
+            break
+
 if __name__ == "__main__":
     main()
 
