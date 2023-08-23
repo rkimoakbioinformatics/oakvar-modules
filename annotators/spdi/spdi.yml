@@ -1,18 +1,8 @@
-##################################
-#
-# Mandatory fields
-#
-##################################
 title: spdi
 description: This is an OakVar annotator module.
 type: annotator
 level: variant
-version: 0.0.1
-
-# If your module does not have its own data under module_dir/data folder,
-# remove data_version field and uncomment no_data field.
-data_version: 0.0.1
-# no_data: true
+version: 0.0.2
 
 input_format: crv
 output_columns:
@@ -33,30 +23,18 @@ developer:
     website: ''
     citation: ''
 
-#################################
-#
-# Optional fields
-#
-#################################
 tags:
-- clinical relevance
-
-# If your module depends on other OakVar modules, 
-# list them below and uncomment.
-
-# requires:
-# - oakvar_module_name
-
-# If your module depends on PyPI packages,
-# list the name of the PyPI packages below and uncommont.
-
-# pypi_dependency:
-# - sqlite3
-
-# If your module works with OakVar versions higher than
-# a number, uncomment below and put the number.
-
-# requires_oakvar: "2.8.0"
+- spdi notation
+requires:
+- oakvar.get_wgs_reader
+internal_dependencies:
+- scripts.Variant
 
 release_note:
-  0.0.1: initial version
+  0.0.2:
+  Refactored spdi.py to seperate Variant classification and conversion in seperate scripts directory. 
+  Added test cases for available classification and conversion scripts based on pytest.
+  Added Unclassified variant classification to better handle edge cases in future testing scenarios. 
+
+  0.0.1:
+  Initial release of spdi module.
