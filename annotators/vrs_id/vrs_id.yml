@@ -20,7 +20,7 @@ output_columns:
   title: VRS Computed Identifier
   type: string
 developer:
-  module: vrs_id
+  module:
     name: Martin Stoves and Ryangguk Kim 
     organization: Oak Bioinformatics LLC
     email: martin.stoves@hotmail.com, rkim@oakbioinformatics.com
@@ -51,9 +51,7 @@ tags:
 # list the name of the PyPI packages below and uncomment.
 
 pypi_dependency:
-- warnings
-- ga4gh.vrs[extras]
-- biocommons
+- 'ga4gh.vrs[extras]'
 
 
 # If your module works with OakVar versions higher than
