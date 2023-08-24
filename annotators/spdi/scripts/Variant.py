@@ -28,6 +28,7 @@ class Variant(ABC):
         importlib.import_module('scripts.SNP')
         importlib.import_module('scripts.SnInsertion')
         importlib.import_module('scripts.SnDeletion')
+        importlib.import_module('scripts.MnInsertion')
         
         for subclass in cls.__subclasses__():
             print(f"Checking subclass: {subclass.__name__}") # Print subclass name
