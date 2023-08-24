@@ -11,8 +11,18 @@ widgetGenerators['base'] = {
             if (hugo != null) {
                 addInfoLine(div, 'Gene', hugo, tabName);
             }
-            addInfoLine(div, 'Chrom', getWidgetData(tabName, 'base', row, 'chrom'), tabName);
-            addInfoLine(div, 'Position', getWidgetData(tabName, 'base', row, 'pos'), tabName);
+
+			var chrom = getWidgetData(tabName, 'base', row, 'chrom')
+            addInfoLine(div, 'Chrom', chrom, tabName);
+
+			var pos_start = getWidgetData(tabName, 'base', row, 'pos')
+			var pos_end = getWidgetData(tabName, 'base', row, 'pos_end')
+			var post_start_end = pos_start + '-' + pos_end
+
+			var ucsc_link = "https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg38&position=" + chrom + "%3A" + post_start_end
+
+			addInfoLineLink(div, 'Position:', post_start_end, ucsc_link, 30);
+
             addInfoLine(div, 'Ref base(s)', getWidgetData(tabName, 'base', row, 'ref_base'), tabName);
             addInfoLine(div, 'Alt base(s)', getWidgetData(tabName, 'base', row, 'alt_base'), tabName);
             var sample = getWidgetData(tabName, 'base', row, 'sample_id');
@@ -39,7 +49,7 @@ widgetGenerators['base'] = {
                     table.style.tableLayout = 'auto';
 					table.style.width = '100%';
 					var thead = getWidgetTableHead(['Gene', 'UniProt', 'Prot Chng', 'cDNA Chng',
-						'Seq Ont', 'Transcript', 'Exon #'], ['100', '100', '100', '100', '200', '200', '50']);
+						'Seq Ont', 'Transcript'], ['8%', '10%', '15%', '17%', '28%', '22%']);
 					addEl(table, thead);
 					var tbody = getEl('tbody');
 					var hugos = Object.keys(allMappings);
@@ -50,11 +60,10 @@ widgetGenerators['base'] = {
 							var uniprot_d = uniprot_ds[j];
 							var uniprot = uniprot_d[0];
 							var aachange = uniprot_d[1];
-              var so = uniprot_d[2].split(',').join(', ');
+                            so = uniprot_d[2].split(',').join(', ');
 							var transcript = uniprot_d[3];
-              var cchange = uniprot_d[4];
-              var exonno = uniprot_d[5];
-							var tr = getWidgetTableTr([hugo, uniprot, aachange, cchange, so, transcript, exonno]);
+                            var cchange = uniprot_d[4];
+							var tr = getWidgetTableTr([hugo, uniprot, aachange, cchange, so, transcript]);
 							addEl(tbody, tr);
 						}
 					}
