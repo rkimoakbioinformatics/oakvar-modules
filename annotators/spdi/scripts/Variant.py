@@ -28,6 +28,7 @@ class Variant(ABC):
         importlib.import_module('scripts.SNP')
         importlib.import_module('scripts.SnInsertion')
         importlib.import_module('scripts.SnDeletion')
+        importlib.import_module('scripts.MNP')
         importlib.import_module('scripts.MnInsertion')
         importlib.import_module('scripts.MnDeletion')
         
