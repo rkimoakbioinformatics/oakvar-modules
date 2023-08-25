@@ -1,0 +1,3443 @@
+2023/08/25 23:09:59 oakvar               /home/mohit/miniconda3/envs/SPDI_Task/bin/ov run exampleinput -a spdi
+2023/08/25 23:09:59 oakvar               started: Fri Aug 25 23:09:59 2023
+2023/08/25 23:09:59 oakvar               conf file: None
+2023/08/25 23:09:59 oakvar               started OakVar
+2023/08/25 23:09:59 oakvar               input file: /home/mohit/.oakvar/modules/annotators/spdi/exampleinput
+2023/08/25 23:09:59 oakvar               system: oakvar==2.9.36 /home/mohit/miniconda3/envs/SPDI_Task/lib/python3.9/site-packages/oakvar
+2023/08/25 23:09:59 oakvar               module: spdi==0.0.2 /home/mohit/.oakvar/modules/annotators/spdi/spdi.py
+2023/08/25 23:09:59 oakvar               module: gencode==43.0.1 /home/mohit/.oakvar/modules/mappers/gencode/gencode.py
+2023/08/25 23:09:59 oakvar               starting converter step...
+2023/08/25 23:09:59 oakvar               running converter
+2023/08/25 23:09:59 oakvar.converter     started converter
+2023/08/25 23:09:59 oakvar.converter     detecting encoding of /home/mohit/.oakvar/modules/annotators/spdi/exampleinput
+2023/08/25 23:09:59 oakvar.converter     encoding: /home/mohit/.oakvar/modules/annotators/spdi/exampleinput utf-8
+2023/08/25 23:09:59 oakvar.converter     Using cravat-converter for /home/mohit/.oakvar/modules/annotators/spdi/exampleinput
+2023/08/25 23:09:59 oakvar.converter     module: cravat-converter==2.0.1 /home/mohit/.oakvar/modules/converters/cravat-converter/cravat-converter.py
+2023/08/25 23:09:59 oakvar.converter     input file: /home/mohit/.oakvar/modules/annotators/spdi/exampleinput
+2023/08/25 23:09:59 oakvar.converter     input format: cravat
+2023/08/25 23:09:59 oakvar.converter     genome_assembly: hg38
+2023/08/25 23:09:59 oakvar.converter     liftover needed: False
+2023/08/25 23:09:59 oakvar.converter     liftover for chrM needed: False
+2023/08/25 23:09:59 oakvar.converter     /home/mohit/.oakvar/modules/annotators/spdi/exampleinput: number of valid variants: 373
+2023/08/25 23:09:59 oakvar.converter     /home/mohit/.oakvar/modules/annotators/spdi/exampleinput: number of lines skipped due to errors: 0
+2023/08/25 23:09:59 oakvar.converter     total number of valid variants: 373
+2023/08/25 23:09:59 oakvar.converter     total number of lines skipped due to errors: 0
+2023/08/25 23:09:59 oakvar.converter     finished: Fri Aug 25 23:09:59 2023
+2023/08/25 23:09:59 oakvar.converter     runtime: 0.015
+2023/08/25 23:09:59 oakvar.converter     finished Converter
+2023/08/25 23:09:59 oakvar               converter step finished in 0.201s
+2023/08/25 23:09:59 oakvar               starting preparer step...
+2023/08/25 23:09:59 oakvar               preparer step finished in 0.000s
+2023/08/25 23:09:59 oakvar               starting mapper step...
+2023/08/25 23:09:59 oakvar               num_workers: 1
+2023/08/25 23:09:59 oakvar               input line chunksize=373 total number of input lines=382 number of chunks=1
+2023/08/25 23:09:59 oakvar.mapper        input file: /home/mohit/.oakvar/modules/annotators/spdi/exampleinput.crv
+2023/08/25 23:10:00 oakvar.mapper        started: Fri Aug 25 23:10:00 2023 | 0
+2023/08/25 23:10:00 oakvar.mapper        started GENCODE Mapper (gencode)
+2023/08/25 23:10:00 oakvar.mapper        finished: Fri Aug 25 23:10:00 2023 | 0
+2023/08/25 23:10:00 oakvar.mapper        runtime:  0.108
+2023/08/25 23:10:01 oakvar               mapper step finished in 1.715s
+2023/08/25 23:10:01 oakvar               starting annotator step...
+2023/08/25 23:10:01 oakvar               num_workers: 1
+2023/08/25 23:10:01 oakvar.spdi          started spdi (spdi)
+2023/08/25 23:10:01 oakvar.spdi          started: Fri Aug 25 23:10:01 2023
+Classifying variant: chrom=chr10, pos=121593817, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr10, pos=2987654, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr10, pos=43077259, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr10, pos=8055656, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr10, pos=87864470, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr10, pos=87864486, ref_base=A, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: True
+Left Context: A
+Right Context: A
+Ref Base: AAA
+Alt Base: AA
+1
+Classifying variant: chrom=chr10, pos=87864486, ref_base=AA, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: AA
+Alt Base: -
+Shifted position: 87864486
+Classifying variant: chrom=chr10, pos=87894027, ref_base=-, alt_base=CG
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 87894027 to 87894028: AT
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: CG
+Shifted position: 87894027
+Classifying variant: chrom=chr10, pos=87894027, ref_base=-, alt_base=CT
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 87894027 to 87894028: AT
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: CT
+Shifted position: 87894027
+Classifying variant: chrom=chr1, pos=100719861, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=10100, ref_base=C, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=110340653, ref_base=CGGCTTT, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: CGGCTTT
+Alt Base: -
+Shifted position: 110340653
+Classifying variant: chrom=chr11, pos=108227625, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr11, pos=113789394, ref_base=G, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=111762684, ref_base=G, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr11, pos=119206418, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=114713881, ref_base=TGGTC, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: TGGTC
+Alt Base: -
+Shifted position: 114713881
+Classifying variant: chrom=chr1, pos=114713881, ref_base=TGGTCTC, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: TGGTCTC
+Alt Base: -
+Shifted position: 114713881
+Classifying variant: chrom=chr1, pos=114716160, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr11, pos=1584916, ref_base=-, alt_base=GCC
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 1584916 to 1584918: AAG
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: GCC
+Shifted position: 1584916
+Classifying variant: chrom=chr1, pos=11847684, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=12000, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=120069406, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=12644547, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=12666560, ref_base=G, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=12666689, ref_base=C, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr11, pos=32430539, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr11, pos=35206205, ref_base=A, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr11, pos=534322, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=154869723, ref_base=-, alt_base=GCT
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 154869723 to 154869725: Ggc
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: GCT
+Shifted position: 154869723
+Classifying variant: chrom=chr1, pos=155206796, ref_base=C, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=155206797, ref_base=G, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=155208796, ref_base=G, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=155208797, ref_base=T, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=155208824, ref_base=C, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=155210348, ref_base=C, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=155213392, ref_base=G, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=155213393, ref_base=T, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=155213394, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=155213481, ref_base=C, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=155213482, ref_base=A, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=155213483, ref_base=G, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=155213823, ref_base=A, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=155213824, ref_base=C, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=155215823, ref_base=C, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=155215824, ref_base=A, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=157790, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr11, pos=64810053, ref_base=-, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: True
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: A
+0
+Classifying variant: chrom=chr11, pos=64810109, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr11, pos=6718320, ref_base=T, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr11, pos=69641314, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr11, pos=8263362, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=193122201, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=204525519, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr12, pos=101395640, ref_base=T, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr12, pos=112419112, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr12, pos=120978769, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr12, pos=123619507, ref_base=A, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr12, pos=123619689, ref_base=A, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: True
+Left Context: 
+Right Context: 
+Ref Base: A
+Alt Base: -
+0
+Classifying variant: chrom=chr12, pos=25209822, ref_base=C, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr12, pos=25227263, ref_base=A, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: True
+Left Context: 
+Right Context: 
+Ref Base: A
+Alt Base: -
+0
+Classifying variant: chrom=chr12, pos=25245372, ref_base=T, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr12, pos=25245378, ref_base=-, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: True
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: A
+0
+Classifying variant: chrom=chr12, pos=25245378, ref_base=-, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: True
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: C
+0
+Classifying variant: chrom=chr12, pos=25245384, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=22563636, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=22586480, ref_base=C, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=226064352, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=235181776, ref_base=G, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=235255683, ref_base=GTTA, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: GTTA
+Alt Base: -
+Shifted position: 235255683
+Classifying variant: chrom=chr12, pos=45729837, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr12, pos=50081180, ref_base=-, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: True
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: T
+0
+Classifying variant: chrom=chr12, pos=51951744, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=26696404, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr12, pos=68809212, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr12, pos=8845496, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr12, pos=8852253, ref_base=C, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr12, pos=9261271, ref_base=A, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=30000, ref_base=T, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=31500, ref_base=T, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr13, pos=28100510, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr13, pos=32316461, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr13, pos=48303913, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=3694500, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=39623, ref_base=T, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=39623, ref_base=TG, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: TG
+Alt Base: -
+Shifted position: 39623
+Classifying variant: chrom=chr1, pos=39624, ref_base=T, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr14, pos=104775212, ref_base=-, alt_base=GG
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 104775212 to 104775213: GG
+Checking bases at pos 104775214 to 104775215: GC
+Final right_context: GG
+Left Context: 
+Right Context: GG
+Ref Base: GG
+Alt Base: GGGG
+Shifted position: 104775212
+Classifying variant: chrom=chr14, pos=104792643, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=42000, ref_base=C, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=43337849, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr14, pos=36519357, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr14, pos=45223925, ref_base=GTTTCTGT, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: GTTTCTGT
+Alt Base: -
+Shifted position: 45223925
+Classifying variant: chrom=chr1, pos=45886, ref_base=G, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=45988, ref_base=T, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr14, pos=80955681, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr14, pos=92039685, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=50970369, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=532970, ref_base=T, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr15, pos=44711547, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr15, pos=45201222, ref_base=A, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr15, pos=45201223, ref_base=T, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr15, pos=45363947, ref_base=-, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: True
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: T
+0
+Classifying variant: chrom=chr15, pos=45364871, ref_base=-, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: True
+Left Context: 
+Right Context: AAAAAAAA
+Ref Base: AAAAAAAA
+Alt Base: AAAAAAAAA
+0
+Classifying variant: chrom=chr15, pos=45364907, ref_base=TA, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: TA
+Alt Base: -
+Shifted position: 45364907
+Classifying variant: chrom=chr15, pos=45364907, ref_base=TAT, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: TATTATTAT
+Left Context: 
+Right Context: TATTATTAT
+Ref Base: TATTATTATTAT
+Alt Base: TATTATTAT
+Shifted position: 45364907
+Classifying variant: chrom=chr15, pos=45376607, ref_base=C, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr15, pos=45378453, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr15, pos=45433048, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr15, pos=45433049, ref_base=C, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr15, pos=45433050, ref_base=T, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr15, pos=45433061, ref_base=C, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr15, pos=48717160, ref_base=G, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr15, pos=48793359, ref_base=T, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr15, pos=66387348, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr15, pos=90102390, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=59868328, ref_base=G, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr16, pos=11255478, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr16, pos=2163921, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr16, pos=347025, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr16, pos=3879916, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=64886264, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr16, pos=50749699, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr16, pos=68737416, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr16, pos=70463695, ref_base=A, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr16, pos=70470418, ref_base=-, alt_base=TG
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 70470418 to 70470419: CA
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: TG
+Shifted position: 70470418
+Classifying variant: chrom=chr16, pos=70478610, ref_base=G, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: True
+Left Context: 
+Right Context: G
+Ref Base: GG
+Alt Base: G
+0
+Classifying variant: chrom=chr17, pos=12020887, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=16194569, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=18512065, ref_base=TATT, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: TATT
+Alt Base: -
+Shifted position: 18512065
+Classifying variant: chrom=chr17, pos=21703215, ref_base=C, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: True
+Left Context: C
+Right Context: 
+Ref Base: CC
+Alt Base: C
+1
+Classifying variant: chrom=chr17, pos=31095310, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=31169906, ref_base=TGTT, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: TGTT
+Left Context: 
+Right Context: TGTT
+Ref Base: TGTTTGTT
+Alt Base: TGTT
+Shifted position: 31169906
+Classifying variant: chrom=chr17, pos=31206362, ref_base=-, alt_base=CCCC
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 31206362 to 31206365: AATG
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: CCCC
+Shifted position: 31206362
+Classifying variant: chrom=chr17, pos=31327741, ref_base=-, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: True
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: C
+0
+Classifying variant: chrom=chr17, pos=31327741, ref_base=-, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: True
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: T
+0
+Classifying variant: chrom=chr17, pos=31343157, ref_base=-, alt_base=TATT
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 31343157 to 31343160: TATT
+Checking bases at pos 31343161 to 31343164: TTTA
+Final right_context: TATT
+Left Context: 
+Right Context: TATT
+Ref Base: TATT
+Alt Base: TATTTATT
+Shifted position: 31343157
+Classifying variant: chrom=chr17, pos=37101975, ref_base=-, alt_base=TC
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 37101975 to 37101976: tc
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: TC
+Shifted position: 37101975
+Classifying variant: chrom=chr17, pos=37284933, ref_base=G, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=39707007, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=41617436, ref_base=C, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=41617437, ref_base=C, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=41619436, ref_base=A, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=41619437, ref_base=T, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=41624183, ref_base=G, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=41624191, ref_base=C, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=41624577, ref_base=G, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=41624578, ref_base=G, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=41626577, ref_base=C, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=41626578, ref_base=C, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=43047643, ref_base=C, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=43079400, ref_base=C, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=43079401, ref_base=T, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=43079402, ref_base=G, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=43082401, ref_base=C, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=43082402, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=43082403, ref_base=C, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=43124096, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=47310187, ref_base=-, alt_base=AAAAA
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 47310187 to 47310191: ACGTA
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: AAAAA
+Shifted position: 47310187
+Classifying variant: chrom=chr17, pos=47310203, ref_base=-, alt_base=CCC
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 47310203 to 47310205: AAT
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: CCC
+Shifted position: 47310203
+Classifying variant: chrom=chr17, pos=49622810, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=58415577, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=61861539, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=68515400, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=72121392, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=7673369, ref_base=-, alt_base=GT
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 7673369 to 7673370: GT
+Checking bases at pos 7673371 to 7673372: GT
+Checking bases at pos 7673373 to 7673374: TC
+Final right_context: GTGT
+Left Context: 
+Right Context: GTGT
+Ref Base: GTGT
+Alt Base: GTGTGT
+Shifted position: 7673369
+Classifying variant: chrom=chr17, pos=76737160, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=7674797, ref_base=T, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr17, pos=7674904, ref_base=T, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: True
+Left Context: TT
+Right Context: 
+Ref Base: TTT
+Alt Base: TT
+2
+Classifying variant: chrom=chr17, pos=7674904, ref_base=TC, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: TC
+Alt Base: -
+Shifted position: 7674904
+Classifying variant: chrom=chr17, pos=7675096, ref_base=-, alt_base=ACCTC
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 7675096 to 7675100: AACCT
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: ACCTC
+Shifted position: 7675096
+Classifying variant: chrom=chr17, pos=7675153, ref_base=GGGCGGGGGT, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: GGGCGGGGGT
+Alt Base: -
+Shifted position: 7675153
+Classifying variant: chrom=chr17, pos=7676594, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=77979004, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=7965337, ref_base=-, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: True
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: C
+0
+Classifying variant: chrom=chr1, pos=7965337, ref_base=-, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: True
+Left Context: 
+Right Context: TT
+Ref Base: TT
+Alt Base: TTT
+0
+Classifying variant: chrom=chr1, pos=7965348, ref_base=G, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=7970884, ref_base=-, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: True
+Left Context: C
+Right Context: 
+Ref Base: C
+Alt Base: CC
+1
+Classifying variant: chrom=chr1, pos=7970884, ref_base=-, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: True
+Left Context: 
+Right Context: TTTT
+Ref Base: TTTT
+Alt Base: TTTTT
+0
+Classifying variant: chrom=chr1, pos=7984955, ref_base=GCC, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: GCC
+Alt Base: -
+Shifted position: 7984955
+Classifying variant: chrom=chr18, pos=44701347, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr18, pos=45622439, ref_base=C, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr18, pos=45666191, ref_base=G, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr18, pos=47896756, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr18, pos=51047047, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr18, pos=54269588, ref_base=CGA, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: CGA
+Alt Base: -
+Shifted position: 54269588
+Classifying variant: chrom=chr18, pos=54292038, ref_base=TGTAA, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: TGTAA
+Alt Base: -
+Shifted position: 54292038
+Classifying variant: chrom=chr18, pos=63318666, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr19, pos=10194899, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr19, pos=10984152, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr19, pos=1206914, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr19, pos=17844417, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr1, pos=925942, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr19, pos=3094652, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr19, pos=33302414, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr19, pos=42271784, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr19, pos=44819487, ref_base=A, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr19, pos=48955597, ref_base=G, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: True
+Left Context: 
+Right Context: GGG
+Ref Base: GGGG
+Alt Base: GGG
+0
+Classifying variant: chrom=chr19, pos=49423274, ref_base=CAG, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: CAG
+Alt Base: -
+Shifted position: 49423274
+Classifying variant: chrom=chr19, pos=52190097, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr19, pos=55358971, ref_base=G, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: True
+Left Context: 
+Right Context: GG
+Ref Base: GGG
+Alt Base: GG
+0
+Classifying variant: chrom=chr20, pos=117745, ref_base=A, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: True
+Left Context: 
+Right Context: 
+Ref Base: A
+Alt Base: -
+0
+Classifying variant: chrom=chr20, pos=32358776, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr20, pos=47622248, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr20, pos=52414564, ref_base=-, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: True
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: C
+0
+Classifying variant: chrom=chr20, pos=52414564, ref_base=-, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: True
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: T
+0
+Classifying variant: chrom=chr20, pos=58840107, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr2, pos=112482345, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr2, pos=115309348, ref_base=C, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr2, pos=115343913, ref_base=G, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr2, pos=132147927, ref_base=C, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr21, pos=34887112, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr2, pos=135837169, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr21, pos=43095723, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr2, pos=15942065, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr2, pos=177234268, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr2, pos=197434999, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr2, pos=201266487, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr2, pos=208251551, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr2, pos=218270086, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr22, pos=23787170, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr22, pos=24762499, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr22, pos=29603999, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr22, pos=29971060, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr2, pos=233772515, ref_base=A, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr22, pos=36284226, ref_base=G, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr22, pos=36293464, ref_base=CTC, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: CTC
+Left Context: 
+Right Context: CTC
+Ref Base: CTCCTC
+Alt Base: CTC
+Shifted position: 36293464
+Classifying variant: chrom=chr22, pos=36295649, ref_base=G, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr22, pos=36301557, ref_base=C, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr22, pos=36309321, ref_base=G, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr22, pos=40463227, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr22, pos=41093005, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr2, pos=25313984, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr2, pos=29920659, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr2, pos=47403192, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr2, pos=47783234, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr3, pos=10141848, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr3, pos=116584450, ref_base=-, alt_base=CAAA
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 116584450 to 116584453: TACT
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: CAAA
+Shifted position: 116584450
+Classifying variant: chrom=chr3, pos=128487031, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr3, pos=138946722, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr3, pos=146085328, ref_base=C, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr3, pos=179198726, ref_base=AT, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: AT
+Left Context: 
+Right Context: AT
+Ref Base: ATAT
+Alt Base: AT
+Shifted position: 179198726
+Classifying variant: chrom=chr3, pos=179198826, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr3, pos=179210602, ref_base=-, alt_base=CC
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 179210602 to 179210603: TA
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: CC
+Shifted position: 179210602
+Classifying variant: chrom=chr3, pos=179234287, ref_base=A, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: True
+Left Context: 
+Right Context: A
+Ref Base: AA
+Alt Base: A
+0
+Classifying variant: chrom=chr3, pos=36993548, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr3, pos=38138662, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr3, pos=41194775, ref_base=C, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr3, pos=41224069, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr3, pos=47163924, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr3, pos=52409878, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr3, pos=52679711, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr4, pos=105233943, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr4, pos=152382335, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr4, pos=1793935, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr4, pos=1801945, ref_base=C, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: True
+Left Context: CCC
+Right Context: 
+Ref Base: CCCC
+Alt Base: CCC
+3
+Classifying variant: chrom=chr4, pos=1804372, ref_base=A, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr4, pos=54258769, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr4, pos=54658015, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr4, pos=85972104, ref_base=T, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: True
+Left Context: 
+Right Context: T
+Ref Base: TT
+Alt Base: T
+0
+Classifying variant: chrom=chr5, pos=112754891, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr5, pos=141505474, ref_base=C, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr5, pos=150086427, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr5, pos=171387949, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr5, pos=180603295, ref_base=-, alt_base=CC
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 180603295 to 180603296: TG
+Final right_context: 
+Left Context: CC
+Right Context: 
+Ref Base: CC
+Alt Base: CCCC
+Shifted position: 180603293
+Classifying variant: chrom=chr5, pos=36152263, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr5, pos=56815574, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr5, pos=68226676, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr6, pos=106088267, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr6, pos=135429934, ref_base=G, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr6, pos=135455775, ref_base=G, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr6, pos=135455847, ref_base=T, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr6, pos=137871228, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr6, pos=143511540, ref_base=G, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr6, pos=156777930, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr6, pos=26032060, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr6, pos=30715175, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr6, pos=33321925, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr6, pos=42929620, ref_base=-, alt_base=AAA
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 42929620 to 42929622: tgc
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: AAA
+Shifted position: 42929620
+Classifying variant: chrom=chr6, pos=42929621, ref_base=-, alt_base=ACC
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 42929621 to 42929623: gct
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: ACC
+Shifted position: 42929621
+Classifying variant: chrom=chr6, pos=87464168, ref_base=ACTTGGCTGGTCTTCGTG, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: ACTTGGCTGGTCTTCGTG
+Alt Base: -
+Shifted position: 87464168
+Classifying variant: chrom=chr6, pos=87464182, ref_base=-, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: True
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: A
+0
+Classifying variant: chrom=chr6, pos=87464182, ref_base=CG, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: CG
+Alt Base: -
+Shifted position: 87464182
+Classifying variant: chrom=chr6, pos=87464197, ref_base=-, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: True
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: T
+0
+Classifying variant: chrom=chr6, pos=87464206, ref_base=GA, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: GA
+Alt Base: -
+Shifted position: 87464206
+Classifying variant: chrom=chr6, pos=87464208, ref_base=-, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: True
+Left Context: A
+Right Context: 
+Ref Base: A
+Alt Base: AA
+1
+Classifying variant: chrom=chr6, pos=87464233, ref_base=-, alt_base=ACACGT
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 87464233 to 87464238: GATGTG
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: ACACGT
+Shifted position: 87464233
+Classifying variant: chrom=chr6, pos=87464233, ref_base=-, alt_base=ACACGTACACGT
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 87464233 to 87464244: GATGTGGATGAA
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: ACACGTACACGT
+Shifted position: 87464233
+Classifying variant: chrom=chr6, pos=87464233, ref_base=G, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr6, pos=87464233, ref_base=GA, alt_base=CT
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: True
+Classifying variant: chrom=chr6, pos=87464233, ref_base=-, alt_base=GAT
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 87464233 to 87464235: GAT
+Checking bases at pos 87464236 to 87464238: GTG
+Final right_context: GAT
+Left Context: 
+Right Context: GAT
+Ref Base: GAT
+Alt Base: GATGAT
+Shifted position: 87464233
+Classifying variant: chrom=chr6, pos=87464233, ref_base=GAT, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: GAT
+Alt Base: -
+Shifted position: 87464233
+Classifying variant: chrom=chr6, pos=87464233, ref_base=GAT, alt_base=AAA
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: True
+Classifying variant: chrom=chr6, pos=87464233, ref_base=GAT, alt_base=CACTAG
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: True
+Classifying variant: chrom=chr6, pos=87464233, ref_base=GAT, alt_base=CGG
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: True
+Classifying variant: chrom=chr6, pos=87464233, ref_base=-, alt_base=CGG
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 87464233 to 87464235: GAT
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: CGG
+Shifted position: 87464233
+Classifying variant: chrom=chr6, pos=87464233, ref_base=-, alt_base=GATGTG
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 87464233 to 87464238: GATGTG
+Checking bases at pos 87464239 to 87464244: GATGAA
+Final right_context: GATGTG
+Left Context: 
+Right Context: GATGTG
+Ref Base: GATGTG
+Alt Base: GATGTGGATGTG
+Shifted position: 87464233
+Classifying variant: chrom=chr6, pos=87464233, ref_base=GATGTG, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: GATGTG
+Alt Base: -
+Shifted position: 87464233
+Classifying variant: chrom=chr6, pos=87464233, ref_base=GATGTG, alt_base=AAC
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: True
+Classifying variant: chrom=chr6, pos=87464233, ref_base=GATGTGGAT, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: GATGTGGAT
+Alt Base: -
+Shifted position: 87464233
+Classifying variant: chrom=chr6, pos=87464233, ref_base=GAT, alt_base=TGA
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: True
+Classifying variant: chrom=chr6, pos=87464233, ref_base=G, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr6, pos=87464233, ref_base=G, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr6, pos=87464234, ref_base=A, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr6, pos=87464234, ref_base=A, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr6, pos=87464234, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr6, pos=87464234, ref_base=ATGTGG, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: ATGTGG
+Alt Base: -
+Shifted position: 87464234
+Classifying variant: chrom=chr6, pos=87464234, ref_base=ATGTGG, alt_base=CCC
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: True
+Classifying variant: chrom=chr6, pos=87464235, ref_base=-, alt_base=ACTTCA
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 87464235 to 87464240: TGTGGA
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: ACTTCA
+Shifted position: 87464235
+Classifying variant: chrom=chr6, pos=87464235, ref_base=-, alt_base=CCTTCA
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 87464235 to 87464240: TGTGGA
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: CCTTCA
+Shifted position: 87464235
+Classifying variant: chrom=chr6, pos=87464235, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr6, pos=87464235, ref_base=T, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr6, pos=87464235, ref_base=T, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr6, pos=87464235, ref_base=TG, alt_base=AC
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: True
+Classifying variant: chrom=chr6, pos=87464235, ref_base=TG, alt_base=CC
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: True
+Classifying variant: chrom=chr6, pos=87464236, ref_base=-, alt_base=CCT
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 87464236 to 87464238: GTG
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: CCT
+Shifted position: 87464236
+Classifying variant: chrom=chr6, pos=87464236, ref_base=-, alt_base=CCTTCA
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 87464236 to 87464241: GTGGAT
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: CCTTCA
+Shifted position: 87464236
+Classifying variant: chrom=chr6, pos=87464236, ref_base=-, alt_base=GAT
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 87464236 to 87464238: GTG
+Final right_context: 
+Left Context: GAT
+Right Context: 
+Ref Base: GAT
+Alt Base: GATGAT
+Shifted position: 87464233
+Classifying variant: chrom=chr6, pos=87464236, ref_base=-, alt_base=GATGAT
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 87464236 to 87464241: GTGGAT
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: GATGAT
+Shifted position: 87464236
+Classifying variant: chrom=chr6, pos=87464236, ref_base=-, alt_base=GATGATGAC
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 87464236 to 87464244: GTGGATGAA
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: GATGATGAC
+Shifted position: 87464236
+Classifying variant: chrom=chr6, pos=87464236, ref_base=-, alt_base=GATGTG
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 87464236 to 87464241: GTGGAT
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: GATGTG
+Shifted position: 87464236
+Classifying variant: chrom=chr6, pos=87464239, ref_base=-, alt_base=GATGTG
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 87464239 to 87464244: GATGAA
+Final right_context: 
+Left Context: GATGTG
+Right Context: 
+Ref Base: GATGTG
+Alt Base: GATGTGGATGTG
+Shifted position: 87464233
+Classifying variant: chrom=chr6, pos=87464239, ref_base=-, alt_base=GATGTGGATGTG
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 87464239 to 87464250: GATGAAACCTAA
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: GATGTGGATGTG
+Shifted position: 87464239
+Classifying variant: chrom=chr6, pos=87464248, ref_base=TAA, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: TAA
+Alt Base: -
+Shifted position: 87464248
+Classifying variant: chrom=chr6, pos=87464249, ref_base=A, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr6, pos=87464250, ref_base=-, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: True
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: C
+0
+Classifying variant: chrom=chr7, pos=11555251, ref_base=G, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr7, pos=116699085, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr7, pos=129189152, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr7, pos=140719262, ref_base=A, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr7, pos=140734758, ref_base=T, alt_base=C
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr7, pos=140734780, ref_base=-, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: True
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: G
+0
+Classifying variant: chrom=chr7, pos=140736487, ref_base=GTGCGA, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: GTGCGA
+Alt Base: -
+Shifted position: 140736487
+Classifying variant: chrom=chr7, pos=140736487, ref_base=GTGCGAT, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: GTGCGAT
+Alt Base: -
+Shifted position: 140736487
+Classifying variant: chrom=chr7, pos=140742186, ref_base=-, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: True
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: T
+0
+Classifying variant: chrom=chr7, pos=140753351, ref_base=A, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr7, pos=140800417, ref_base=CT, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: CT
+Right Context: 
+Ref Base: CTCT
+Alt Base: CT
+Shifted position: 140800415
+Classifying variant: chrom=chr7, pos=140800417, ref_base=CTG, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: False
+Checking subclass: MnDeletion
+Result of matches_criteria for MnDeletion: True
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: CTG
+Alt Base: -
+Shifted position: 140800417
+Classifying variant: chrom=chr7, pos=140807936, ref_base=A, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: True
+Left Context: 
+Right Context: AAAAAAAA
+Ref Base: AAAAAAAAA
+Alt Base: AAAAAAAA
+0
+Classifying variant: chrom=chr7, pos=140924703, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr7, pos=148847298, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr7, pos=27199497, ref_base=C, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr7, pos=2958506, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr7, pos=50319062, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr7, pos=55019278, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr7, pos=55019338, ref_base=G, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr7, pos=55181319, ref_base=-, alt_base=GGGTTG
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: False
+Checking subclass: MNP
+Result of matches_criteria for MNP: False
+Checking subclass: MNV
+Result of matches_criteria for MNV: False
+Checking subclass: MnInsertion
+Result of matches_criteria for MnInsertion: True
+Checking bases at pos 55181319 to 55181324: CAACCC
+Final right_context: 
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: GGGTTG
+Shifted position: 55181319
+Classifying variant: chrom=chr8, pos=127738263, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr8, pos=43018497, ref_base=A, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr9, pos=107489172, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr9, pos=130714320, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr9, pos=132928872, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr9, pos=136545786, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr9, pos=21968622, ref_base=C, alt_base=-
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: False
+Checking subclass: SnDeletion
+Result of matches_criteria for SnDeletion: True
+Left Context: 
+Right Context: CCC
+Ref Base: CCCC
+Alt Base: CCC
+0
+Classifying variant: chrom=chr9, pos=21974827, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr9, pos=37034031, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr9, pos=5021988, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr9, pos=62802322, ref_base=C, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr9, pos=78031235, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chr9, pos=95508361, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chrX, pos=1212634, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chrX, pos=124022628, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chrX, pos=134377618, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chrX, pos=153907795, ref_base=-, alt_base=G
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: False
+Checking subclass: SnInsertion
+Result of matches_criteria for SnInsertion: True
+Left Context: 
+Right Context: 
+Ref Base: -
+Alt Base: G
+0
+Classifying variant: chrom=chrX, pos=40064468, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chrX, pos=44873624, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chrX, pos=48791110, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chrX, pos=53224889, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chrX, pos=64193286, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chrX, pos=67545147, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chrX, pos=71120077, ref_base=A, alt_base=T
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chrX, pos=77786001, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+Classifying variant: chrom=chrY, pos=13479665, ref_base=T, alt_base=A
+Checking subclass: UnclassifiedVariant
+Result of matches_criteria for UnclassifiedVariant: None
+Checking subclass: SNP
+Result of matches_criteria for SNP: True
+2023/08/25 23:10:01 oakvar.spdi          started spdi (spdi)
+2023/08/25 23:10:01 oakvar.spdi          spdi: finished at Fri Aug 25 23:10:01 2023
+2023/08/25 23:10:01 oakvar.spdi          spdi: runtime 0.124s
+2023/08/25 23:10:02 oakvar               annotator step finished in 1.219s
+2023/08/25 23:10:02 oakvar               starting aggregator step...
+2023/08/25 23:10:02 oakvar               running Aggregator (variant)
+2023/08/25 23:10:02 oakvar.aggregator    level: variant
+2023/08/25 23:10:02 oakvar.aggregator    input directory: /home/mohit/.oakvar/modules/annotators/spdi
+2023/08/25 23:10:02 oakvar.aggregator    started aggregator (variant)
+2023/08/25 23:10:02 oakvar.aggregator    started: Fri Aug 25 23:10:02 2023
+2023/08/25 23:10:02 oakvar.aggregator    finished: Fri Aug 25 23:10:02 2023
+2023/08/25 23:10:02 oakvar.aggregator    runtime: 0.009
+2023/08/25 23:10:02 oakvar.aggregator    finished aggregator (variant)
+2023/08/25 23:10:02 oakvar               Aggregator variant finished in 0.023s
+2023/08/25 23:10:02 oakvar               running Aggregator (gene)
+2023/08/25 23:10:02 oakvar.aggregator    level: gene
+2023/08/25 23:10:02 oakvar.aggregator    input directory: /home/mohit/.oakvar/modules/annotators/spdi
+2023/08/25 23:10:02 oakvar.aggregator    started aggregator (gene)
+2023/08/25 23:10:02 oakvar.aggregator    started: Fri Aug 25 23:10:02 2023
+2023/08/25 23:10:02 oakvar.aggregator    finished: Fri Aug 25 23:10:02 2023
+2023/08/25 23:10:02 oakvar.aggregator    runtime: 0.001
+2023/08/25 23:10:02 oakvar.aggregator    finished aggregator (gene)
+2023/08/25 23:10:02 oakvar               Aggregator gene finished in 0.005s
+2023/08/25 23:10:02 oakvar               running Aggregator (sample)
+2023/08/25 23:10:02 oakvar.aggregator    level: sample
+2023/08/25 23:10:02 oakvar.aggregator    input directory: /home/mohit/.oakvar/modules/annotators/spdi
+2023/08/25 23:10:02 oakvar.aggregator    started aggregator (sample)
+2023/08/25 23:10:02 oakvar.aggregator    started: Fri Aug 25 23:10:02 2023
+2023/08/25 23:10:02 oakvar.aggregator    finished: Fri Aug 25 23:10:02 2023
+2023/08/25 23:10:02 oakvar.aggregator    runtime: 0.001
+2023/08/25 23:10:02 oakvar.aggregator    finished aggregator (sample)
+2023/08/25 23:10:02 oakvar               Aggregator sample finished in 0.006s
+2023/08/25 23:10:02 oakvar               running Aggregator (mapping)
+2023/08/25 23:10:02 oakvar.aggregator    level: mapping
+2023/08/25 23:10:02 oakvar.aggregator    input directory: /home/mohit/.oakvar/modules/annotators/spdi
+2023/08/25 23:10:02 oakvar.aggregator    started aggregator (mapping)
+2023/08/25 23:10:02 oakvar.aggregator    started: Fri Aug 25 23:10:02 2023
+2023/08/25 23:10:02 oakvar.aggregator    finished: Fri Aug 25 23:10:02 2023
+2023/08/25 23:10:02 oakvar.aggregator    runtime: 0.001
+2023/08/25 23:10:02 oakvar.aggregator    finished aggregator (mapping)
+2023/08/25 23:10:02 oakvar               Aggregator mapping finished in 0.005s
+2023/08/25 23:10:02 oakvar               aggregator step finished in 0.040s
+2023/08/25 23:10:02 oakvar               starting postaggregator step...
+2023/08/25 23:10:02 oakvar.tagsampler    started Samples and Tags (tagsampler)
+2023/08/25 23:10:02 oakvar.tagsampler    started: Fri Aug 25 23:10:02 2023
+2023/08/25 23:10:02 oakvar.tagsampler    finished: Fri Aug 25 23:10:02 2023
+2023/08/25 23:10:02 oakvar.tagsampler    runtime: 0.009
+2023/08/25 23:10:02 oakvar.tagsampler    Finished Samples and Tags (tagsampler)
+2023/08/25 23:10:02 oakvar               tagsampler finished in 0.010s
+2023/08/25 23:10:02 oakvar               vcfinfo finished in 0.000s
+2023/08/25 23:10:02 oakvar               postaggregator step finished in 0.032s
+2023/08/25 23:10:02 oakvar               finished: Fri Aug 25 23:10:02 2023
+2023/08/25 23:10:02 oakvar               finished normally. Runtime: 3.227s
+2023/08/25 23:10:02 oakvar               removing /home/mohit/.oakvar/modules/annotators/spdi/exampleinput.crm
+2023/08/25 23:10:02 oakvar               removing /home/mohit/.oakvar/modules/annotators/spdi/exampleinput.crx
+2023/08/25 23:10:02 oakvar               removing /home/mohit/.oakvar/modules/annotators/spdi/exampleinput.crv
+2023/08/25 23:10:02 oakvar               removing /home/mohit/.oakvar/modules/annotators/spdi/exampleinput.crg
+2023/08/25 23:10:02 oakvar               removing /home/mohit/.oakvar/modules/annotators/spdi/exampleinput.crs
+2023/08/25 23:10:02 oakvar               removing /home/mohit/.oakvar/modules/annotators/spdi/exampleinput.spdi.var
+2023/08/25 23:10:02 oakvar               removing /home/mohit/.oakvar/modules/annotators/spdi/exampleinput.original_input.var
