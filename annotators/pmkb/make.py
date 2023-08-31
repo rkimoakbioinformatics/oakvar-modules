@@ -2,29 +2,22 @@ import sqlite3
 import pandas as pd
 import numpy as np
 import re
-
 conn = sqlite3.connect('pmkb.sqlite')
 interpretations_pmkb = pd.read_csv('pmkb_interpretations.csv')
 def main():
+    interpretations_pmkb = pd.read_csv('pmkb_interpretations.csv')
+    pmkb_variants = pd.read_csv('pmkb_variants.csv')
     # data_manipulation()
     # variant_parsing_new()
-    exon_codon_trans()
+    # exon_codon_trans()
     # interpretations =interpretations_cleaning(interpretations_pmkb)
     # interpretations_manipulation(interpretations)
+    # interpretations_split()
+    # interpretations_new_parsing()
 def interpretations_cleaning(interpretations_pmkb):
     c = conn.cursor()
-    # s = "CSF3R T618I|CSF3R any nonsense|CSF3R any frameshift".split("|")
-    # l = []
-    # for i in range(len(s)):
-    #     l.append(" ".join(s[i].split(" ")[1:]))
-    # print("|".join(l))
-    #Filling null values 
-
+    #Filling null values
     variants_null = interpretations_pmkb[interpretations_pmkb['Variant(s)'].isnull()]['Gene']
-    # print(variants_null.loc[0])
-    # c.execute("SELECT achange FROM variants WHERE gene = 'CSF1R'")
-    # g = c.fetchone()[0]
-    # print(g)
     c.execute("SELECT Gene FROM pmkb_variants")
     rows = c.fetchall()
     all_genes = [list(row) for row in rows]
@@ -33,45 +26,51 @@ def interpretations_cleaning(interpretations_pmkb):
         l = []
         l.append(variants_null.loc[ind])
         if l in all_genes:
-            c.execute("SELECT achange FROM variants WHERE Gene = ? AND (achange LIKE '_codon%' OR achange LIKE '_exon%')", (variants_null.loc[ind],))
-            if variants_null.loc[ind] == "AKT1":
-                print(l)
-                print(c.fetchone()[0])
+            c.execute("SELECT achange FROM variant WHERE Gene = ? AND (achange LIKE '_codon%' OR achange LIKE '_exon%')", (variants_null.loc[ind],))
             variant = c.fetchone()
+            if l[0] == "WHSC1":
+                print(variant[0])
             if variant:
-                interpretations_pmkb.at[ind, 'Variant(s)'] = variant[0]                    
+                interpretations_pmkb.loc[ind, 'Variant(s)'] = variant[0]
                 # print(interpretations_pmkb.loc[ind, 'Gene'])
     # print(interpretations_pmkb['Variant(s)'].isnull().sum())
     interpretations_pmkb = interpretations_pmkb.dropna(subset=["Variant(s)"])
     interpretations_pmkb = interpretations_pmkb.reset_index(drop = True)
     # interpretations_pmkb.to_csv('interpretations.csv')
     # print(interpretations_pmkb)
+    # conn.close()
+    # interpretations_pmkb.to_csv("cleaning.csv")
     return interpretations_pmkb
     
 def interpretations_manipulation(inter):
     # print(inter.loc[8,'Variant(s)'].split("|"))
     # print(inter['Variant(s)'].isnull().sum())
+
+    #loop through each row
     for ind in inter.index:
+        #get the Varaint row
         variants = inter.loc[ind,'Variant(s)'].split("|")
+        #put each manipulated variant in a new list
         l = []
+        
         for j in variants:
+            # handle any pos firstly
             if "_codon:_any" in j or "_exon:_any" in j:
                 description  = " ".join(j.split(" "))
-                # inter.loc[ind,'Variant(s)'] = description
                 inter.loc[ind,'Variant(s)'] = description
-                # l.append(description)
-                # print(description)
-                # print(ind)
-            elif "copy number" in j:
+            #handle copy number variant
+            elif "copy number" in j :
                 description  = " ".join(j.split(" "))
                 inter.loc[ind,"Variant(s)"] = description
+            elif "_codon:" in j or "_exon:" in j:
+                pass
             else:
+                #remove the gene name part and get the variant
                 description = " ".join(j.split(" ")[1:])
                 if 'any' not in description and 'copy' not in description and 'rearrangement' not in description and 'exon' not in description and 'codon' not in description and "_codon" not in description and "_exon" not in description:
-                    description = "p." + description
+                    description = description
                     l.append(description)
                 else:
-                # print(description)
                     match = re.search(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense|frameshift|insertion|deletion|any|indel)$',description)
                     if match:
                         get_v = match.group()
@@ -81,83 +80,145 @@ def interpretations_manipulation(inter):
                     # print(match)
                             d = get_v.group().split(',')
                             if 'exon' in description and 'missense' in description:
-                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_exon:{",".join(d).strip()}:missense',description)
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_exon:{",".join(d).strip().replace(" ","")}:missense:_any:_any',description)
                                 l.append(description)
                             elif 'codon' in description and 'missense' in description:
-                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_codon:{",".join(d).strip()}:missense',description)
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_codon:{",".join(d).strip().replace(" ","")}:missense:_any:_any',description)
                                 l.append(description)
                             #nonsense
                             elif 'exon' in description and 'nonsense' in description:
-                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_exon:{",".join(d).strip()}:nonsense',description)
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_exon:{",".join(d).strip().replace(" ","")}:nonsense:_any:_any',description)
                                 l.append(description)
                             elif 'codon' in description and 'nonsense' in description:
-                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'codon:{",".join(d).strip()}:nonsense',description)
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_codon:{",".join(d).strip().replace(" ","")}:nonsense:_any:_any',description)
                                 l.append(description)
                             #Frameshift
                             elif 'exon' in description and 'frameshift' in description:
-                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(frameshift)$',f'_exon:{",".join(d).strip()}:frameshift',description)
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(frameshift)$',f'_exon:{",".join(d).strip().replace(" ","")}:frameshift:_any:_any',description)
                                 l.append(description)
                             elif 'codon' in description and 'frameshift' in description:
-                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(frameshift)$',f'_codon:{",".join(d).strip()}:frameshift',description)
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(frameshift)$',f'_codon:{",".join(d).strip().replace(" ","")}:frameshift:_any:_any',description)
                                 l.append(description)
                             #insertion
                             elif 'codon' in description and 'insertion' in description:
-                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(insertion)$',f'_codon:{",".join(d).strip()}:insertion',description)
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(insertion)$',f'_codon:{",".join(d).strip().replace(" ","")}:insertion:_any:_any',description)
                                 l.append(description)
                             elif 'exon' in description and 'insertion' in description:
-                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(insertion)$',f'_exon:{",".join(d).strip()}:insertion',description)
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(insertion)$',f'_exon:{",".join(d).strip().replace(" ","")}:insertion:_any:_any',description)
                                 l.append(description)
                                     
                             #deletion
                             elif 'codon' in description and 'deletion' in description:
-                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(deletion)$',f'_codon:{",".join(d).strip()}:deletion',description)
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(deletion)$',f'_codon:{",".join(d).strip().replace(" ","")}:deletion:_any:_any',description)
                                 l.append(description)
                             elif 'exon' in description and 'deletion' in description:
-                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(deletion)$',f'_exon:{",".join(d).strip()}:deletion',description)
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(deletion)$',f'_exon:{",".join(d).strip().replace(" ", "")}:deletion:_any:_any',description)
                                 l.append(description)
                             #any
                             elif 'codon' in description and 'any' in description:
-                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(any)$',f'_codon:{",".join(d).strip()}:any',description)
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(any)$',f'_codon:{",".join(d).strip().replace(" ","")}:any:_any:_any',description)
                                 l.append(description)
                                 # print(description)
                             elif 'exon' in description and 'any' in description:
-                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(any)$',f'_exon:{",".join(d).strip()}:any',description)        
+                                description = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(any)$',f'_exon:{",".join(d).strip().replace(" ","")}:any:_any:_any',description)        
                                 l.append(description)
                     else:
                         match_any = re.search(r'^any\s.*',description)
                         if match_any:
-                            description = "_codon:" + ":".join(match_any.group().split(" "))
+                            m = match_any.group().split(" ")
+                            #if any:mutation convert it to _any
+                            m[1] = '_any' if m[1] == 'mutation' else m[1]
+                            description = "_codon:" + ":".join(m) +":_any:_any"
                             l.append(description)
-                            
                         else:
                             l.append(description)
+                #join the variants with | separator
                 inter.loc[ind,'Variant(s)'] = ("|").join(l)
-    
     # print(inter)
     # inter['Variant(s)'].replace('p.', np.nan,inplace = True)
     
     # inter = inter[inter['Variant(s)'].notna()]
     # # print(inter)
     # inter.dropna(subset = ['Variant(s)'],inplace = True)
+
+    #Drop rows containing copy number 
+    inter = inter.drop(index=[row for row in inter.index if 'copy' in inter.loc[row,'Variant(s)']])
+    inter = inter.reset_index(drop = True)
+    #drop rows containing rearrangement
+    inter = inter.drop(index=[row for row in inter.index if 'rearrangement' in inter.loc[row,'Variant(s)']])
     inter = inter.reset_index(drop = True)
     # print(inter)
-    # inter.to_csv("interpretations.csv")
+    inter.to_csv("interpretations.csv")
 
-'''
-# def interpretations_split():
-CREATE TABLE temporary_interpretations AS
-	WITH RECURSIVE split(gene_name, variants, rest, tumor_type, tissue_type, interpretations,citations, pmkb_url) AS(
-		SELECT gene_name, "",variants||"|", tumor_type, tissue_type,interpretations, citations, pmkb_url FROM interpretations
-		UNION ALL SELECT
-		gene_name,
-		substr(rest,0,instr(rest,"|")),
-		substr(rest, instr(rest,"|")+1),
-		tumor_type, tissue_type, interpretations, citations, pmkb_url
-		FROM split WHERE rest !=""	)
-SELECT gene_name, variants, tumor_type, tissue_type, interpretations, citations, pmkb_url FROM split WHERE variants !="" 
 
-'''
-
+def interpretations_split():
+    # connect_pmkb = sqlite3.connect('pmkb.sqlite')
+    c = conn.cursor()
+    c.execute("""
+        CREATE TABLE temporary_interpretations_2 AS
+        WITH RECURSIVE split(gene_name, variants, rest, tumor_type, tissue_type, interpretations,citations, pmkb_url) AS(
+            SELECT gene_name, "",variants||"|", tumor_type, tissue_type,interpretations, citations, pmkb_url FROM interpretations
+            UNION ALL SELECT
+            gene_name,
+            substr(rest,0,instr(rest,"|")),
+            substr(rest, instr(rest,"|")+1),
+            tumor_type, tissue_type, interpretations, citations, pmkb_url
+            FROM split WHERE rest !=""	)
+            SELECT gene_name, variants, tumor_type, tissue_type, interpretations, citations, pmkb_url FROM split WHERE variants !="" 
+    """)
+def interpretations_new_parsing():
+    interpretations_split = pd.read_csv('temporary_interpretations_2.csv')
+    for ind in interpretations_split.index:
+        desc = interpretations_split.loc[ind, 'variants']
+        if "_codon:" not in desc and  "_exon" not in desc:
+            #Q61L
+            #capturing missense variants only
+            missense = re.search(r'([A-Z])(\d+)([A-Z])',desc)
+            if missense:
+                #capture the ref_allele, pos, alt_allele
+                missense_group= missense.groups()
+                desc = f'_codon:{missense_group[1]}:{missense_group[1]}:missense:{missense_group[0]}:{missense_group[2]}'
+                interpretations_split.loc[ind,'variants'] = desc
+            else:
+                nonsense = re.search(r'([A-Z])(\d+)(\*)',desc)
+                if nonsense:
+                    nonsense_group = nonsense.groups()
+                    # print(nonsense_group)
+                    desc = f'_codon:{nonsense_group[1]}:{nonsense_group[1]}:nonsense:{nonsense_group[0]}:{nonsense_group[2]}'
+                    interpretations_split.loc[ind,'variants'] = desc
+                #capturing deletion only
+                deletion = re.search(r'^(\w)(\d+)del$',desc)
+                if deletion:
+                    deletion_group = deletion.groups()
+                    desc = f'_codon:{deletion_group[1]}:{deletion_group[1]}:deletion:{deletion_group[0]}:-'
+                    interpretations_split.loc[ind,'variants'] = desc
+                #capturing deletion from pos to pos
+                deletions = re.search(r'(\w)(\d*)_?(\w)(\d+)(delins|del)(\w*)',desc)
+                if deletions:
+                    deletions_group = deletions.groups()
+                    if deletions_group[5] == '':
+                        desc = f'_codon:{deletions_group[1]}:{deletions_group[3]}:deletion:{deletions_group[0]}X{deletions_group[2]}:-'
+                        interpretations_split.loc[ind,'variants'] = desc
+                    else:
+                        if deletions_group[0] == 'G':
+                            pos = "".join(deletions_group[1:4])
+                            desc = f'_codon:{pos}:{pos}:indel:{deletions_group[0]}:{deletions_group[5]}'
+                            interpretations_split.loc[ind,'variants'] = desc
+                        else:
+                            # print(deletions_group)
+                            desc = f'_codon:{deletions_group[1]}:{deletions_group[3]}:indel:{deletions_group[0]}X{deletions_group[2]}:{deletions_group[5]}'
+                            interpretations_split.loc[ind,'variants']  = desc
+                frameshift = re.search(r'(\w)(\d+)(fs)$',desc)
+                if frameshift:
+                    frameshift_group = frameshift.groups()
+                    desc = f'_codon:{frameshift_group[1]}:{frameshift_group[1]}:frameshift:{frameshift_group[0]}:-'
+                    interpretations_split.loc[ind,'variants'] = desc
+                insertion = re.search(r'(\w)(\d*)_?(\w)(\d+)ins(\w*)',desc)
+                if insertion:
+                    insertion_group = insertion.groups()
+                    desc = f'_codon:{insertion_group[1]}:{insertion_group[3]}:insertion:{insertion_group[0]}:{insertion_group[4]}'
+                    interpretations_split.loc[ind,'variants'] = desc
+    interpretations_split.to_csv('interpretations_final.csv')
 def data_manipulation():
     '''
     Manipulates pmkb_variant dataset as converting codon(s) pos so to _codon:pos:so:ref_aa:alt_aa
@@ -349,20 +410,19 @@ def exon_codon_trans():
     c = conn.cursor()
     pmkb = conn_pmkb.cursor()
     for row in variants_ds.index:
-        if '_exon' in variants_ds.loc[row , 'achange']:
+        if '_exon' in variants_ds.loc[row , 'achange'] and "NOTCH1" not in variants_ds.loc[row,'Gene']:
             data = variants_ds.loc[row,'achange'].split(":")
-            print(data)
+            # print(data)
             if "," in variants_ds.loc[row,'achange']:
                 exon = variants_ds.loc[row,'achange'].split(":")[1].split(",")
             elif "-" in variants_ds.loc[row,'achange']:
                 exon = variants_ds.loc[row,'achange'].split(":")[1].split("-")
             else:
-                exon = variants_ds.loc[row,'achange'].split(":")[1]
-            print(exon)
+                exon = [variants_ds.loc[row,'achange'].split(":")[1]]
             cstart = []
+            cend = []
             for exon_no in exon:
                 exon_no = int(exon_no)
-                print(exon_no)
             # print(variants_ds.loc[row,'Transcript ID (GRCh37/hg19)'])
                 t = variants_ds.loc[row, 'Transcript ID (GRCh37/hg19)']
                 # print(t)
@@ -395,18 +455,56 @@ def exon_codon_trans():
                 # print(tid)
                 t_name = f'transcript_frags_{chromd[0]}'
                 # print(t_name)
-                f = f'SELECT cstart FROM {t_name} WHERE tid = {tid} AND kind = 8 AND exonno = {exon_no - 1}'
+                f = f'SELECT cstart FROM {t_name} WHERE tid = {tid} AND kind = 24 AND exonno = {exon_no - 1}'
                 c.execute(f)
                 f_f = c.fetchmany()
                 cstart.append(f_f[0][0]//3  + 1)
+                c_end = f'SELECT cstart FROM {t_name} WHERE tid = {tid} AND kind = 24 AND exonno = {exon_no}'
+                c.execute(c_end)
+                c_end_fetch = c.fetchmany()
+                if len(c_end_fetch) == 0:
+                    c.execute("""
+                    SELECT 
+                        alen
+                    FROM 
+                        transcript
+                    WHERE 
+                        name LIKE :transcript
+                    """, {"transcript": t+"%"})
+                    alen = c.fetchmany()
+                    cend.append(alen[0][0])
+                else:
+                    cend.append(c_end_fetch[0][0]//3+1)
                 # print(f_f)
+            codon_end = ",".join([str(i) for i in cend])
             codon_no = ",".join([str(i) for i in cstart])
-            variants_ds.loc[row,'achange'] = f'_codon:{codon_no}:{data[2]}:{data[3]}:{data[4]}'
-            print(variants_ds.loc[row,'achange'])
+            variants_ds.loc[row,'achange'] = f'_codon:{codon_no}:{codon_end}:{data[2]}:{data[3]}:{data[4]}'
+            # print(variants_ds.loc[row,'achange'])
             # print(codon_no)
             # print(cstart)
-            break
-
+        
+        #NOTCH1 manipulation
+        # elif "_exon" in variants_ds.loc[row,'achange'] and "NOTCH1" in variants_ds.loc[row,'Gene']:
+        #     data = variants_ds.loc[row,'achange'].split(":")
+        #     print(data)
+        #     if "-" in variants_ds.loc[row,'achange']:
+        #         exon = variants_ds.loc[row,'achange'].split(":")[1].split("-")
+        #     else:
+        #         exon = [variants_ds.loc[row,'achange'].split(":")[1]]
+        #     c.execute("""
+        #         SELECT tid
+        #         FROM
+        #             transcript
+        #         WHERE
+        #             genename = 36316
+        #     """)
+        #     tid = c.fetchall()
+        #     print(tid)
+        #     break
+        #     codon_start = ",".join(str(i) for i in codon_no)
+        #     variants_ds.loc[row,'achange'] = f'_codon:{codon_start}:{data[2]}:{data[3]}:{data[4]}'
+        #     # print(variants_ds.loc[row,'achange'])
+    variants_ds.to_csv("variants3.csv")
 if __name__ == "__main__":
     main()
 
