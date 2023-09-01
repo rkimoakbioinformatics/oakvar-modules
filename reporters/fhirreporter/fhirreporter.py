@@ -1,4 +1,5 @@
 import uuid
+import json
 import requests
 import hashlib
 import sqlite3
@@ -27,7 +28,7 @@ class Reporter(BaseReporter):
         self.filenames = []
         self.counter = 0
 
-        self.levels_to_write = self.confs.get("pages", "variant")
+        self.levels_to_write = self.conf.get("pages", "variant")
         self.samples = []
         self.bundles = []
         self.SO_dict = {
@@ -112,6 +113,7 @@ class Reporter(BaseReporter):
         self.dict_bundles = create_dict(self.samples)
         self.dict_patient = create_dict(self.samples)
         self.dict_nums = create_dict(self.samples)
+
 
         # get number of rows
         curs = conn.cursor()
@@ -225,7 +227,9 @@ class Reporter(BaseReporter):
         sample_with_variants = row["tagsampler__samples"].split(":")
 
         for sample in sample_with_variants:
-            self.dict_nums[sample].append(self.counter)
+            sample_json_mappings = row['base__all_mappings']
+            print(row['base__all_mappings'])
+    
 
             #get RefSeq from sqlite file 
             transcript = row["base__transcript"]
@@ -310,14 +314,7 @@ class Reporter(BaseReporter):
             #Make Component for Sequence Ontology 
 
             SO = row["base__so"]
-            comp_so = None
-            if SO is not None:
-                so_val_coding = Coding()
-                so_val_coding.system = ("http://sequenceontology.org")
-                so_val_coding.code = self.SO_dict[SO]
-                so_val_coding.display = SO
-                so_value = CodeableConcept(coding=[so_val_coding])
-                comp_so = ObservationComponent(code=so_value)
+
 
 
             #Make Component for Start and End (sne)
@@ -337,21 +334,9 @@ class Reporter(BaseReporter):
             aa_change = row["base__achange"]
             c_change = row["base__cchange"]
 
-            coding_change = Coding()
-            coding_change.system = Uri("http://loinc.org")
-            coding_change.code = '48006-1'
-            coding_change.display  = "Amino Acid Change [type]"
-            code_change = CodeableConcept(coding=[coding_change])
-            comp_change = ObservationComponent(code=code_change)
-            comp_change.valueCodeableConcept = CodeableConcept(text=f"{aa_change}")
 
-            coding_c_change = Coding()
-            coding_c_change.system = Uri("http://loinc.org")
-            coding_c_change.code = "48004-6"
-            coding_c_change.display = "DNA change (c.HGVS)"
-            code_c_change = CodeableConcept(coding=[coding_c_change])
-            comp_c_change = ObservationComponent(code=code_c_change)
-            comp_c_change.valueCodeableConcept = CodeableConcept(text=f"{transcript}:{c_change}")
+
+
 
             #Make Component for Gene ID
             gene_id = row["base__hugo"]
@@ -364,20 +349,45 @@ class Reporter(BaseReporter):
             comp_gene_id.valueCodeableConcept = CodeableConcept(text=f"{gene_id}")
 
 
-            
-        
-
-
-
-
-            
-
             # add componenets to row observation
-            if comp_so is not None:
-                obs_row.component = [comp_gene_id,comp_ref, comp_alt,comp_chrom, comp_so, comp_sne,comp_change,comp_c_change]
-            else:obs_row.component = [comp_gene_id,comp_ref, comp_alt,comp_chrom,comp_sne]
+            obs_row.component = [comp_gene_id,comp_ref, comp_alt,comp_chrom,comp_gene_id]
 
-            conn = sqlite3.connect(self.dbpath)
+
+
+            #start loop to make mapping components
+            print(type(row['base__all_mappings']))
+            if row['base__all_mappings'] != "":
+                #make SO component
+                if SO is not None:
+                    so_val_coding = Coding()
+                    so_val_coding.system = ("http://sequenceontology.org")
+                    so_val_coding.code = self.SO_dict[SO]
+                    so_val_coding.display = SO
+                    so_value = CodeableConcept(coding=[so_val_coding])
+                    comp_so = ObservationComponent(code=so_value)
+                    obs_row.component.append(comp_so)
+                #make a_change component
+                coding_change = Coding()
+                coding_change.system = Uri("http://loinc.org")
+                coding_change.code = '48006-1'
+                coding_change.display  = "Amino Acid Change [type]"
+                code_achange = CodeableConcept(coding=[coding_change])
+                comp_achange = ObservationComponent(code=code_achange)
+                comp_achange.valueCodeableConcept = CodeableConcept(text=f"{aa_change}")
+                obs_row.component.append(comp_achange)
+                coding_c_change = Coding()
+                coding_c_change.system = Uri("http://loinc.org")
+                coding_c_change.code = "48004-6"
+                coding_c_change.display = "DNA change (c.HGVS)"
+                code_c_change = CodeableConcept(coding=[coding_c_change])
+                comp_c_change = ObservationComponent(code=code_c_change)
+                comp_c_change.valueCodeableConcept = CodeableConcept(text=f"{transcript}:{c_change}")
+                obs_row.component.append(comp_c_change)
+
+
+            conn = sqlite3.connect(self.dbpath) 
+
+
             curs = conn.cursor()
             curs.execute("SELECT COUNT(*) from variant")
             self.num_rows = curs.fetchone()[0]
