@@ -228,7 +228,6 @@ class Reporter(BaseReporter):
 
         for sample in sample_with_variants:
             sample_json_mappings = row['base__all_mappings']
-            print(row['base__all_mappings'])
     
 
             #get RefSeq from sqlite file 
@@ -355,7 +354,6 @@ class Reporter(BaseReporter):
 
 
             #start loop to make mapping components
-            print(type(row['base__all_mappings']))
             if row['base__all_mappings'] != "":
                 #make SO component
                 if SO is not None:
@@ -375,6 +373,8 @@ class Reporter(BaseReporter):
                 comp_achange = ObservationComponent(code=code_achange)
                 comp_achange.valueCodeableConcept = CodeableConcept(text=f"{aa_change}")
                 obs_row.component.append(comp_achange)
+
+                #make c_change component (ENSEMBL)
                 coding_c_change = Coding()
                 coding_c_change.system = Uri("http://loinc.org")
                 coding_c_change.code = "48004-6"
@@ -383,6 +383,16 @@ class Reporter(BaseReporter):
                 comp_c_change = ObservationComponent(code=code_c_change)
                 comp_c_change.valueCodeableConcept = CodeableConcept(text=f"{transcript}:{c_change}")
                 obs_row.component.append(comp_c_change)
+
+                #make rc_change component (RefSeq)
+                coding_rc_change = Coding()
+                coding_rc_change.system = Uri("http://loinc.org")
+                coding_c_change.code =  "48004-6"
+                coding_rc_change.display = "DNA change(c.HGVS)"
+                code_rc_change = CodeableConcept(coding=[coding_rc_change])
+                comp_rc_change = ObservationComponent (code = code_rc_change)
+                comp_rc_change.valueCodeableConcept = CodeableConcept(text=f"{row['base__refseq']}:{c_change}")
+                obs_row.component.append(comp_rc_change)
 
 
             conn = sqlite3.connect(self.dbpath) 
