@@ -10,13 +10,13 @@ class Annotator(BaseAnnotator):
         gene = input_data['hugo']
         transcript = input_data['transcript']
         achange = input_data['achange'].split('.')[0]
-        #check if this is a missense variant
+        #Handle missense variants
         if 'missense' in input_data['all_mappings'].split(":")[3]:
             input_ref_alt_pos = re.search(r'(\w{3})(\d+)(\w{3})',achange)
             ref_alt_pos_catch = input_ref_alt_pos.groups()
             input_pos = ref_alt_pos_catch[1]
-            input_ref_allele = ref_alt_pos_catch[0]
-            input_alt_allele = ref_alt_pos_catch[2]
+            input_ref_allele = seq1(ref_alt_pos_catch[0])
+            input_alt_allele = seq1(ref_alt_pos_catch[2])
             #Query the database for the possible variants
             self.cursor.execute("""
                 SELECT 
@@ -50,7 +50,8 @@ class Annotator(BaseAnnotator):
                             WHERE 
                                 achange = :achange_pmkb
                         """, {"achange_pmkb": achange_pmkb})
-                        qr = self.cursor.fetchall()         
+                        qr = self.cursor.fetchall()
+
         # qr = self.cursor.fetchone()
         if qr is not None:
             return{
