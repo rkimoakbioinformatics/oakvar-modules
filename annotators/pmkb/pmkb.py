@@ -27,7 +27,7 @@ class Annotator(BaseAnnotator):
                     Gene = :gene AND transcript_id = :transcript 
             """, {"gene": gene, "transcript": transcript})
             #save results in pmkb_variants variable    
-            pmkb_variants = self.fetchall()
+            pmkb_variants = self.cursor.fetchall()
             #loop through results to get a match
             for line in pmkb_variants:
                 pmkb_achange = line[0]
@@ -38,7 +38,7 @@ class Annotator(BaseAnnotator):
                     pmkb_alt_allele = achange_pmkb.split(':')[5]
                     #match results of pmkb achange with input data
                     if pmkb_pos == input_pos and pmkb_ref_allele == input_ref_allele and pmkb_alt_allele == input_alt_allele:
-                        c.execute("""
+                        self.cursor.execute("""
                             SELECT 
                                 * 
                             FROM 
@@ -50,7 +50,7 @@ class Annotator(BaseAnnotator):
                             WHERE 
                                 achange = :achange_pmkb
                         """, {"achange_pmkb": achange_pmkb})
-
+                        qr = self.cursor.fetchall()         
         # qr = self.cursor.fetchone()
         if qr is not None:
             return{
