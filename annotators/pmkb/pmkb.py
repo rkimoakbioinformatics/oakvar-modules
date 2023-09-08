@@ -1,30 +1,57 @@
 from typing import Optional
 from oakvar import BaseAnnotator
-
+from Bio.SeqUtils import seq1
 class Annotator(BaseAnnotator):
     def annotate(self, input_data: dict, secondary_data: Optional[dict] = None):
         assert input_data is not None
         if not self.cursor:
             return None
-        gene_name = input_data["hugo"]
-        a_change = input_data["achange"]
-        #query interpretations database
-          
-        self.cursor.execute(
-            """SELECT 
-                    interpretations.gene_name, variants.achange, interpretations.tumor_type,
-                    interpretations.tissue_type, interpretations.interpretations,
-                    interpretations.citations, interpretations.pmkb_url,
-                    variants.pmkb_url
-                FROM
-	                interpretations
-                LEFT JOIN
-	                variants
-	                    ON variants.achange = interpretations.variants 
-                WHERE variants.gene_name = :gene AND variants.achange = :achange
-            """, {"gene": gene_name, "achange":a_change}
-        )
-        qr = self.cursor.fetchone()
+        #get data for querying the pmkb database from input_data
+        gene = input_data['hugo']
+        transcript = input_data['transcript']
+        achange = input_data['achange'].split('.')[0]
+        #check if this is a missense variant
+        if 'missense' in input_data['all_mappings'].split(":")[3]:
+            input_ref_alt_pos = re.search(r'(\w{3})(\d+)(\w{3})',achange)
+            ref_alt_pos_catch = input_ref_alt_pos.groups()
+            input_pos = ref_alt_pos_catch[1]
+            input_ref_allele = ref_alt_pos_catch[0]
+            input_alt_allele = ref_alt_pos_catch[2]
+            #Query the database for the possible variants
+            self.cursor.execute("""
+                SELECT 
+                    achange
+                FROM 
+                    variant
+                WHERE 
+                    Gene = :gene AND transcript_id = :transcript 
+            """, {"gene": gene, "transcript": transcript})
+            #save results in pmkb_variants variable    
+            pmkb_variants = self.fetchall()
+            #loop through results to get a match
+            for line in pmkb_variants:
+                pmkb_achange = line[0]
+                if len(pmkb_achange.split(':')> 5):
+                    #get pos:ref_allele_alt_allele
+                    pmkb_pos = achange_pmkb.split(':')[1]
+                    pmkb_ref_allele = achange_pmkb.split(':')[4]
+                    pmkb_alt_allele = achange_pmkb.split(':')[5]
+                    #match results of pmkb achange with input data
+                    if pmkb_pos == input_pos and pmkb_ref_allele == input_ref_allele and pmkb_alt_allele == input_alt_allele:
+                        c.execute("""
+                            SELECT 
+                                * 
+                            FROM 
+                                variant
+            
+                            LEFT JOIN 
+                                interpretations_final
+                                ON variant.achange = interpretations_final.variants
+                            WHERE 
+                                achange = :achange_pmkb
+                        """, {"achange_pmkb": achange_pmkb})
+
+        # qr = self.cursor.fetchone()
         if qr is not None:
             return{
               "gene_name": qr[0],
