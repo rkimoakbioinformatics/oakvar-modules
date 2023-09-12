@@ -20,28 +20,7 @@ class TestSnInsertion:
     
     def test_matches_criteria(self, chrom, position, ref_base, alt_base, is_valid_sninsertion, mock_data, expected_spdi):
         assert SnInsertion.matches_criteria(chrom, position, ref_base, alt_base) == is_valid_sninsertion
-
-    @pytest.mark.parametrize(
-        "initial_position, mock_data, expected_position_after_left_align",
-        [
-            (1000, {999: "G", 1000: "A", 998: "G", 997: "G"}, 997),
-            (1000, {999: "G", 1000: "A", 998: "G", 997: "A"}, 998),
-           
-        ]
-    )
-    def test_left_align(self, initial_position, mock_data, expected_position_after_left_align, mocked_wgs_reader):
-        
-        def mock_get_base(chrom, pos):
-            return mock_data.get(pos, "A")
-                
-        mocked_wgs_reader.get_bases.side_effect = mock_get_base
-        
-        SnInsertion._wgs_reader = mocked_wgs_reader
-        sninsertion = SnInsertion("chr1", initial_position, "-", "G")
-        assert sninsertion.pos == expected_position_after_left_align
-        
-        
-        
+    
     @pytest.mark.parametrize(
     "initial_position, alt_base, mock_data, expected_left_context",
     [
@@ -52,7 +31,7 @@ class TestSnInsertion:
 )
     def test_get_left_context(self, initial_position, alt_base, mock_data, expected_left_context, mocked_wgs_reader):
             
-        def mock_get_base(chrom, pos, data=mock_data):  # Bind mock_data to mock_get_base
+        def mock_get_base(chrom, pos, to_upper = True, data=mock_data):  # Bind mock_data to mock_get_base
             if pos not in data:
                 print(f"Position {pos} not found in mock data!")
                 print(f"Current mock data: {data}")
@@ -76,7 +55,7 @@ class TestSnInsertion:
 )
     def test_get_right_context(self, initial_position, alt_base, mock_data, expected_right_context, mocked_wgs_reader):
 
-        def mock_get_base(chrom, pos, data=mock_data):  # Bind mock_data to mock_get_base
+        def mock_get_base(chrom, pos, to_upper = True, data=mock_data):  # Bind mock_data to mock_get_base
             if pos not in data:
                 print(f"Position {pos} not found in mock data!")
                 print(f"Current mock data: {data}")
@@ -108,7 +87,7 @@ class TestSnInsertion:
     def test_construct_contextual_allele(self, initial_position, alt_base, mock_data, expected_ref_base, expected_alt_base, mocked_wgs_reader):
         
         # Mocking method
-        def mock_get_base(chrom, pos, data=mock_data):
+        def mock_get_base(chrom, pos, to_upper = True, data=mock_data):
             return data.get(pos)
         
         mocked_wgs_reader.get_bases.side_effect = mock_get_base
@@ -117,6 +96,23 @@ class TestSnInsertion:
         sninsertion = SnInsertion("chr1", initial_position, "-", alt_base)
         assert sninsertion.ref_base == expected_ref_base
         assert sninsertion.alt_base == expected_alt_base
+
+    @pytest.mark.parametrize(
+    "chrom, pos, ref_base, alt_base, mock_data, expected_position_after_left_align",
+    [
+        ("chr1", 1000, "-", "G", {999: "G", 1000: "A", 998: "G", 997: "G"}, 997),
+        ("chr1", 1000, "-", "G", {999: "G", 1000: "A", 998: "G", 997: "A"}, 998),
+    ]
+)
+    def test_left_align(self, chrom, pos, ref_base, alt_base, mock_data, expected_position_after_left_align, mocked_wgs_reader):
+        
+        def mock_get_base(chrom, pos, to_upper=True, data=mock_data):
+            return mock_data.get(pos, "A")
+                
+        mocked_wgs_reader.get_bases.side_effect = mock_get_base
+        SnInsertion._wgs_reader = mocked_wgs_reader
+        sninsertion = SnInsertion(chrom, pos, ref_base, alt_base)
+        assert sninsertion.pos == expected_position_after_left_align
 
     @pytest.mark.parametrize(
     "chrom, pos, ref_base, alt_base, mock_data, expected_spdi",
@@ -137,8 +133,8 @@ class TestSnInsertion:
 
     def test_to_spdi(self, chrom, pos, ref_base, alt_base, mock_data, expected_spdi, mocked_wgs_reader):
         # Mocking method
-        def mock_get_base(chrom, position, data=mock_data):
-            return data.get(position)
+        def mock_get_base(chrom, pos, to_upper = True, data=mock_data):
+            return data.get(pos)
 
         # Set up the mock
         mocked_wgs_reader.get_bases.side_effect = mock_get_base
