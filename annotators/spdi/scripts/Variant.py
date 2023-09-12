@@ -33,6 +33,7 @@ class Variant(ABC):
         importlib.import_module('scripts.MnInsertion')
         importlib.import_module('scripts.MnDeletion')
         
+        
         for subclass in cls.__subclasses__():
             print(f"Checking subclass: {subclass.__name__}") # Print subclass name
             match = subclass.matches_criteria(chrom, pos, ref_base, alt_base)
@@ -63,29 +64,12 @@ class Variant(ABC):
     def _construct_contextual_allele(self):
         """Helper method for constructing contextual allele."""
 
-    @classmethod
-    def set_wgs_reader(cls, reader):
-        """Set the WGS reader for all instances of this class."""
-        cls._wgs_reader = reader
-
-    @classmethod
-    def _get_base(cls, chrom, pos):
-        """Get a single base from the WGS."""
-        return cls._wgs_reader.get_bases(chrom, pos)
-
-    @classmethod
-    def _get_bases(cls, chrom, start, end):
-        """Get a range of bases from the WGS."""
-        return cls._wgs_reader.get_bases(chrom, start, end=end)
-
     @staticmethod
-    # Initialize the wgs_reader once for the entire module
     def initialize_wgs_reader(assembly="hg38"):
         """
         Initialize the WGS reader for the module.
         """
-        wgs_reader = ov.get_wgs_reader(assembly)
-        Variant.set_wgs_reader(wgs_reader)
+        Variant._wgs_reader = ov.get_wgs_reader(assembly)
 
 
 class UnclassifiedVariant(Variant):
