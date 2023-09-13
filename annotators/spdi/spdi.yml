@@ -1,8 +1,8 @@
 title: SPDI Annotator
-description: The SPDI annotator module outputs the SPDI notations for the variants.
+description: The SPDI annotator module outputs the SPDI notation for the variants.
 type: annotator
 level: variant
-version: 0.0.2
+version: 0.0.3
 
 input_format: crv
 output_columns:
@@ -24,13 +24,16 @@ developer:
     citation: ''
 
 tags:
-- spdi_notation
+- spdi
 
 release_note:
-  0.0.2:
-  Refactored spdi.py to separate Variant classification and conversion in separate scripts directory.
-  Added test cases for available classification and conversion scripts based on pytest.
-  Added Unclassified variant classification to better handle edge cases in future testing scenarios.
+  0.0.3: 
+    - Changed MnInsertion and MnDeletion logic to match VOCA.
+    - Added to_upper = True instead of .upper() for wgs_reader retrievals.
+  0.0.2: 
+    - Refactored spdi.py to separate Variant classification and conversion in separate scripts directory.
+    - Added test cases for available classification and conversion scripts based on pytest.
+    - Added Unclassified variant classification to better handle edge cases in future testing scenarios.
+  0.0.1: 
+    - Initial release of spdi module.
 
-  0.0.1:
-  Initial release of spdi module.
