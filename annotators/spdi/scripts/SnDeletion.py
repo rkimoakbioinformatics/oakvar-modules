@@ -68,18 +68,10 @@ class SnDeletion(Variant):
             self.ref_base = self.left_context + self.ref_base + self.right_context
             self.alt_base = self.left_context + self.right_context
             
-            
-        print(f"Left Context: {self.left_context}")
-        print(f"Right Context: {self.right_context}")
-        print(f"Ref Base: {self.ref_base}")
-        print(f"Alt Base: {self.alt_base}")
-
-
     def _left_align(self):
         shift = len(self.left_context)  # This determines how many bases we can shift to the left
         if shift > 0:
             self.pos -= shift
-        print(len(self.left_context))
 
     
     def to_spdi(self):
