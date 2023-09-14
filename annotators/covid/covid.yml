@@ -1,0 +1,48 @@
+##################################
+#
+# Mandatory fields
+#
+##################################
+title: covid
+description: This is an OakVar annotator module.
+type: annotator
+level: variant
+version: 0.0.1
+
+# If your module does not have its own data under module_dir/data folder,
+# remove data_version field and uncomment no_data field.
+data_version: 0.0.1
+# no_data: true
+
+input_format: crx
+output_columns:
+- name: desc
+  title: Description
+  desc: Description of the variant with regard to COVID
+  type: string
+developer:
+  module:
+    name: 'Mohit Panwar'
+    organization: 'Oak Bioinformatic LLC'
+    email: 'mohitsingh5123@gmail.com'
+    website: 'https://oakbioinformatics.com'
+    citation: ''
+  data:
+    name: ''
+    organization: ''
+    email: ''
+    website: ''
+    citation: ''
+
+#################################
+#
+# Optional fields
+#
+#################################
+tags:
+- covid
+
+
+release_note:
+  0.0.1: 
+    - Initial working release of covid module. The current iteration works by adding variant description in the covid_data.csv file present in the data directory.
