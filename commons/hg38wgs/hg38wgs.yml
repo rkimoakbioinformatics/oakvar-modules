@@ -1,0 +1,20 @@
+name: hg38wgs
+title: UCSC hg38 Whole Genome Sequence
+version: 2023.09.10
+data_version: 2020.03.13
+datasource: 2020.03.13
+type: common
+description: UCSC hg38 whole genome sequence module
+developer:
+  name: Ryangguk Kim
+  organization: Oak Bioinformatics, LLC
+  email: rkim@oakbioinformatics.com
+  website: https://oakbioinformatics.com
+  citation: ''
+requires_opencravat: '>=2.5.28'
+release_note:
+  2023.09.10: Option to convert to upper letters.
+  2020.03.13: hg38.2bit updated
+  1.0.0: release version
+  0.0.2: added rev for n.
+  0.0.1: initial release
