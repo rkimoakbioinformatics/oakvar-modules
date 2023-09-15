@@ -24,7 +24,7 @@ class SnDeletion(Variant):
         left_pos = self.pos - 1
 
         while True:
-            base_at_pos = self._wgs_reader.get_bases(self.chrom, left_pos)
+            base_at_pos = self._wgs_reader.get_bases(self.chrom, left_pos, to_upper=True)
             # Update the left_context if the base matches the last character of ref_base
             if base_at_pos == self.ref_base[-1]:
                 left_context = base_at_pos + left_context
@@ -40,14 +40,14 @@ class SnDeletion(Variant):
         right_pos = self.pos + 1
 
         while True:
-            base_at_pos = self._wgs_reader.get_bases(self.chrom, right_pos)
+            base_at_pos = self._wgs_reader.get_bases(self.chrom, right_pos, to_upper=True)
             # Update the right_context if the base matches the first character of ref_base
             if base_at_pos == self.ref_base[0]:
                 right_context = right_context + base_at_pos
                 right_pos += 1
             else:
                 break
-
+            
         return right_context
     
     def _construct_contextual_allele(self):
@@ -68,18 +68,10 @@ class SnDeletion(Variant):
             self.ref_base = self.left_context + self.ref_base + self.right_context
             self.alt_base = self.left_context + self.right_context
             
-            
-        print(f"Left Context: {self.left_context}")
-        print(f"Right Context: {self.right_context}")
-        print(f"Ref Base: {self.ref_base}")
-        print(f"Alt Base: {self.alt_base}")
-
-
     def _left_align(self):
         shift = len(self.left_context)  # This determines how many bases we can shift to the left
         if shift > 0:
             self.pos -= shift
-        print(len(self.left_context))
 
     
     def to_spdi(self):

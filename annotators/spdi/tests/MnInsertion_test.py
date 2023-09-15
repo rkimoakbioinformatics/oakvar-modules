@@ -29,14 +29,14 @@ class TestMnInsertion:
     "initial_position, alt_bases, mock_data, expected_left_context",
     [
         (1000, "GGG", {1000: "A", 999: "G", 998: "G", 997: "G", 996: "A"}, "GGG"),
-        (1000, "G", {1000: "A", 999: "A"}, ""),
-        (1000, "T", {1000: "T", 999: "T", 998: "T", 997: "T", 996: "A"}, "TTT"),
+        (1000, "GT", {1000: "A", 999: "A"}, ""),
+        (1000, "TEC", {1000: "T", 999: "C", 998: "E", 997: "T", 996: "C"}, "CTEC"),
         (1000, "GTC", {1000: "A", 999: "C", 998: "T", 997: "G", 996: "C", 995: "T", 994: "G", 993: "A"}, "GTCGTC"),
     ]
 )
     def test_get_left_context(self, initial_position, alt_bases, mock_data, expected_left_context, mocked_wgs_reader):
     
-        def mock_get_bases(chrom, start, end):
+        def mock_get_bases(chrom, start, end, to_upper = True):
             bases = ''
             for pos in range(start, end + 1):
                 base = mock_data.get(pos, '')
@@ -55,7 +55,7 @@ class TestMnInsertion:
     "initial_position, alt_bases, mock_data, expected_right_context",
     [
         (1000, "GGG", {1000:"G", 1001: "G", 1002: "G", 1003: "A"}, "GGG"),
-        (1000, "GA", {1000: "G", 1001: "A", 1002: "A"}, "GA"),
+        (1000, "GA", {1000: "G", 1001: "A", 1002: "G"}, "GAG"),
         (1000, "TA", {1000: "T", 1001: "A", 1002: "T", 1003: "A"}, "TATA"),
         (1000, "ACT", {1000: "C", 1001: "T", 1002: "T", 1003: "T", 1004: "A"}, ""),
         (1000, "GATC", {1000: "G", 1001: "A", 1002: "T", 1003: "C", 1004: "G", 1005: "A", 1006: "T", 1007: "C"}, "GATCGATC")
@@ -63,7 +63,7 @@ class TestMnInsertion:
 )
     def test_get_right_context(self, initial_position, alt_bases, mock_data, expected_right_context, mocked_wgs_reader):
         
-        def mock_get_bases(chrom, start, end):
+        def mock_get_bases(chrom, start, end, to_upper = True):
             bases = ''
             for pos in range(start, end + 1):
                 base = mock_data.get(pos, '')
@@ -82,22 +82,22 @@ class TestMnInsertion:
     "initial_position, alt_base, mock_data, expected_ref_base, expected_alt_base",
     [
         # No left or right context
-        (1000, "GG", {1000: "G"}, "-", "GG"),
+        (1000, "GG", {1000: "A"}, "-", "GG"),
         
         # Only left context
-        (1000, "GG", {1000: "G", 999: "G", 998: "G", 997: "G"}, "GG", "GGGG"),
+        (1000, "GG", {1000: "T", 999: "G", 998: "G", 997: "G"}, "GGG", "GGGGG"),
         
         # Only right context
         (1000, "TT", {1000: "T", 1001: "T", 1002: "T", 1003: "T"}, "TTTT", "TTTTTT"),
         
         # Both left and right context
-        (1000, "AA", {1000: "A", 999: "A", 998: "A", 1001: "A", 1002: "A", 1003: "G"}, "AAAA", "AAAAAA"),
+        (1000, "TACT", {1003: "T", 1002: "C", 1001: "A", 1000: "T", 999: "T", 998: "C", 997: "A", 996: "T"}, "TACTTACT", "TACTTACTTACT"),
     ]
 )
     def test_construct_contextual_allele(self, initial_position, alt_base, mock_data, expected_ref_base, expected_alt_base, mocked_wgs_reader):
         
         # Mocking method
-        def mock_get_bases(chrom, start, end):
+        def mock_get_bases(chrom, start, end, to_upper = True):
             bases = ''
             for pos in range(start, end + 1):
                 base = mock_data.get(pos, '')
@@ -115,7 +115,7 @@ class TestMnInsertion:
         "initial_position, alt_base, mock_data, expected_position_after_left_align",
         [
             # Case 1: "AA" repeated, with some on the left
-            (1000, "AA", {1000: "A", 999: "A", 998: "A", 997: "A"}, 998),
+            (1000, "AA", {1000: "A", 999: "A", 998: "A", 997: "A"}, 997),
 
             # Case 2: "ACG" not repeated on the left
             (1000, "ACG", {1000: "T", 999: "C", 998: "A", 997: "G"}, 1000),
@@ -129,7 +129,7 @@ class TestMnInsertion:
     
     def test_left_align(self, initial_position, alt_base, mock_data, expected_position_after_left_align, mocked_wgs_reader):
         
-        def mock_get_bases(chrom, start, end):
+        def mock_get_bases(chrom, start, end, to_upper = True):
             bases = ''
             for pos in range(start, end + 1):
                 base = mock_data.get(pos, '')
@@ -156,13 +156,16 @@ class TestMnInsertion:
         ("chr2", 1000, "-", "TAT", {1000: "T", 1001: "A", 1002: "T", 1003: "G"}, "chr2:999:TAT:TATTAT"),
         
         # Both left and right context (assuming 2 A's to the left and 3 A's to the right of the position 1000)
-        ("chr3", 1000, "-", "ACGT", {999: "T", 998: "G", 997: "C", 996: "A", 995: "T", 994: "G", 993: "C", 992: "A", 1000: "A", 1001: "C", 1002: "G", 1003: "T", 1004: "A", 1005: "C", 1006: "G", 1007: "T"}, "chr3:991:ACGTACGTACGTACGT:ACGTACGTACGTACGTACGT"),        
-        # Additional cases can be added here
+        ("chr3", 1000, "-", "ACGT", {999: "T", 998: "G", 997: "C", 996: "A", 995: "T", 994: "G", 993: "C", 992: "A", 1000: "A", 1001: "C", 1002: "G", 1003: "T", 1004: "A", 1005: "C", 1006: "G", 1007: "T"}, "chr3:991:ACGTACGTACGTACGT:ACGTACGTACGTACGTACGT"),  
+        
+        #Partial context in both left and right
+        ("chr4", 1000, "-", "ACGT", {999: "T", 998: "G", 997: "C", 996: "A", 995: "T", 994: "G", 993: "C", 1000: "A", 1001: "C", 1002: "G", 1003: "T", 1004: "A", 1005: "C", 1006: "G"}, "chr4:992:CGTACGTACGTACG:CGTACGTACGTACGTACG"),
+              
     ]
 )
     def test_to_spdi(self, chrom, pos, ref_base, alt_base, mock_data, expected_spdi, mocked_wgs_reader):
 
-        def mock_get_bases(chrom, start, end):
+        def mock_get_bases(chrom, start, end, to_upper = True):
             bases = ''
             for position in range(start, end + 1):
                 base = mock_data.get(position, '')

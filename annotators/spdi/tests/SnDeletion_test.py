@@ -1,7 +1,6 @@
 from scripts.SnDeletion import SnDeletion
 import pytest
 
-
 class TestSnDeletion:
     
     @pytest.mark.parametrize(
@@ -31,7 +30,7 @@ class TestSnDeletion:
 )
     def test_get_left_context(self, initial_position, ref_base, mock_data, expected_left_context, mocked_wgs_reader):
             
-        def mock_get_base(chrom, pos, data=mock_data):  # Bind mock_data to mock_get_base
+        def mock_get_base(chrom, pos, to_upper = True, data=mock_data):  # Bind mock_data to mock_get_base
             if pos not in data:
                 print(f"Position {pos} not found in mock data!")
                 print(f"Current mock data: {data}")
@@ -54,7 +53,7 @@ class TestSnDeletion:
     )   
     def test_get_right_context(self, initial_position, ref_base, mock_data, expected_right_context, mocked_wgs_reader):
             
-        def mock_get_base(chrom, pos, data=mock_data):  # Bind mock_data to mock_get_base
+        def mock_get_base(chrom, pos, to_upper = True, data=mock_data):  # Bind mock_data to mock_get_base
             if pos not in data:
                 print(f"Position {pos} not found in mock data!")
                 print(f"Current mock data: {data}")
@@ -89,7 +88,7 @@ class TestSnDeletion:
     def test_construct_contextual_allele(self, initial_position, ref_base, mock_data, expected_ref_base, expected_alt_base, mocked_wgs_reader):
         
         # Mocking method
-        def mock_get_base(chrom, pos, data=mock_data):
+        def mock_get_base(chrom, pos, to_upper = True, data=mock_data):
             return data.get(pos)
         
         mocked_wgs_reader.get_bases.side_effect = mock_get_base
@@ -111,7 +110,7 @@ class TestSnDeletion:
     
     def test_left_align(self, initial_position, mock_data, expected_position_after_left_align, mocked_wgs_reader):
 
-        def mock_get_base(chrom, pos):
+        def mock_get_base(chrom, pos, to_upper = True):
             return mock_data.get(pos, "A")
                 
         mocked_wgs_reader.get_bases.side_effect = mock_get_base
@@ -139,12 +138,12 @@ class TestSnDeletion:
 
     def test_to_spdi(self, chrom, pos, ref_base, alt_base, mock_data, expected_spdi, mocked_wgs_reader):
         # Mocking method
-        def mock_get_base(chrom, position, data=mock_data):
-            return data.get(position)
+        def mock_get_base(chrom, pos, to_upper = True, data=mock_data):
+            return data.get(pos)
 
         # Set up the mock
         mocked_wgs_reader.get_bases.side_effect = mock_get_base
         SnDeletion._wgs_reader = mocked_wgs_reader
 
         sndeletion = SnDeletion(chrom, pos, ref_base, alt_base)
-        assert sndeletion.to_spdi() == expected_spdi
+        assert sndeletion.to_spdi() == expected_spdi      
