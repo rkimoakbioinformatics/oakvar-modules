@@ -191,15 +191,27 @@ class Reporter(BaseReporter):
             return False
 
     def end(self):
-        for sample in self.samples:
-            filename = str(self.prefix) + f"__{sample}.fhir.json"
-            self.wf = open(filename, "w", encoding="utf-8")
-            self.dict_bundles[sample].entry = self.dict_entries[sample]
-            obs = self.dict_bundles[sample]
-            json_str = obs.json(indent=2)
-            self.wf.write(json_str)
-            self.filenames.append(filename)
-        self.wf.close()
+        if self.module_options.get('all_transcripts') == "true":
+            for sample in self.samples:
+                filename = str(self.prefix) + f"__{sample}.all.fhir.json"
+                self.wf = open(filename, "w", encoding="utf-8")
+                self.dict_bundles[sample].entry = self.dict_entries[sample]
+                obs = self.dict_bundles[sample]
+                json_str = obs.json(indent=2)
+                self.wf.write(json_str)
+                self.filenames.append(filename)
+            self.wf.close()
+        else:
+            for sample in self.samples:
+                filename = str(self.prefix) + f"__{sample}.primary.fhir.json"
+                self.wf = open(filename, "w", encoding="utf-8")
+                self.dict_bundles[sample].entry = self.dict_entries[sample]
+                obs = self.dict_bundles[sample]
+                json_str = obs.json(indent=2)
+                self.wf.write(json_str)
+                self.filenames.append(filename)
+            self.wf.close()
+
         return self.filenames
 
         # assign entries to correct bundles
@@ -350,69 +362,69 @@ class Reporter(BaseReporter):
 
             # add componenets to row observation
             obs_row.component = [comp_gene_id,comp_ref, comp_alt,comp_chrom,comp_gene_id]
-            #if self.module_options['all_transcripts'] == "true":
-            all_mappings = row['base__all_mappings'].split(";")
-            #print(all_mappings[0].split(":"))
-            for mapping in all_mappings: 
-                mapping_list = mapping.split(":")
-                transcript = mapping_list[0].strip()
-                #Ensembl transcript component
-                if len(transcript)>0:
-                    coding_transcript = Coding()
-                    coding_transcript.system = ("http://loinc.org")
-                    coding_transcript.code = "51958-7"
-                    coding_transcript.display = "Transcript reference sequence[ID]"
-                    code_transcript = CodeableConcept(coding=[coding_transcript])
-                    comp_transcript = ObservationComponent(code = code_transcript)
-                    coding_comp = Coding()
-                    coding_comp.system = "http://www.ensembl.org"
-                    coding_comp.code = transcript
-                    comp_transcript.valueCodeableConcept = CodeableConcept(coding=[coding_comp])
-                    obs_row.component.append(comp_transcript)
-                if len(mapping_list)>1:
-                    uniprot_id = mapping_list[1].strip()
-                    sequence_ontology = mapping_list[3].strip()
-                    list_so = sequence_ontology.split(",")
-                    amino_acid_change = mapping_list[4].strip()
-                    chromosome_change = mapping_list[5].strip()
-                    for so in list_so:
-                        if so != 'unknown' and so != '' and so != ' ':
-                            so_coding = Coding()
-                            so_coding.system = ("http://sequenceontology.org")
-                            so_coding.code = self.SO_dict[so]
-                            so_coding.display = so
-                            so_value = CodeableConcept(coding=[so_coding])
-                            comp_so = ObservationComponent(code = so_value)
-                            obs_row.component.append(comp_so)
-                    #make a_change component
-                    coding_change = Coding()
-                    coding_change.system = Uri("http://loinc.org")
-                    coding_change.code = '48006-1'
-                    coding_change.display  = "Amino Acid Change [type]"
-                    code_achange = CodeableConcept(coding=[coding_change])
-                    comp_achange = ObservationComponent(code=code_achange)
-                    comp_achange.valueCodeableConcept = CodeableConcept(text=f"{transcript}:{aa_change}")
-                    obs_row.component.append(comp_achange)
-#  
-                    #make c_change component (ENSEMBL)
-                    coding_c_change = Coding()
-                    coding_c_change.system = Uri("http://loinc.org")
-                    coding_c_change.code = "48004-6"
-                    coding_c_change.display = "DNA change (c.HGVS)"
-                    code_c_change = CodeableConcept(coding=[coding_c_change])
-                    comp_c_change = ObservationComponent(code=code_c_change)
-                    comp_c_change.valueCodeableConcept = CodeableConcept(text=f'{transcript}:{chromosome_change}')
-                    obs_row.component.append(comp_c_change)
-#  
-                    ##make rc_change component (RefSeq)
-                    coding_rc_change = Coding()
-                    coding_rc_change.system = Uri("http://loinc.org")
-                    coding_c_change.code =  "48004-6"
-                    coding_rc_change.display = "DNA change(c.HGVS)"
-                    code_rc_change = CodeableConcept(coding=[coding_rc_change])
-                    comp_rc_change = ObservationComponent (code = code_rc_change)
-                    comp_rc_change.valueCodeableConcept = CodeableConcept(text=f"{row['base__refseq']}:{chromosome_change}")
-                    obs_row.component.append(comp_rc_change)
+            if self.module_options.get('all_transcripts') == "true":
+                all_mappings = row['base__all_mappings'].split(";")
+                #print(all_mappings[0].split(":"))
+                for mapping in all_mappings: 
+                    mapping_list = mapping.split(":")
+                    transcript = mapping_list[0].strip()
+                    #Ensembl transcript component
+                    if len(transcript)>0:
+                        coding_transcript = Coding()
+                        coding_transcript.system = ("http://loinc.org")
+                        coding_transcript.code = "51958-7"
+                        coding_transcript.display = "Transcript reference sequence[ID]"
+                        code_transcript = CodeableConcept(coding=[coding_transcript])
+                        comp_transcript = ObservationComponent(code = code_transcript)
+                        coding_comp = Coding()
+                        coding_comp.system = "http://www.ensembl.org"
+                        coding_comp.code = transcript
+                        comp_transcript.valueCodeableConcept = CodeableConcept(coding=[coding_comp])
+                        obs_row.component.append(comp_transcript)
+                    if len(mapping_list)>1:
+                        uniprot_id = mapping_list[1].strip()
+                        sequence_ontology = mapping_list[3].strip()
+                        list_so = sequence_ontology.split(",")
+                        amino_acid_change = mapping_list[4].strip()
+                        chromosome_change = mapping_list[5].strip()
+                        for so in list_so:
+                            if so != 'unknown' and so != '' and so != ' ':
+                                so_coding = Coding()
+                                so_coding.system = ("http://sequenceontology.org")
+                                so_coding.code = self.SO_dict[so]
+                                so_coding.display = so
+                                so_value = CodeableConcept(coding=[so_coding])
+                                comp_so = ObservationComponent(code = so_value)
+                                obs_row.component.append(comp_so)
+                        #make a_change component
+                        coding_change = Coding()
+                        coding_change.system = Uri("http://loinc.org")
+                        coding_change.code = '48006-1'
+                        coding_change.display  = "Amino Acid Change [type]"
+                        code_achange = CodeableConcept(coding=[coding_change])
+                        comp_achange = ObservationComponent(code=code_achange)
+                        comp_achange.valueCodeableConcept = CodeableConcept(text=f"{transcript}:{aa_change}")
+                        obs_row.component.append(comp_achange)
+#   
+                        #make c_change component (ENSEMBL)
+                        coding_c_change = Coding()
+                        coding_c_change.system = Uri("http://loinc.org")
+                        coding_c_change.code = "48004-6"
+                        coding_c_change.display = "DNA change (c.HGVS)"
+                        code_c_change = CodeableConcept(coding=[coding_c_change])
+                        comp_c_change = ObservationComponent(code=code_c_change)
+                        comp_c_change.valueCodeableConcept = CodeableConcept(text=f'{transcript}:{chromosome_change}')
+                        obs_row.component.append(comp_c_change)
+#   
+                        ##make rc_change component (RefSeq)
+                        coding_rc_change = Coding()
+                        coding_rc_change.system = Uri("http://loinc.org")
+                        coding_c_change.code =  "48004-6"
+                        coding_rc_change.display = "DNA change(c.HGVS)"
+                        code_rc_change = CodeableConcept(coding=[coding_rc_change])
+                        comp_rc_change = ObservationComponent (code = code_rc_change)
+                        comp_rc_change.valueCodeableConcept = CodeableConcept(text=f"{row['base__refseq']}:{chromosome_change}")
+                        obs_row.component.append(comp_rc_change)
                 
 
 
