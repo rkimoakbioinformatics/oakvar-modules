@@ -2,8 +2,8 @@ title: SPDI Annotator
 description: The SPDI annotator module outputs the SPDI notation for the variants.
 type: annotator
 level: variant
-version: 0.0.3
-
+version: 1.0.0
+no_data: true
 input_format: crv
 output_columns:
 - name: spdi
@@ -11,9 +11,9 @@ output_columns:
   type: string
 developer:
   module:
-    name: 'Mohit Panwar'
+    name: ['Mohit Panwar', "Ryangguk Kim"]
     organization: 'Oak Bioinformatic LLC'
-    email: 'mohitsingh5123@gmail.com'
+    email: ['mohitsingh5123@gmail.com', "rkim@oakbioinformatics.com"]
     website: 'https://oakbioinformatics.com'
     citation: ''
   data:
