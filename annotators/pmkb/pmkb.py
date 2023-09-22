@@ -11,14 +11,30 @@ class Annotator(BaseAnnotator):
         #get data for querying the pmkb database from input_data
         gene = input_data['hugo']
         transcript = input_data['transcript']
+        exonno = input_data['exonno']
         if input_data['achange'] != None or input_data['achange'] != '':
             achange = input_data['achange']
         qr = []
+        query = """ 
+                    SELECT 
+                        interpretations_final.gene_name, interpretations_final.tumor_type,interpretations_final.tissue_type,
+                        interpretations_final.pmkb_url_interpretations,
+                        interpretations_final.interpretations, interpretations_final.citations,
+                        variant.achange, variant.pmkb_url_variants 
+                    FROM 
+                        variant
+                    LEFT JOIN
+                        interpretations_final
+                        ON variant.achange = interpretations_final.variants
+                    WHERE 
+                        achange = :achange_pmkb
+                """
         # exonno = input_data['exonno']
         variant_type = input_data['so']
         #Handle missense variants
-        if variant_type == 'MIS' or variant_type == 'MLO':
-            input_ref_alt_pos = re.search(r'(\w{3})(\d+)(\w{3})',achange)
+        if variant_type == 'MIS' or variant_type == 'missense_variant':
+            #search for the description of missense variant
+            input_ref_alt_pos = re.search(r'(\w{3})(\d+)(\w{3}|\?)',achange)
             if input_ref_alt_pos is not None:
                 ref_alt_pos_catch = input_ref_alt_pos.groups()
                 input_pos = ref_alt_pos_catch[1]
@@ -38,33 +54,32 @@ class Annotator(BaseAnnotator):
                 #loop through results to get a match
                 for line in pmkb_variants:
                     pmkb_achange = line[0].split(':')
-                    #for exon cases 
-                    #             
                     #get pos:ref_allele_alt_allele
                     pmkb_pos = pmkb_achange[1]
                     pmkb_ref_allele = pmkb_achange[-2]
                     pmkb_alt_allele = pmkb_achange[-1]
+                    pmkb_so = pmkb_achange[-3]
+                    pmkb_kind = pmkb_achange[0]
                     #match results of pmkb achange with input data
-                    if pmkb_pos == input_pos and pmkb_ref_allele == input_ref_allele and pmkb_alt_allele == input_alt_allele:
-                        self.cursor.execute("""
-                            SELECT 
-                                interpretations_final.gene_name, interpretations_final.tumor_type,interpretations_final.tissue_type,
-                                interpretations_final.pmkb_url_interpretations,
-                                interpretations_final.interpretations, interpretations_final.citations,
-                                variant.achange, variant.pmkb_url_variants 
-                            FROM 
-                                variant
-                            LEFT JOIN
-                                interpretations_final
-                                ON variant.achange = interpretations_final.variants
-                            WHERE 
-                                achange = :achange_pmkb
-                        """, {"achange_pmkb": line[0]})
-                        qr.append(self.cursor.fetchall())
-                        print(qr[0][0])
-                    
+                    if input_pos in pmkb_pos:
+                        if  pmkb_ref_allele == input_ref_allele and pmkb_alt_allele == input_alt_allele:
+                            self.cursor.execute(f'{query}', {"achange_pmkb": line[0]})
+                            qr.append(self.cursor.fetchone())
+                        #if positions meet 
+                        elif pmkb_ref_allele == '_any' and pmkb_alt_allele == '_any':
+                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            qr.append(self.cursor.fetchone())
+                        if pmkb_kind == '_exon':
+                            if pmkb_pos == exonno:
+                                self.cursor.execute(query,{"achange_pmkb": line[0]})
+                                qr.append(self.cursor.fetchone())
+                    #handle _any kind
+                    if pmkb_so == '_any' or pmkb_so == 'any':
+                        if pmkb_pos == '_any':
+                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            qr.append(self.cursor.fetchone())
         #handle frameshift mutations
-        elif  variant_type == 'FSD' or variant_type  == 'FSI': 
+        elif  variant_type == 'FSD' or variant_type  == 'FSI' or variant_type == 'frameshift_insertion' or variant_type == 'frameshift_deletion': 
             #get input data for querying the pmkb database
             input_ref_alt_pos = re.search(r'(\w{3})(\d+)',achange)
             if input_ref_alt_pos is not None:
@@ -77,8 +92,8 @@ class Annotator(BaseAnnotator):
                         achange
                     FROM 
                         variant
-                    WHERE gene = :gene AND transcript_id = :transcript
-                """, {"gene": gene, "transcript": transcript})
+                    WHERE gene = :gene
+                """, {"gene": gene})
                 #fetch the achanges
                 pmkb_variants = self.cursor.fetchall()
                 #get pmkb pos:ref_allele:alt_allele
@@ -86,29 +101,37 @@ class Annotator(BaseAnnotator):
                     #get pos:ref_allele_alt_allele
                     pmkb_achange = line[0].split(':')
                     pmkb_pos = pmkb_achange[1]
-                    pmkb_ref_allele = pmkb_achange.split(':')[-2]
-                    if pmkb_pos == input_pos and pmkb_ref_allele == input_ref_allele:
-                        self.cursor.execute("""
-                            SELECT 
-                                interpretations_final.gene_name, tumor_type,tissue_type,variant.pmkb_url_variants,interpretations,
-                                citations,achange, interpretations_final.pmkb_url_interpretations
-                            FROM 
-                                variant
-                            LEFT JOIN 
-                                interpretations_final
-                                ON variant.achange = interpretations_final.variants
-                            WHERE 
-                                achange = :achange_pmkb""", {"achange_pmkb": line[0]})
-                        qr.append(self.cursor.fetchone())
+                    pmkb_ref_allele = pmkb_achange[-2]
+                    pmkb_alt_allele = pmkb_achange[-1]
+                    pmkb_so = pmkb_achange[-3]
+                    pmkb_kind = pmkb_achange[0]
+                    if input_pos in pmkb_pos:
+                        if  pmkb_ref_allele == input_ref_allele:
+                            self.cursor.execute(f'{query}', {"achange_pmkb": line[0]})
+                            qr.append(self.cursor.fetchone())
+                        #if positions meet 
+                        elif pmkb_ref_allele == '_any' and pmkb_alt_allele == '_any':
+                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            qr.append(self.cursor.fetchone())
+                        if pmkb_kind == '_exon':
+                            if pmkb_pos == exonno:
+                                self.cursor.execute(query,{"achange_pmkb": line[0]})
+                                qr.append(self.cursor.fetchone())
+                    #handle _any kind
+                    if pmkb_so == '_any' or pmkb_so == 'any':
+                        if pmkb_pos == '_any':
+                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            qr.append(self.cursor.fetchone())
+
         #handle insertion mutation cases
-        elif variant_type == 'INI':
+        elif variant_type == 'INI' or variant_type == 'inframe_insertion':
             input_ref_alt_pos = re.search(r'(\w{3})(\d+)_?(\w{3})(\d+)ins(\w+)',achange)
             if input_ref_alt_pos is not None:
                 ref_alt_pos_catch = input_ref_alt_pos.groups()
                 input_start_pos = ref_alt_pos_catch[1]
                 input_end_pos = ref_alt_pos_catch[3]
                 input_alt_allele = ref_alt_pos_catch[-1]
-
+            
                 #Query pmkb database
                 self.cursor.execute("""
                     SELECT 
@@ -116,41 +139,41 @@ class Annotator(BaseAnnotator):
                     FROM 
                         variant
                     WHERE 
-                        gene = :gene AND transcript_id = :transcript
-                """, {'gene': gene, 'transcript': transcript})
+                        gene = :gene
+                """, {'gene': gene})
                 pmkb_variants = self.cursor.fetchall()
                 #loop through results to get a match
                 for line in pmkb_variants:
                     pmkb_achange = line[0].split(':')
-                    #for exon cases 
-                    #
-                    #get pos:ref_allele_alt_allele
                     pmkb_pos = pmkb_achange[1]
-
                     pmkb_alt_allele = pmkb_achange[-1]
                     input_alt_allele_seq1 = ''
+                    pmkb_so = pmkb_achange[-3]
+                    pmkb_kind = pmkb_achange[0]
+                    
                     #convert alt_allele to one letter amino acid notation
                     if input_alt_allele != None:
                         for i in range(0,len(input_alt_allele)+1,3):
                             if i < len(input_alt_allele):
                                 input_alt_allele_seq1 += seq1(alt_allele[i:i+3])
-                        
-                    if pmkb_pos == input_start_pos and pmkb_alt_allele == input_alt_allele_seq1:
-                        self.cursor.execute("""
-                            SELECT 
-                                gene_name, tumor_type,tissue_type,variant.pmkb_url_variants,interpretations,
-                                citations,achange, interpretations_fina.pmkb_url_interpretations
-                            FROM 
-                                variant
-                            LEFT JOIN 
-                                interpretations_final
-                                ON variant.achange = interpretations_final.variants
-                            WHERE 
-                                achange = :achange_pmkb
-                        """, {"achange_pmkb": line[0]})
-                        qr.append(self.cursor.fetchone())
+                    if pmkb_pos == input_start_pos:    
+                        if pmkb_alt_allele == input_alt_allele_seq1:
+                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            qr.append(self.cursor.fetchone())
+                        elif pmkb_ref_allele == '_any' and pmkb_alt_allele == '_any':
+                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            qr.append(self.cursor.fetchone())
+                        if pmkb_kind == '_exon':
+                            if pmkb_pos == exonno:
+                                self.cursor.execute(query,{"achange_pmkb": line[0]})
+                                qr.append(self.cursor.fetchone())
+                    #handle _any kind
+                    if pmkb_so == '_any' or pmkb_so == 'any':
+                        if pmkb_pos == '_any':
+                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            qr.append(self.cursor.fetchone())
 
-        elif variant_type == 'CSS':
+        elif variant_type == 'CSS' or variant_type == 'complex_substitution':
         
             input_ref_alt_pos = re.search(r'(\w{3})(\d+)_?(\w{3})?(\d+)?delins(\w+)',achange)
             if input_ref_alt_pos is not None:
@@ -164,22 +187,20 @@ class Annotator(BaseAnnotator):
                     FROM 
                         variant
                     WHERE 
-                        gene = :gene AND transcript_id = :transcript
-                    """, {'gene': gene, 'transcript': transcript})
+                        gene = :gene
+                    """, {'gene': gene})
                 
                 pmkb_variants = self.cursor.fetchall()
-
                 for line in pmkb_variants:
                     pmkb_achange = line[0].split(':')
-                    #for exon cases 
-                    #
                     #get pos:ref_allele_alt_allele
                     pmkb_start_pos = pmkb_achange[1]
                     #get pos:alt_allele
                     pmkb_end_pos = pmkb_achange[2]
-
                     pmkb_alt_allele = pmkb_achange[-1]
                     input_alt_allele_seq1 = ''
+                    pmkb_so = pmkb_achange[-3]
+                    pmkb_kind = pmkb_achange[0]
                     #convert alt_allele to one letter amino acid notation
                     if input_alt_allele != None:
                         for i in range(0,len(input_alt_allele)+1,3):
@@ -187,43 +208,33 @@ class Annotator(BaseAnnotator):
                                 input_alt_allele_seq1 += seq1(alt_allele[i:i+3])
                     #if variant description has start and end pos - check matching with the pmkb database
                     if input_end_pos != '':
-                        if pmkb_start_pos == input_start_pos and pmkb_end_pos == input_end_pos and pmkb_alt_allele == input_alt_allele_seq1:
-                            self.cursor.execute("""
-                                SELECT 
-                                    gene_name, tumor_type,tissue_type,variant.pmkb_url_variants,interpretations,
-                                    citations,achange, interpretations_fina.pmkb_url_interpretations
-                                FROM 
-                                    variant
-                                LEFT JOIN 
-                                    interpretations_final
-                                    ON variant.achange = interpretations_final.variants
-                                WHERE 
-                                    achange = :achange_pmkb
-                            """, {"achange_pmkb": line[0]})
-                            qr.append(self.cursor.fetchall())
+                        if pmkb_start_pos == input_start_pos:
+                            if pmkb_end_pos == input_end_pos and pmkb_alt_allele == input_alt_allele_seq1:
+                                self.cursor.execute(query, {"achange_pmkb": line[0]})
+                                qr.append(self.cursor.fetchall())
                     # if there is no end pos for the input variant ex: p.Asp618delinsGluLeuHis 
                     else:
                         if pmkb_start_pos == input_start_pos and pmkb_alt_allele == input_alt_allele_seq1:
-                            self.cursor.execute("""
-                                SELECT 
-                                    gene_name, tumor_type,tissue_type,variant.pmkb_url_variants,interpretations,
-                                    citations,achange, interpretations_final.pmkb_url_interpretations
-                                FROM 
-                                    variant
-                                LEFT JOIN 
-                                    interpretations_final
-                                    ON variant.achange = interpretations_final.variants
-                                WHERE 
-                                    achange = :achange_pmkb
-                            """, {"achange_pmkb": line[0]})
+                            self.cursor.execute(query, {"achange_pmkb": line[0]})
                             qr.append(self.cursor.fetchall())
+                        elif pmkb_ref_allele == '_any' and pmkb_alt_allele == '_any':
+                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            qr.append(self.cursor.fetchone())
+                        if pmkb_kind == '_exon':
+                            if pmkb_pos == exonno:
+                                self.cursor.execute(query,{"achange_pmkb": line[0]})
+                                qr.append(self.cursor.fetchone())
+                    #handle _any so
+                    if pmkb_so == '_any' or pmkb_so == 'any':
+                        if pmkb_pos == '_any':
+                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            qr.append(self.cursor.fetchone())
             #Handle deletion cases
         
         #Handle deletion category
-        elif variant_type == 'IND':
+        elif variant_type == 'IND' or variant_type == 'inframe_deletion':
             input_ref_alt_pos = re.search(r'(\w{3})(\d+)_?(\w{3})?(\d+)?del', achange)
             if input_ref_alt_pos is not None:
-                
                 ref_alt_pos_catch = input_ref_alt_pos.groups()
                 input_ref_allele = seq1(ref_alt_pos_catch[0])
                 input_alt_allele = '' if ref_alt_pos_catch[2] == None else seq1(ref_alt_pos_catch[2])
@@ -236,60 +247,50 @@ class Annotator(BaseAnnotator):
                     FROM 
                         variant
                     WHERE 
-                        gene = :gene AND transcript_id = :transcript
-                    """, {'gene': gene, 'transcript': transcript})
+                        gene = :gene
+                    """, {'gene': gene})
                 pmkb_variants = self.cursor.fetchall()
 
                 for line in pmkb_variants:
                     pmkb_achange = line[0].split(':')
                     pmkb_start_pos = pmkb_achange[1]
                     pmkb_ref_allele = pmkb_achange[-2]
-                    pmkb_end_pos = pmkb_achange[2] if type(pmkb_achang[2]) is int else ''
-
+                    pmkb_alt_allele = pmkb_achange[-1]
+                    pmkb_end_pos = pmkb_achange[2] if type(pmkb_achange[2]) is int else ''
+                    pmkb_so = pmkb_achange[-3]
+                    pmkb_kind = pmkb_achange[0]
                     #convert input ref_allele to one letter notation
                     #if the deletion is in an interval
                     if input_end_pos != '' and pmkb_end_pos != '' and input_alt_allele != '':
                         if pmkb_start_pos == input_start_pos and pmkb_ref_allele == input_ref_alt and pmkb_end_pos == input_end_pos:
-                            self.cursor.execute("""
-                                SELECT 
-                                    gene_name, tumor_type,tissue_type,variant.pmkb_url_variants,interpretations,
-                                    citations,achange, interpretations_fina.pmkb_url_interpretations
-                                FROM 
-                                    variant
-                                LEFT JOIN 
-                                    interpretations_final
-                                    ON variant.achange = interpretations_final.variants
-                                WHERE 
-                                    achange = :achange_pmkb
-                            """, {"achange_pmkb": line[0]})
+                            self.cursor.execute(query, {"achange_pmkb": line[0]})
                             qr.append(self.cursor.fetchall())
                     #else the deletion is in one position only
                     else:
                         if pmkb_ref_allele == input_ref_allele and pmkb_start_pos == input_start_pos:
-                            self.cursor.execute("""
-                                SELECT 
-                                    gene_name, tumor_type,tissue_type,variant.pmkb_url_variants,interpretations,
-                                    citations,achange, interpretations_fina.pmkb_url_interpretations
-                                FROM 
-                                    variant
-                                LEFT JOIN 
-                                    interpretations_final
-                                    ON variant.achange = interpretations_final.variants
-                                WHERE 
-                                    achange = :achange_pmkb
-                            """, {"achange_pmkb": line[0]})
+                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            qr.append(self.cursor.fetchone())
+                        elif pmkb_ref_allele == '_any' and pmkb_alt_allele == '_any':
+                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            qr.append(self.cursor.fetchone())
+                        if pmkb_kind == '_exon':
+                            if pmkb_pos == exonno:
+                                self.cursor.execute(query,{"achange_pmkb": line[0]})
+                                qr.append(self.cursor.fetchone())
+                    #handle _any so
+                    if pmkb_so == '_any' or pmkb_so == 'any':
+                        if pmkb_start_pos == '_any':
+                            self.cursor.execute(query, {"achange_pmkb": line[0]})
                             qr.append(self.cursor.fetchone())
         if qr is not None and qr != []:
             return{
-              "gene_name": qr[0][0][0],
-              "tumor_type":qr[0][0][1],
-              "tissue_type":qr[0][0][2],
-              "pmkb_url_interpretations":qr[0][0][3],
-              "interpretations": qr[0][0][4],
-              "citations":qr[0][0][5],
-              "achange": qr[0][0][6],
-              "pmkb_url_variants": qr[0][0][7]
+              "gene_name": qr[0][0],
+              "tumor_type":qr[0][1],
+              "tissue_type":qr[0][2],
+              "pmkb_url_interpretation":qr[0][3],
+              "interpretations": qr[0][4],
+              "citations":qr[0][5],
+              "achange": qr[0][6],
+              "pmkb_url_variants": qr[0][7]
             }
         _ = secondary_data
-        # out = {}
-        # return out
