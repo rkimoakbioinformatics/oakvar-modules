@@ -20,19 +20,7 @@ from fhir.resources.list import List, ListEntry
 
 
 class Reporter(BaseReporter):
-    
-    
-    def setup(self):
-        # establish filename with fhir suffix
-        self.prefix = self.savepath
-        self.wf = None
-        self.filenames = []
-        self.counter = 0
-
-        self.levels_to_write = self.conf.get("pages", "variant")
-        self.samples = []
-        self.bundles = []
-        self.SO_dict = {
+    SO_dict = {
             "start_lost" :"SO:0002012",
             "intron_variant" : "SO:0001627",
             "frameshift_elongation" : "SO:0001909",
@@ -96,6 +84,31 @@ class Reporter(BaseReporter):
             "pseudogene_rRNA" : "SO:0002111",
             "sRNA" : "SO:0002352"
         }
+    
+    #def __init__(self):
+    #    #super().__init__()
+    #    self.dict_entries = None
+    #    self.dict_bundles = None
+    #    self.dict_patient = None
+    #    self.dict_nums = None
+#
+    #    self.prefix = None
+    #    self.wf = None
+
+    
+    
+    def setup(self):
+        self.levels_to_write = self.conf.get("pages", "variant")
+        self.filenames = []
+        self.counter = 0
+
+
+        self.samples = []
+        self.bundles = []
+
+        # establish filename with fhir suffix
+        self.prefix = self.savepath
+
         # get sample names
         conn = sqlite3.connect(self.dbpath)
         curs = conn.cursor()
@@ -234,7 +247,7 @@ class Reporter(BaseReporter):
 
     def write_table_row(self, row):
         # get samples that have variant(row)
-        sample_with_variants = row["tagsampler__samples"].split(":")
+        sample_with_variants = row["tagsampler__samples"].split(",")
 
         for sample in sample_with_variants:
 
@@ -267,9 +280,6 @@ class Reporter(BaseReporter):
                 #get chrom and pos information
                 chrom_location = row["base__chrom"]
                 pos = row["base__pos"]
-
-
-
 
 
 
@@ -344,17 +354,17 @@ class Reporter(BaseReporter):
 
                 #Make Component for Gene ID
                 gene_id = row["base__hugo"]
-                coding_id = Coding()
-                coding_id.system = Uri("http://loinc.org")
-                coding_id.code = "48018-6"
-                coding_id.display = "Gene studied [ID]"
-                code_gene_id = CodeableConcept(coding=[coding_id])
-                comp_gene_id = ObservationComponent(code=code_gene_id)
-                comp_gene_id.valueCodeableConcept = CodeableConcept(text=f"{gene_id}")
-
-
-                #add components 
-                obs_row.component = [comp_gene_id,comp_ref, comp_alt,comp_chrom,comp_gene_id]
+                if gene_id is not None:
+                    coding_id = Coding()
+                    coding_id.system = Uri("http://loinc.org")
+                    coding_id.code = "48018-6"
+                    coding_id.display = "Gene studied [ID]"
+                    code_gene_id = CodeableConcept(coding=[coding_id])
+                    comp_gene_id = ObservationComponent(code=code_gene_id)
+                    comp_gene_id.valueCodeableConcept = CodeableConcept(text=f"{gene_id}")
+                    obs_row.component = [comp_gene_id,comp_ref, comp_alt,comp_chrom]
+                else:
+                    obs_row.component = [comp_ref, comp_alt,comp_chrom]
 
                 #Make Component for cchange (change)
                 aa_change = row["base__achange"]
