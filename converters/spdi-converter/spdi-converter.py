@@ -41,7 +41,7 @@ class Converter(BaseConverter):
         var_dict = {
             'var_no': var_no,  
             'chrom': chrom,
-            'pos': int(pos),
+            'pos': int(pos) + 1,
             'ref_base': ref_base,
             'alt_base': alt_base
         }
