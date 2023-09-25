@@ -13,7 +13,15 @@ from fhir.resources.codeableconcept import CodeableConcept
 from fhir.resources.coding import Coding
 from fhir.resources.reference import Reference
 from fhir.resources.bundle import Bundle, BundleEntry
-from fhir.resources.fhirtypes import Uri, MetaType, IdentifierType, String, RangeType, Code
+from fhir.resources.fhirtypes import (
+    Uri,
+    MetaType,
+    IdentifierType,
+    String,
+    RangeType,
+    Code,
+    BackboneElementType,
+)
 from fhir.resources.quantity import Quantity
 from fhir.resources.identifier import Identifier
 from fhir.resources.list import List, ListEntry
@@ -21,87 +29,84 @@ from fhir.resources.list import List, ListEntry
 
 class Reporter(BaseReporter):
     SO_dict = {
-            "start_lost" :"SO:0002012",
-            "intron_variant" : "SO:0001627",
-            "frameshift_elongation" : "SO:0001909",
-            "missense_variant" : "SO:0001583",
-            "stop_lost" : "SO:0001578",
-            "frameshift_truncation" : "SO:0001910",
-            'lnc_RNA': "SO:0002127",
-            "inframe_insertion" : "SO:0001821",
-            "5_prime_UTR_variant" : "SO:0001623",
-            "synonymous_variant" : "SO:0001819",
-            "splice_site_variant" : "SO:0001629",
-            "3_prime_UTR_variant" : "SO:0001624",
-            "2kb_upstream_variant" : "SO:0001636",
-            "2kb_downstream_variant":"SO:0002083",
-            "stop_gained" : "SO:0001587",
-            "retained_intron":"SO:0002113",
-            "inframe_deletion" : "SO:0001822",
-            "misc_RNA" : "SO:0000673",
-            "complex_substitution" : "SO:1000005",
-            "processed_transcript" : "SO:0001503",
-            "transcribed_unprocessed_pseudogene" : "SO:0002107",
-            "unprocessed_pseudogene": "SO:0001760",
-            "miRNA" : "SO:0000276",
-            "processed_pseudogene" : "SO:0000043",
-            "snRNA":"SO:0000274",
-            "transcribed_processed_pseudogene":"SO:0002109",
-            "NMD_transcript_variant" : "SO:0001621",
-            "unconfirmed_transcript": "SO:0002139",
-            "pseudogene" :"SO:0000336",
-            "transcribed_unitary_pseudogene" : "SO:0002108",
-            "NSD_transcript" : "SO:0002130",
-            "snoRNA":"SO:0000275",
-            "scaRNA" : "SO:0002095",
-            "unitary_pseudogene" : "O:0001759",
-            "polymorphic_pseudogene" : "SO:0001841",
-            "rRNA" : "SO:0000252",
-            "IG_V_pseudogene" : "SO:0002102",
-            "ribozyme" : "SO:0000374",
-            "TR_V_gene":"SO:0002137",
-            "TR_V_pseudogene" : "SO:0002103",
-            "TR_D_gene" : "SO:0002135",
-            "TR_J_gene" : "SO:0002136",
-            "TR_C_gene" : "SO:0002134",
-            "TR_J_pseudogene" : "SO:0002104",
-            "IG_C_gene" : "SO:0002123" , 
-            "IG_C_pseudogene" : "SO:0002100",
-            "IG_J_gene" : "SO:0002125",
-            "IG_J_pseudogene" : "SO:0002101",
-            "IG_D_gene" : "SO:0002124",
-            "IG_V_gene" : "SO:0002126",
-            "translated_processed_pseudogene" : "SO:0002105",
-            "scRNA" : "SO:0000013",
-            "vault_RNA":"SO:0000404",
-            "translated_unprocessed_pseudogene" : "SO:0002106",
-            "Mt_tRNA" : "SO:0002129",
-            "Mt_rRNA" : "SO:0002128",
-            "start_retained_variant" : "SO:0002019",
-            "stop_retained_variant" : "SO:0001567",
-            "exon_loss_variant" : "SO:0001572",
-            "transcript_ablation" : "SO:0001893",
-            "pseudogene_rRNA" : "SO:0002111",
-            "sRNA" : "SO:0002352"
-        }
-    
-    #def __init__(self):
+        "start_lost": "SO:0002012",
+        "intron_variant": "SO:0001627",
+        "frameshift_elongation": "SO:0001909",
+        "missense_variant": "SO:0001583",
+        "stop_lost": "SO:0001578",
+        "frameshift_truncation": "SO:0001910",
+        "lnc_RNA": "SO:0002127",
+        "inframe_insertion": "SO:0001821",
+        "5_prime_UTR_variant": "SO:0001623",
+        "synonymous_variant": "SO:0001819",
+        "splice_site_variant": "SO:0001629",
+        "3_prime_UTR_variant": "SO:0001624",
+        "2kb_upstream_variant": "SO:0001636",
+        "2kb_downstream_variant": "SO:0002083",
+        "stop_gained": "SO:0001587",
+        "retained_intron": "SO:0002113",
+        "inframe_deletion": "SO:0001822",
+        "misc_RNA": "SO:0000673",
+        "complex_substitution": "SO:1000005",
+        "processed_transcript": "SO:0001503",
+        "transcribed_unprocessed_pseudogene": "SO:0002107",
+        "unprocessed_pseudogene": "SO:0001760",
+        "miRNA": "SO:0000276",
+        "processed_pseudogene": "SO:0000043",
+        "snRNA": "SO:0000274",
+        "transcribed_processed_pseudogene": "SO:0002109",
+        "NMD_transcript_variant": "SO:0001621",
+        "unconfirmed_transcript": "SO:0002139",
+        "pseudogene": "SO:0000336",
+        "transcribed_unitary_pseudogene": "SO:0002108",
+        "NSD_transcript": "SO:0002130",
+        "snoRNA": "SO:0000275",
+        "scaRNA": "SO:0002095",
+        "unitary_pseudogene": "O:0001759",
+        "polymorphic_pseudogene": "SO:0001841",
+        "rRNA": "SO:0000252",
+        "IG_V_pseudogene": "SO:0002102",
+        "ribozyme": "SO:0000374",
+        "TR_V_gene": "SO:0002137",
+        "TR_V_pseudogene": "SO:0002103",
+        "TR_D_gene": "SO:0002135",
+        "TR_J_gene": "SO:0002136",
+        "TR_C_gene": "SO:0002134",
+        "TR_J_pseudogene": "SO:0002104",
+        "IG_C_gene": "SO:0002123",
+        "IG_C_pseudogene": "SO:0002100",
+        "IG_J_gene": "SO:0002125",
+        "IG_J_pseudogene": "SO:0002101",
+        "IG_D_gene": "SO:0002124",
+        "IG_V_gene": "SO:0002126",
+        "translated_processed_pseudogene": "SO:0002105",
+        "scRNA": "SO:0000013",
+        "vault_RNA": "SO:0000404",
+        "translated_unprocessed_pseudogene": "SO:0002106",
+        "Mt_tRNA": "SO:0002129",
+        "Mt_rRNA": "SO:0002128",
+        "start_retained_variant": "SO:0002019",
+        "stop_retained_variant": "SO:0001567",
+        "exon_loss_variant": "SO:0001572",
+        "transcript_ablation": "SO:0001893",
+        "pseudogene_rRNA": "SO:0002111",
+        "sRNA": "SO:0002352",
+    }
+
+    # def __init__(self):
     #    #super().__init__()
     #    self.dict_entries = None
     #    self.dict_bundles = None
     #    self.dict_patient = None
     #    self.dict_nums = None
-#
+    #
     #    self.prefix = None
     #    self.wf = None
 
-    
-    
     def setup(self):
         self.levels_to_write = self.conf.get("pages", "variant")
         self.filenames = []
         self.counter = 0
-
 
         self.samples = []
         self.bundles = []
@@ -114,7 +119,8 @@ class Reporter(BaseReporter):
         curs = conn.cursor()
         curs.execute("SELECT DISTINCT base__sample_id FROM 'sample' ")
         for sample in curs.fetchall():
-            self.samples.append(sample[0])
+            if sample[0].count(",") < 1:
+                self.samples.append(sample[0])
 
         def create_dict(keys):
             unique_dict = {}
@@ -127,7 +133,6 @@ class Reporter(BaseReporter):
         self.dict_bundles = create_dict(self.samples)
         self.dict_patient = create_dict(self.samples)
         self.dict_nums = create_dict(self.samples)
-
 
         # get number of rows
         curs = conn.cursor()
@@ -152,7 +157,6 @@ class Reporter(BaseReporter):
         # make this bundle UUID
 
         for sample in self.samples:
-
             # create sample id
             sample_name = f"{self.str_id} + {sample}"
             hex_sample = hashlib.md5(sample_name.encode("utf-8")).hexdigest()
@@ -202,12 +206,13 @@ class Reporter(BaseReporter):
             return False
 
     def end(self):
-        if self.module_options.get('all_transcripts') == "true":
+        if self.module_options.get("all_transcripts") == "true":
             for sample in self.samples:
-                filename = str(self.prefix) + f"__{sample}.all.fhir.json"
-                self.wf = open(filename, "w", encoding="utf-8")
+                # fill in bundles with entries
                 self.dict_bundles[sample].entry = self.dict_entries[sample]
                 obs = self.dict_bundles[sample]
+                filename = str(self.prefix) + f"__{sample}.all.fhir.json"
+                self.wf = open(filename, "w", encoding="utf-8")
                 json_str = obs.json(indent=2)
                 self.wf.write(json_str)
                 self.filenames.append(filename)
@@ -250,45 +255,44 @@ class Reporter(BaseReporter):
         sample_with_variants = row["tagsampler__samples"].split(",")
 
         for sample in sample_with_variants:
-
             # create codingType for row  Variant Observation
             coding = Coding()
             coding.system = Uri("http://loinc.org")
             coding.code = "69548-6"
             code = CodeableConcept()
             code.coding = [coding]
-            #create CC for Laboratory 
+            # create CC for Laboratory
             cat_coding = Coding()
-            cat_coding.system = Uri("http://terminology.hl7.org/CodeSystem/observation-category")
+            cat_coding.system = Uri(
+                "http://terminology.hl7.org/CodeSystem/observation-category"
+            )
             cat_coding.code = "laboratory"
             cat_cc = CodeableConcept()
-            cat_cc.coding=[cat_coding]
+            cat_cc.coding = [cat_coding]
 
+            if self.module_options.get("all_transcripts") != "true":
+                sample_json_mappings = row["base__all_mappings"]
 
-            if self.module_options.get('all_transcripts') != "true":
-                sample_json_mappings = row['base__all_mappings']
-
-
-                #get RefSeq from sqlite file 
+                # get RefSeq from sqlite file
                 transcript = row["base__transcript"]
-
 
                 # Get Alleles from sqlite file
                 ref = row["base__ref_base"]
                 alt = row["base__alt_base"]
 
-                #get chrom and pos information
+                # get chrom and pos information
                 chrom_location = row["base__chrom"]
                 pos = row["base__pos"]
 
-
-
                 # create Observation Resource for row
                 obs_row = Observation(
-                    status="final", code=code, subject=self.dict_patient[sample], category=[cat_cc]
+                    status="final",
+                    code=code,
+                    subject=self.dict_patient[sample],
+                    category=[cat_cc],
                 )
-                #obs_row.meta = MetaType()
-                #obs_row.meta.profile = ["http://hl7.org/fhir/uv/genomics-reporting/StructureDefinition/variant"]
+                # obs_row.meta = MetaType()
+                # obs_row.meta.profile = ["http://hl7.org/fhir/uv/genomics-reporting/StructureDefinition/variant"]
 
                 # Make Component for reference allele
                 coding_ref = Coding()
@@ -304,13 +308,13 @@ class Reporter(BaseReporter):
                 coding_alt = Coding()
                 coding_alt.system = Uri("http://loinc.org")
                 coding_alt.code = "69551-0"
-                coding_alt.display= "Alt allele"
+                coding_alt.display = "Alt allele"
                 code_alt = CodeableConcept()
                 code_alt.coding = [coding_alt]
                 comp_alt = ObservationComponent(code=code_alt)
                 comp_alt.valueString = alt
 
-                ##Make Component for Chrom 
+                ##Make Component for Chrom
                 coding_chrom = Coding()
                 coding_chrom.system = Uri("http://loinc.org")
                 coding_chrom.code = "48001-2"
@@ -318,29 +322,35 @@ class Reporter(BaseReporter):
                 code_chrom = CodeableConcept()
                 code_chrom.coding = [coding_chrom]
                 comp_chrom = ObservationComponent(code=code_chrom)
-                comp_chrom.valueCodeableConcept = CodeableConcept(text=String(f"{chrom_location}"))
-#   
-                ##Make Component for Pos 
+                comp_chrom.valueCodeableConcept = CodeableConcept(
+                    text=String(f"{chrom_location}")
+                )
+                #
+                ##Make Component for Pos
                 coding_pos = Coding()
                 coding_pos.system = Uri("http://loinc.org")
                 coding_pos.code = "92822-6"
                 code_pos = CodeableConcept()
                 code_pos.coding = [coding_pos]
                 comp_pos = ObservationComponent(code=code_pos)
-                cc_pos = CodeableConcept(coding=
-                                         [(Coding(system=Uri("http://loinc.org"),
-                                                 code="LA30102-0",
-                                                 display=String("1-based character counting")
-                ))])
+                cc_pos = CodeableConcept(
+                    coding=[
+                        (
+                            Coding(
+                                system=Uri("http://loinc.org"),
+                                code="LA30102-0",
+                                display=String("1-based character counting"),
+                            )
+                        )
+                    ]
+                )
                 comp_pos.valueCodeableConcept = cc_pos
 
-                #Make Component for Sequence Ontology 
+                # Make Component for Sequence Ontology
 
                 SO = row["base__so"]
 
-
-
-                #Make Component for Start and End (sne)
+                # Make Component for Start and End (sne)
 
                 coding_st_sne = Coding()
                 coding_st_sne.system = Uri("http://loinc.org")
@@ -350,9 +360,11 @@ class Reporter(BaseReporter):
                 st_sne_value_high = Quantity(value=row["base__pos_end"])
                 code_sne = CodeableConcept(coding=[coding_st_sne])
                 comp_sne = ObservationComponent(code=code_sne)
-                comp_sne.valueRange= RangeType(low=st_sne_value_low, high = st_sne_value_high)
+                comp_sne.valueRange = RangeType(
+                    low=st_sne_value_low, high=st_sne_value_high
+                )
 
-                #Make Component for Gene ID
+                # Make Component for Gene ID
                 gene_id = row["base__hugo"]
                 if gene_id is not None:
                     coding_id = Coding()
@@ -361,37 +373,42 @@ class Reporter(BaseReporter):
                     coding_id.display = "Gene studied [ID]"
                     code_gene_id = CodeableConcept(coding=[coding_id])
                     comp_gene_id = ObservationComponent(code=code_gene_id)
-                    comp_gene_id.valueCodeableConcept = CodeableConcept(text=f"{gene_id}")
-                    obs_row.component = [comp_gene_id,comp_ref, comp_alt,comp_chrom]
+                    comp_gene_id.valueCodeableConcept = CodeableConcept(
+                        text=f"{gene_id}"
+                    )
+                    obs_row.component = [comp_gene_id, comp_ref, comp_alt, comp_chrom]
                 else:
-                    obs_row.component = [comp_ref, comp_alt,comp_chrom]
+                    obs_row.component = [comp_ref, comp_alt, comp_chrom]
 
-                #Make Component for cchange (change)
+                # Make Component for cchange (change)
                 aa_change = row["base__achange"]
                 c_change = row["base__cchange"]
 
                 if aa_change is not None:
                     coding_change = Coding()
                     coding_change.system = Uri("http://loinc.org")
-                    coding_change.code = '48006-1'
-                    coding_change.display  = "Amino Acid Change [type]"
+                    coding_change.code = "48006-1"
+                    coding_change.display = "Amino Acid Change [type]"
                     code_achange = CodeableConcept(coding=[coding_change])
                     comp_achange = ObservationComponent(code=code_achange)
-                    comp_achange.valueCodeableConcept = CodeableConcept(text=f"{transcript}:{aa_change}")
+                    comp_achange.valueCodeableConcept = CodeableConcept(
+                        text=f"{transcript}:{aa_change}"
+                    )
                     obs_row.component.append(comp_achange)
-                if c_change is not None: 
+                if c_change is not None:
                     coding_c_change = Coding()
                     coding_c_change.system = Uri("http://loinc.org")
                     coding_c_change.code = "48004-6"
                     coding_c_change.display = "DNA change (c.HGVS)"
                     code_c_change = CodeableConcept(coding=[coding_c_change])
                     comp_c_change = ObservationComponent(code=code_c_change)
-                    comp_c_change.valueCodeableConcept = CodeableConcept(text=f'{transcript}:{c_change}') 
+                    comp_c_change.valueCodeableConcept = CodeableConcept(
+                        text=f"{transcript}:{c_change}"
+                    )
                     obs_row.component.append(comp_c_change)
 
-                #add primary observation to bundle
-                conn = sqlite3.connect(self.dbpath) 
-
+                # add primary observation to bundle
+                conn = sqlite3.connect(self.dbpath)
 
                 curs = conn.cursor()
                 curs.execute("SELECT COUNT(*) from variant")
@@ -405,64 +422,72 @@ class Reporter(BaseReporter):
                 uri_maker = Uri(f"urn:uuid:{id}")
                 converted_ent = BundleEntry(resource=obs_row, fullUrl=uri_maker)
 
-                self.dict_entries[sample].append(converted_ent)        
+                self.dict_entries[sample].append(converted_ent)
 
-
-            #begin all transcript mapping loop
+            # begin all transcript mapping loop
             else:
-                all_mappings = row['base__all_mappings'].split(";")
+                all_mappings = row["base__all_mappings"].split(";")
                 for mapping in all_mappings:
                     mapping_comps = []
-                    obs_mapping= Observation(
-                    status="final", code=code, subject=self.dict_patient[sample], category=[cat_cc]
-            )                
+                    obs_mapping = Observation(
+                        status="final",
+                        code=code,
+                        subject=self.dict_patient[sample],
+                        category=[cat_cc],
+                    )
                     mapping_list = mapping.split(":")
                     transcript = mapping_list[0].strip()
-                    id_maker = ((self.str_id)
-                                 + f"{str(row['base__chrom']) + str(row['base__pos']) + str(row['base__ref_base']) + str(row['base__alt_base'] + transcript)}")
+                    id_maker = (
+                        (self.str_id)
+                        + f"{str(row['base__chrom']) + str(row['base__pos']) + str(row['base__ref_base']) + str(row['base__alt_base'] + transcript)}"
+                    )
                     mapping_id = self.uuid_maker(id_maker + self.str_id)
                     uri_maker = Uri(f"urn:uuid:{mapping_id}")
-                                    
-                    #Ensembl transcript component
-                    if len(transcript)>0:
+
+                    # Ensembl transcript component
+                    if len(transcript) > 0:
                         coding_transcript = Coding()
-                        coding_transcript.system = ("http://loinc.org")
+                        coding_transcript.system = "http://loinc.org"
                         coding_transcript.code = "51958-7"
                         coding_transcript.display = "Transcript reference sequence[ID]"
                         code_transcript = CodeableConcept(coding=[coding_transcript])
-                        comp_transcript = ObservationComponent(code = code_transcript)
+                        comp_transcript = ObservationComponent(code=code_transcript)
                         coding_comp = Coding()
                         coding_comp.system = "http://www.ensembl.org"
                         coding_comp.code = transcript
-                        comp_transcript.valueCodeableConcept = CodeableConcept(coding=[coding_comp])
+                        comp_transcript.valueCodeableConcept = CodeableConcept(
+                            coding=[coding_comp]
+                        )
                         mapping_comps.append(comp_transcript)
-                    if len(mapping_list)>1:
+                    if len(mapping_list) > 1:
                         uniprot_id = mapping_list[1].strip()
                         sequence_ontology = mapping_list[3].strip()
                         list_so = sequence_ontology.split(",")
                         amino_acid_change = mapping_list[4].strip()
                         chromosome_change = mapping_list[5].strip()
                         for so in list_so:
-                            if so != 'unknown' and so != '' and so != ' ':
+                            if so != "unknown" and so != "" and so != " ":
                                 so_coding = Coding()
-                                so_coding.system = ("http://sequenceontology.org")
+                                so_coding.system = "http://sequenceontology.org"
                                 so_coding.code = self.SO_dict[so]
                                 so_coding.display = so
                                 so_value = CodeableConcept(coding=[so_coding])
-                                comp_so = ObservationComponent(code = so_value)
+                                comp_so = ObservationComponent(code=so_value)
                                 mapping_comps.append(comp_so)
-                        #make a_change component
+                        # make a_change component
                         if amino_acid_change is not None:
                             coding_change = Coding()
                             coding_change.system = Uri("http://loinc.org")
-                            coding_change.code = '48006-1'
-                            coding_change.display  = "Amino Acid Change [type]"
+                            coding_change.code = "48006-1"
+                            coding_change.display = "Amino Acid Change [type]"
                             code_achange = CodeableConcept(coding=[coding_change])
                             comp_achange = ObservationComponent(code=code_achange)
-                            comp_achange.valueCodeableConcept = CodeableConcept(text=f"{transcript}:{amino_acid_change}")
+                            comp_achange.valueCodeableConcept = CodeableConcept(
+                                text=f"{transcript}:{amino_acid_change}"
+                            )
                             mapping_comps.append(comp_achange)
-#   
-                        #make c_change component (ENSEMBL)
+                        #
+                        # make c_change component (ENSEMBL)
                         if chromosome_change is not None:
                             coding_c_change = Coding()
                             coding_c_change.system = Uri("http://loinc.org")
@@ -470,23 +495,22 @@ class Reporter(BaseReporter):
                             coding_c_change.display = "DNA change (c.HGVS)"
                             code_c_change = CodeableConcept(coding=[coding_c_change])
                             comp_c_change = ObservationComponent(code=code_c_change)
-                            comp_c_change.valueCodeableConcept = CodeableConcept(text=f'{transcript}:{chromosome_change}')
+                            comp_c_change.valueCodeableConcept = CodeableConcept(
+                                text=f"{transcript}:{chromosome_change}"
+                            )
                             mapping_comps.append(comp_c_change)
-#   
+                            #
                             ##make rc_change component (RefSeq)
                             coding_rc_change = Coding()
                             coding_rc_change.system = Uri("http://loinc.org")
-                            coding_rc_change.code =  "48004-6"
+                            coding_rc_change.code = "48004-6"
                             coding_rc_change.display = "DNA change (c.HGVS)"
                             code_rc_change = CodeableConcept(coding=[coding_rc_change])
-                            comp_rc_change = ObservationComponent(code = code_rc_change)
-                            comp_rc_change.valueCodeableConcept = CodeableConcept(text=f"{row['base__refseq']}:{chromosome_change}")
+                            comp_rc_change = ObservationComponent(code=code_rc_change)
+                            comp_rc_change.valueCodeableConcept = CodeableConcept(
+                                text=f"{row['base__refseq']}:{chromosome_change}"
+                            )
                             mapping_comps.append(comp_rc_change)
                     obs_mapping.component = mapping_comps
                     mapping_ent = BundleEntry(resource=obs_mapping, fullUrl=uri_maker)
                     self.dict_entries[sample].append(mapping_ent)
-              
-                
-
-
-
