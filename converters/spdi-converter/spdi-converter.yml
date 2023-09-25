@@ -1,0 +1,36 @@
+##################################
+#
+# Mandatory fields
+#
+##################################
+title: SPDI Converter
+description: This is an OakVar converter module.
+type: converter
+#level: variant
+version: 0.0.1
+format_name: spdi
+
+# If your module has its own data under module_dir/data folder,
+# remove no_data field and uncomment data_version field with 
+# a data version number.
+no_data: true
+# data_version: 0.0.1
+
+developer:
+  module:
+    name: 'Mohit Bachan Singh Panwar'
+    organization: 'Oak Bioinformatics LLC'
+    email: 'mohitsingh5123@gmail.com'
+    website: ''
+    citation: ''
+  data:
+    name: ''
+    organization: ''
+    email: ''
+    website: ''
+    citation: ''
+
+
+
+release_note:
+  0.0.1: initial version
