@@ -347,8 +347,8 @@ class Reporter(BaseReporter):
                 comp_pos.valueCodeableConcept = cc_pos
 
                 # Make Component for Sequence Ontology
+                
 
-                SO = row["base__so"]
 
                 # Make Component for Start and End (sne)
 
@@ -376,9 +376,20 @@ class Reporter(BaseReporter):
                     comp_gene_id.valueCodeableConcept = CodeableConcept(
                         text=f"{gene_id}"
                     )
-                    obs_row.component = [comp_gene_id, comp_ref, comp_alt, comp_chrom]
+                    obs_row.component = [comp_gene_id, comp_ref, comp_alt, comp_chrom, comp_pos]
                 else:
-                    obs_row.component = [comp_ref, comp_alt, comp_chrom]
+                    obs_row.component = [comp_ref, comp_alt, comp_chrom, comp_pos]
+
+                SO = row["base__so"]
+
+                if SO is  not None:
+                    SO_coding = Coding()
+                    SO_coding.system = "http://sequenceontology.org"
+                    SO_coding.code = self.SO_dict[SO]
+                    SO_coding.display = SO
+                    SO_value = CodeableConcept(coding=[SO_coding])
+                    comp_SO = ObservationComponent(code=SO_value)
+                    obs_row.component.append(comp_SO)
 
                 # Make Component for cchange (change)
                 aa_change = row["base__achange"]
