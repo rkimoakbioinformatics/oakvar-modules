@@ -1,6 +1,5 @@
 from typing import Optional
 from oakvar import BaseAnnotator
-from Bio.SeqUtils import seq1
 import re
 import sqlite3
 class Annotator(BaseAnnotator):
@@ -174,7 +173,6 @@ class Annotator(BaseAnnotator):
                             qr.append(self.cursor.fetchone())
 
         elif variant_type == 'CSS' or variant_type == 'complex_substitution':
-        
             input_ref_alt_pos = re.search(r'(\w{3})(\d+)_?(\w{3})?(\d+)?delins(\w+)',achange)
             if input_ref_alt_pos is not None:
                 ref_alt_pos_catch = input_ref_alt_pos.groups()
@@ -294,3 +292,31 @@ class Annotator(BaseAnnotator):
               "pmkb_url_variants": qr[0][7]
             }
         _ = secondary_data
+
+    def seq1(seq):
+        protein_letters_3to1 = {
+            "Ala": "A",
+            "Cys": "C",
+            "Asp": "D",
+            "Glu": "E",
+            "Phe": "F",
+            "Gly": "G",
+            "His": "H",
+            "Ile": "I",
+            "Lys": "K",
+            "Leu": "L",
+            "Met": "M",
+            "Asn": "N",
+            "Pro": "P",
+            "Gln": "Q",
+            "Arg": "R",
+            "Ser": "S",
+            "Thr": "T",
+            "Val": "V",
+            "Trp": "W",
+            "Tyr": "Y",
+            }
+
+        onecode = {k.upper(): v for k,v in protein_letters_3to1.items()}
+        seqlist = [seq[3 * i : 3 * (i+1)] for i in range(len(seq)//3)]
+        return "".join(onecode.get(aa.upper()) for aa in seqlist)
