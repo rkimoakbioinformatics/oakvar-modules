@@ -294,6 +294,15 @@ class Annotator(BaseAnnotator):
         _ = secondary_data
 
     def seq1(seq):
+        """
+        Inspired from BioPython package seq1 function 
+
+        resource:
+            https://github.com/biopython/biopython/blob/master/Bio/SeqUtils/__init__.py
+        """
+
+
+
         protein_letters_3to1 = {
             "Ala": "A",
             "Cys": "C",
@@ -320,3 +329,4 @@ class Annotator(BaseAnnotator):
         onecode = {k.upper(): v for k,v in protein_letters_3to1.items()}
         seqlist = [seq[3 * i : 3 * (i+1)] for i in range(len(seq)//3)]
         return "".join(onecode.get(aa.upper()) for aa in seqlist)
+        
