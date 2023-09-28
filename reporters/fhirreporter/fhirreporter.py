@@ -381,21 +381,26 @@ class Reporter(BaseReporter):
                     obs_row.component = [comp_ref, comp_alt, comp_chrom, comp_pos]
 
                 SO = row["base__so"]
-
-                if SO is  not None:
+                if SO is not None:
                     SO_coding = Coding()
-                    SO_coding.system = "http://sequenceontology.org"
-                    SO_coding.code = self.SO_dict[SO]
-                    SO_coding.display = SO
-                    SO_value = CodeableConcept(coding=[SO_coding])
-                    comp_SO = ObservationComponent(code=SO_value)
+                    SO_coding.system = "http://hl7.org/fhir/uv/genomics-reporting/STU2/CodeSystem-tbd-codes-cs"
+                    SO_coding.code = "feature-consequence"
+                    code_SO = CodeableConcept(coding = [SO_coding])
+                    comp_SO = ObservationComponent(code=code_SO)
+                    
+                    comp_SO.valueCodeableConcept = CodeableConcept(
+                        coding=[Coding(system="http://sequenceontology.org",
+                                      code=SO,
+                                      display=self.SO_dict[SO])
+                        ])
                     obs_row.component.append(comp_SO)
+
 
                 # Make Component for cchange (change)
                 aa_change = row["base__achange"]
                 c_change = row["base__cchange"]
 
-                if aa_change is not None:
+                if aa_change != "" and aa_change != " ":
                     coding_change = Coding()
                     coding_change.system = Uri("http://loinc.org")
                     coding_change.code = "48006-1"
@@ -406,7 +411,7 @@ class Reporter(BaseReporter):
                         text=f"{transcript}:{aa_change}"
                     )
                     obs_row.component.append(comp_achange)
-                if c_change is not None:
+                if c_change != '' and c_change != ' ':
                     coding_c_change = Coding()
                     coding_c_change.system = Uri("http://loinc.org")
                     coding_c_change.code = "48004-6"
@@ -479,14 +484,21 @@ class Reporter(BaseReporter):
                         for so in list_so:
                             if so != "unknown" and so != "" and so != " ":
                                 so_coding = Coding()
-                                so_coding.system = "http://sequenceontology.org"
-                                so_coding.code = self.SO_dict[so]
-                                so_coding.display = so
-                                so_value = CodeableConcept(coding=[so_coding])
-                                comp_so = ObservationComponent(code=so_value)
+                                so_coding.system = "http://hl7.org/fhir/uv/genomics-reporting/STU2/CodeSystem-tbd-codes-cs"
+                                so_coding.code = "feature-consequence"
+                                code_so = CodeableConcept(coding = [so_coding])
+                                comp_so = ObservationComponent(code=code_so)
+
+                                comp_so.valueCodeableConcept = CodeableConcept(
+                                    coding=[Coding(system="http://sequenceontology.org",
+                                                  code=so,
+                                                  display=self.SO_dict[so])
+                                ])
                                 mapping_comps.append(comp_so)
                         # make a_change component
-                        if amino_acid_change is not None:
+
+                        if  amino_acid_change != "" and amino_acid_change != " ":
+                           
                             coding_change = Coding()
                             coding_change.system = Uri("http://loinc.org")
                             coding_change.code = "48006-1"
@@ -499,7 +511,7 @@ class Reporter(BaseReporter):
                             mapping_comps.append(comp_achange)
                         #
                         # make c_change component (ENSEMBL)
-                        if chromosome_change is not None:
+                        if chromosome_change != '' and chromosome_change != ' ':
                             coding_c_change = Coding()
                             coding_c_change.system = Uri("http://loinc.org")
                             coding_c_change.code = "48004-6"
