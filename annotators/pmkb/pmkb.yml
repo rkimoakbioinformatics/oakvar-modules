@@ -25,11 +25,8 @@ output_columns:
 - name: tissue_type
   title: Tissue type
   type: string
-- name: tier
-  title: Tier
-  type: string
-- name: pmkb_url 
-  title: PMKB URL
+- name: pmkb_url_interpretation
+  title: PMKB URL Interpretation
   type: string
 - name: interpretations
   title: interpretations
@@ -37,13 +34,10 @@ output_columns:
 - name: citations
   title: citations
   type: string
-- name: gene
-  title: Gene description
-  type: string
 - name: achange
   title: Amino Acid Change
   type: string
-- name: pmkb_url
+- name: pmkb_url_variants
   title: PMKB variant URL
   type: string 
 developer:
