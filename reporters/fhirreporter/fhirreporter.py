@@ -270,179 +270,199 @@ class Reporter(BaseReporter):
             cat_cc = CodeableConcept()
             cat_cc.coding = [cat_coding]
 
-            if self.module_options.get("all_transcripts") != "true":
-                sample_json_mappings = row["base__all_mappings"]
+            #get primary transcript ENSEMBL
+            primary_transcript = row['base__transcript']
+            coding_primary_transcript = Coding()
+            coding_primary_transcript.system = "http://loinc.org"
+            coding_primary_transcript.code = "51958-7"
+            coding_primary_transcript.display = "Transcript reference sequence [ID]"
+            code_transcript = CodeableConcept(coding=[coding_primary_transcript])
+            comp_primary_transcript = ObservationComponent(code=code_transcript)
+            coding_pt_comp = Coding()
+            coding_pt_comp.system = "http://www.ensembl.org"
+            coding_pt_comp.code = primary_transcript
+            comp_primary_transcript.valueCodeableConcept = CodeableConcept(
+                coding=[coding_pt_comp]
+            )
+            # Get Alleles from sqlite file
+            ref = row["base__ref_base"]
+            alt = row["base__alt_base"]
 
-                # get RefSeq from sqlite file
-                transcript = row["base__transcript"]
+            # Make Component for reference allele (UNIVERSAL COMPONENT)
+            coding_ref = Coding()
+            coding_ref.system = Uri("http://loinc.org")
+            coding_ref.code = "69547-8"  # always code for reference allele
+            coding_ref.display = "Ref nucleotide"
+            code_ref = CodeableConcept()
+            code_ref.coding = [coding_ref]
+            comp_ref = ObservationComponent(code=code_ref)
+            comp_ref.valueString = ref
 
-                # Get Alleles from sqlite file
-                ref = row["base__ref_base"]
-                alt = row["base__alt_base"]
 
-                # get chrom and pos information
-                chrom_location = row["base__chrom"]
-                pos = row["base__pos"]
+            # Make Component for (alt)ernate allele (UNIVERSAL COMPONENT)
+            coding_alt = Coding()
+            coding_alt.system = Uri("http://loinc.org")
+            coding_alt.code = "69551-0"
+            coding_alt.display = "Alt allele"
+            code_alt = CodeableConcept()
+            code_alt.coding = [coding_alt]
+            comp_alt = ObservationComponent(code=code_alt)
+            comp_alt.valueString = alt
 
-                # create Observation Resource for row
-                obs_row = Observation(
-                    status="final",
-                    code=code,
-                    subject=self.dict_patient[sample],
-                    category=[cat_cc],
-                )
-                # obs_row.meta = MetaType()
-                # obs_row.meta.profile = ["http://hl7.org/fhir/uv/genomics-reporting/StructureDefinition/variant"]
 
-                # Make Component for reference allele
-                coding_ref = Coding()
-                coding_ref.system = Uri("http://loinc.org")
-                coding_ref.code = "69547-8"  # always code for reference allele
-                coding_ref.display = "Ref nucleotide"
-                code_ref = CodeableConcept()
-                code_ref.coding = [coding_ref]
-                comp_ref = ObservationComponent(code=code_ref)
-                comp_ref.valueString = ref
+            # get chrom and pos information
+            chrom_location = row["base__chrom"]
+            pos = row["base__pos"]
 
-                # Make Component for (alt)ernate allele
-                coding_alt = Coding()
-                coding_alt.system = Uri("http://loinc.org")
-                coding_alt.code = "69551-0"
-                coding_alt.display = "Alt allele"
-                code_alt = CodeableConcept()
-                code_alt.coding = [coding_alt]
-                comp_alt = ObservationComponent(code=code_alt)
-                comp_alt.valueString = alt
 
-                ##Make Component for Chrom
-                coding_chrom = Coding()
-                coding_chrom.system = Uri("http://loinc.org")
-                coding_chrom.code = "48001-2"
-                coding_chrom.display = "Cytogenetic (chromosome) location"
-                code_chrom = CodeableConcept()
-                code_chrom.coding = [coding_chrom]
-                comp_chrom = ObservationComponent(code=code_chrom)
-                comp_chrom.valueCodeableConcept = CodeableConcept(
-                    text=String(f"{chrom_location}")
-                )
-                #
-                ##Make Component for Pos
-                coding_pos = Coding()
-                coding_pos.system = Uri("http://loinc.org")
-                coding_pos.code = "92822-6"
-                code_pos = CodeableConcept()
-                code_pos.coding = [coding_pos]
-                comp_pos = ObservationComponent(code=code_pos)
-                cc_pos = CodeableConcept(
-                    coding=[
-                        (
-                            Coding(
-                                system=Uri("http://loinc.org"),
-                                code="LA30102-0",
-                                display=String("1-based character counting"),
-                            )
+            #Make Component for Chrom Location
+            coding_chrom = Coding()
+            coding_chrom.system = Uri("http://loinc.org")
+            coding_chrom.code = "48001-2"
+            coding_chrom.display = "Cytogenetic (chromosome) location"
+            code_chrom = CodeableConcept()
+            code_chrom.coding = [coding_chrom]
+            comp_chrom = ObservationComponent(code=code_chrom)
+            comp_chrom.valueCodeableConcept = CodeableConcept(
+                text=String(f"{chrom_location}")
+            )
+            #
+            ##Make Component for character based counting 
+            coding_counting = Coding()
+            coding_counting.system = Uri("http://loinc.org")
+            coding_counting.code = "92822-6"
+            code_counting = CodeableConcept()
+            code_counting.coding = [coding_counting]
+            comp_counting = ObservationComponent(code=code_counting)
+            cc_counting = CodeableConcept(
+                coding=[
+                    (
+                        Coding(
+                            system=Uri("http://loinc.org"),
+                            code="LA30102-0",
+                            display=String("1-based character counting"),
                         )
-                    ]
-                )
-                comp_pos.valueCodeableConcept = cc_pos
-
-                # Make Component for Sequence Ontology
-                
-
-
-                # Make Component for Start and End (sne)
-
-                coding_st_sne = Coding()
-                coding_st_sne.system = Uri("http://loinc.org")
-                coding_st_sne.code = "81254-5"
-                coding_st_sne.display = "Genomic allele start-end"
-                st_sne_value_low = Quantity(value=row["base__pos"])
-                st_sne_value_high = Quantity(value=row["base__pos_end"])
-                code_sne = CodeableConcept(coding=[coding_st_sne])
-                comp_sne = ObservationComponent(code=code_sne)
-                comp_sne.valueRange = RangeType(
-                    low=st_sne_value_low, high=st_sne_value_high
-                )
-
-                # Make Component for Gene ID
-                gene_id = row["base__hugo"]
-                if gene_id is not None:
-                    coding_id = Coding()
-                    coding_id.system = Uri("http://loinc.org")
-                    coding_id.code = "48018-6"
-                    coding_id.display = "Gene studied [ID]"
-                    code_gene_id = CodeableConcept(coding=[coding_id])
-                    comp_gene_id = ObservationComponent(code=code_gene_id)
-                    comp_gene_id.valueCodeableConcept = CodeableConcept(
-                        text=f"{gene_id}"
                     )
-                    obs_row.component = [comp_gene_id, comp_ref, comp_alt, comp_chrom, comp_pos]
-                else:
-                    obs_row.component = [comp_ref, comp_alt, comp_chrom, comp_pos]
+                ]
+            )
+            comp_counting.valueCodeableConcept = cc_counting
+    
+            # Make Component for Start and End (sne) ##contains position 
+            coding_st_sne = Coding()
+            coding_st_sne.system = Uri("http://loinc.org")
+            coding_st_sne.code = "81254-5"
+            coding_st_sne.display = "Genomic allele start-end"
+            st_sne_value_low = Quantity(value=pos)
+            st_sne_value_high = Quantity(value=row["base__pos_end"])
+            code_sne = CodeableConcept(coding=[coding_st_sne])
+            comp_sne = ObservationComponent(code=code_sne)
+            comp_sne.valueRange = RangeType(
+                low=st_sne_value_low, high=st_sne_value_high
+            )
+            # create Observation Resource for row
 
-                SO = row["base__so"]
-                if SO is not None:
-                    SO_coding = Coding()
-                    SO_coding.system = "http://hl7.org/fhir/uv/genomics-reporting/STU2/CodeSystem-tbd-codes-cs"
-                    SO_coding.code = "feature-consequence"
-                    code_SO = CodeableConcept(coding = [SO_coding])
-                    comp_SO = ObservationComponent(code=code_SO)
-                    
-                    comp_SO.valueCodeableConcept = CodeableConcept(
-                        coding=[Coding(system="http://sequenceontology.org",
-                                      code=SO,
-                                      display=self.SO_dict[SO])
-                        ])
-                    obs_row.component.append(comp_SO)
+
+            #create single observation for row
+            obs_row = Observation(
+                status="final",
+                code=code,
+                subject=self.dict_patient[sample],
+                category=[cat_cc],
+            )
+            
+            #make ID for single observation
+            conn = sqlite3.connect(self.dbpath)
+            curs = conn.cursor()
+            curs.execute("SELECT COUNT(*) from variant")
+            self.num_rows = curs.fetchone()[0]
+            id_maker = (
+                (self.str_id)
+                + f"{str(row['base__chrom']) + str(row['base__pos']) + str(row['base__ref_base']) + str(row['base__alt_base'])}"
+            )
+            id = self.uuid_maker(id_maker + self.str_id)
+            uri_maker = Uri(f"urn:uuid:{id}")
 
 
-                # Make Component for cchange (change)
-                aa_change = row["base__achange"]
-                c_change = row["base__cchange"]
+            # obs_row.meta = MetaType()
+            # obs_row.meta.profile = ["http://hl7.org/fhir/uv/genomics-reporting/StructureDefinition/variant"]
 
-                if aa_change != "" and aa_change != " ":
-                    coding_change = Coding()
-                    coding_change.system = Uri("http://loinc.org")
-                    coding_change.code = "48006-1"
-                    coding_change.display = "Amino Acid Change [type]"
-                    code_achange = CodeableConcept(coding=[coding_change])
-                    comp_achange = ObservationComponent(code=code_achange)
-                    comp_achange.valueCodeableConcept = CodeableConcept(
-                        text=f"{transcript}:{aa_change}"
-                    )
-                    obs_row.component.append(comp_achange)
-                if c_change != '' and c_change != ' ':
-                    coding_c_change = Coding()
-                    coding_c_change.system = Uri("http://loinc.org")
-                    coding_c_change.code = "48004-6"
-                    coding_c_change.display = "DNA change (c.HGVS)"
-                    code_c_change = CodeableConcept(coding=[coding_c_change])
-                    comp_c_change = ObservationComponent(code=code_c_change)
-                    comp_c_change.valueCodeableConcept = CodeableConcept(
-                        text=f"{transcript}:{c_change}"
-                    )
-                    obs_row.component.append(comp_c_change)
-
-                # add primary observation to bundle
-                conn = sqlite3.connect(self.dbpath)
-
-                curs = conn.cursor()
-                curs.execute("SELECT COUNT(*) from variant")
-                self.num_rows = curs.fetchone()[0]
-
-                id_maker = (
-                    (self.str_id)
-                    + f"{str(row['base__chrom']) + str(row['base__pos']) + str(row['base__ref_base']) + str(row['base__alt_base'])}"
+            # Make Component for Gene ID
+            gene_id = row["base__hugo"]
+            if gene_id is not None:
+                coding_id = Coding()
+                coding_id.system = Uri("http://loinc.org")
+                coding_id.code = "48018-6"
+                coding_id.display = "Gene studied [ID]"
+                code_gene_id = CodeableConcept(coding=[coding_id])
+                comp_gene_id = ObservationComponent(code=code_gene_id)
+                comp_gene_id.valueCodeableConcept = CodeableConcept(
+                    text=f"{gene_id}"
                 )
-                id = self.uuid_maker(id_maker + self.str_id)
-                uri_maker = Uri(f"urn:uuid:{id}")
-                converted_ent = BundleEntry(resource=obs_row, fullUrl=uri_maker)
-
-                self.dict_entries[sample].append(converted_ent)
-
-            # begin all transcript mapping loop
+                obs_row.component = [comp_gene_id,comp_primary_transcript, comp_ref, comp_alt, comp_chrom, comp_counting,comp_sne]
             else:
+                obs_row.component = [comp_primary_transcript,comp_ref, comp_alt, comp_chrom, comp_counting, comp_sne]
+
+
+    
+            SO = row["base__so"]
+            if SO != ' ' and SO!= None or SO != '' and SO != None:
+                SO_coding = Coding()
+                SO_coding.system = "http://hl7.org/fhir/uv/genomics-reporting/STU2/CodeSystem-tbd-codes-cs"
+                SO_coding.code = "feature-consequence"
+                code_SO = CodeableConcept(coding = [SO_coding])
+                comp_SO = ObservationComponent(code=code_SO)
+                
+                comp_SO.valueCodeableConcept = CodeableConcept(
+                    coding=[Coding(system="http://sequenceontology.org",
+                                  code=SO,
+                                  display=self.SO_dict[SO])
+                    ])
+                obs_row.component.append(comp_SO)
+
+
+
+
+            aa_change = row["base__achange"]
+            c_change = row["base__cchange"]
+
+
+            # Make Component for achange (change)
+            if aa_change != "" and aa_change != " ":
+                coding_change = Coding()
+                coding_change.system = Uri("http://loinc.org")
+                coding_change.code = "48006-1"
+                coding_change.display = "Amino Acid Change [type]"
+                code_achange = CodeableConcept(coding=[coding_change])
+                comp_achange = ObservationComponent(code=code_achange)
+                comp_achange.valueCodeableConcept = CodeableConcept(
+                    text=f"{primary_transcript}:{aa_change}"
+                )
+                obs_row.component.append(comp_achange)
+            #Make Component for cchange (change)
+            if c_change != '' and c_change != ' ':
+                coding_c_change = Coding()
+                coding_c_change.system = Uri("http://loinc.org")
+                coding_c_change.code = "48004-6"
+                coding_c_change.display = "DNA change (c.HGVS)"
+                code_c_change = CodeableConcept(coding=[coding_c_change])
+                comp_c_change = ObservationComponent(code=code_c_change)
+                comp_c_change.valueCodeableConcept = CodeableConcept(
+                    text=f"{primary_transcript}:{c_change}"
+                )
+                obs_row.component.append(comp_c_change)
+
+
+
+            # add primary observation to bundle
+            converted_ent = BundleEntry(resource=obs_row, fullUrl=uri_maker)
+            self.dict_entries[sample].append(converted_ent)
+
+            #begin all_transcript module optionloop
+            if self.module_options.get("all_transcripts") == "true":
                 all_mappings = row["base__all_mappings"].split(";")
+
+
+                
                 for mapping in all_mappings:
                     mapping_comps = []
                     obs_mapping = Observation(
@@ -465,7 +485,7 @@ class Reporter(BaseReporter):
                         coding_transcript = Coding()
                         coding_transcript.system = "http://loinc.org"
                         coding_transcript.code = "51958-7"
-                        coding_transcript.display = "Transcript reference sequence[ID]"
+                        coding_transcript.display = "Transcript reference sequence [ID]"
                         code_transcript = CodeableConcept(coding=[coding_transcript])
                         comp_transcript = ObservationComponent(code=code_transcript)
                         coding_comp = Coding()
@@ -475,30 +495,41 @@ class Reporter(BaseReporter):
                             coding=[coding_comp]
                         )
                         mapping_comps.append(comp_transcript)
-                    if len(mapping_list) > 1:
-                        uniprot_id = mapping_list[1].strip()
-                        sequence_ontology = mapping_list[3].strip()
-                        list_so = sequence_ontology.split(",")
-                        amino_acid_change = mapping_list[4].strip()
-                        chromosome_change = mapping_list[5].strip()
+                        if len(mapping_list) > 1:
+                            uniprot_id = mapping_list[1].strip()
+                            sequence_ontology = mapping_list[3].strip()
+                            list_so = sequence_ontology.split(",")
+                            amino_acid_change = mapping_list[4].strip()
+                            chromosome_change = mapping_list[5].strip()
+    
+                        #create SO system for SO list
+                        so_system_coding = Coding()
+                        so_system_coding.system = "http://hl7.org/fhir/uv/genomics-reporting/STU2/CodeSystem-tbd-codes-cs"
+                        so_system_coding.code = "feature-consequence"
+                        code_system = CodeableConcept(coding = [so_system_coding])
+                        comp_SO_all = ObservationComponent(code=code_system)
+    
+                        coding_list = []
+                            
                         for so in list_so:
                             if so != "unknown" and so != "" and so != " ":
                                 so_coding = Coding()
-                                so_coding.system = "http://hl7.org/fhir/uv/genomics-reporting/STU2/CodeSystem-tbd-codes-cs"
-                                so_coding.code = "feature-consequence"
-                                code_so = CodeableConcept(coding = [so_coding])
-                                comp_so = ObservationComponent(code=code_so)
-
-                                comp_so.valueCodeableConcept = CodeableConcept(
-                                    coding=[Coding(system="http://sequenceontology.org",
-                                                  code=so,
-                                                  display=self.SO_dict[so])
-                                ])
-                                mapping_comps.append(comp_so)
+                                so_coding.system = "http://sequenceontology.org"
+                                so_coding.code = self.SO_dict[so]
+                                so_coding.display = so
+                                coding_list.append(so_coding)
+    
+    
+    
+                        comp_SO_all.valueCodeableConcept = CodeableConcept(
+                                coding=coding_list
+                        )
+    
+                        mapping_comps.append(comp_SO_all)
+                        
                         # make a_change component
-
                         if  amino_acid_change != "" and amino_acid_change != " ":
-                           
+                        
                             coding_change = Coding()
                             coding_change.system = Uri("http://loinc.org")
                             coding_change.code = "48006-1"
@@ -534,6 +565,6 @@ class Reporter(BaseReporter):
                                 text=f"{row['base__refseq']}:{chromosome_change}"
                             )
                             mapping_comps.append(comp_rc_change)
-                    obs_mapping.component = mapping_comps
-                    mapping_ent = BundleEntry(resource=obs_mapping, fullUrl=uri_maker)
-                    self.dict_entries[sample].append(mapping_ent)
+                        obs_mapping.component = mapping_comps
+                        mapping_ent = BundleEntry(resource=obs_mapping, fullUrl=uri_maker)
+                        self.dict_entries[sample].append(mapping_ent)
