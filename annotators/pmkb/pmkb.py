@@ -2,7 +2,10 @@ from typing import Optional
 from oakvar import BaseAnnotator
 import re
 import sqlite3
+
+
 class Annotator(BaseAnnotator):
+    
     def annotate(self, input_data: dict, secondary_data: Optional[dict] = None):
         assert input_data is not None
         if not self.cursor:
@@ -21,12 +24,12 @@ class Annotator(BaseAnnotator):
                         interpretations_final.interpretations, interpretations_final.citations,
                         variant.achange, variant.pmkb_url_variants 
                     FROM 
-                        variant
-                    LEFT JOIN
                         interpretations_final
-                        ON variant.achange = interpretations_final.variants
+                    LEFT JOIN
+                        variant
+                        ON variant.gene = interpretations_final.gene_name
                     WHERE 
-                        achange = :achange_pmkb
+                        achange = :achange_pmkb AND variant.gene = :gene
                 """
         # exonno = input_data['exonno']
         variant_type = input_data['so']
@@ -62,21 +65,22 @@ class Annotator(BaseAnnotator):
                     #match results of pmkb achange with input data
                     if input_pos in pmkb_pos:
                         if  pmkb_ref_allele == input_ref_allele and pmkb_alt_allele == input_alt_allele:
-                            self.cursor.execute(f'{query}', {"achange_pmkb": line[0]})
+                            self.cursor.execute(f'{query}', {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
                         #if positions meet 
                         elif pmkb_ref_allele == '_any' and pmkb_alt_allele == '_any':
-                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
                         if pmkb_kind == '_exon':
                             if pmkb_pos == exonno:
-                                self.cursor.execute(query,{"achange_pmkb": line[0]})
+                                self.cursor.execute(query,{"achange_pmkb": line[0],"gene": gene})
                                 qr.append(self.cursor.fetchone())
                     #handle _any kind
                     if pmkb_so == '_any' or pmkb_so == 'any':
                         if pmkb_pos == '_any':
-                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
+        
         #handle frameshift mutations
         elif  variant_type == 'FSD' or variant_type  == 'FSI' or variant_type == 'frameshift_insertion' or variant_type == 'frameshift_deletion': 
             #get input data for querying the pmkb database
@@ -106,22 +110,21 @@ class Annotator(BaseAnnotator):
                     pmkb_kind = pmkb_achange[0]
                     if input_pos in pmkb_pos:
                         if  pmkb_ref_allele == input_ref_allele:
-                            self.cursor.execute(f'{query}', {"achange_pmkb": line[0]})
+                            self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
                         #if positions meet 
                         elif pmkb_ref_allele == '_any' and pmkb_alt_allele == '_any':
-                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
                         if pmkb_kind == '_exon':
                             if pmkb_pos == exonno:
-                                self.cursor.execute(query,{"achange_pmkb": line[0]})
+                                self.cursor.execute(query,{"achange_pmkb": line[0],"gene": gene})
                                 qr.append(self.cursor.fetchone())
                     #handle _any kind
                     if pmkb_so == '_any' or pmkb_so == 'any':
                         if pmkb_pos == '_any':
-                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
-
         #handle insertion mutation cases
         elif variant_type == 'INI' or variant_type == 'inframe_insertion':
             input_ref_alt_pos = re.search(r'(\w{3})(\d+)_?(\w{3})(\d+)ins(\w+)',achange)
@@ -157,22 +160,23 @@ class Annotator(BaseAnnotator):
                                 input_alt_allele_seq1 += seq1(alt_allele[i:i+3])
                     if pmkb_pos == input_start_pos:    
                         if pmkb_alt_allele == input_alt_allele_seq1:
-                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
                         elif pmkb_ref_allele == '_any' and pmkb_alt_allele == '_any':
-                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
                         if pmkb_kind == '_exon':
                             if pmkb_pos == exonno:
-                                self.cursor.execute(query,{"achange_pmkb": line[0]})
+                                self.cursor.execute(query,{"achange_pmkb": line[0],"gene": gene})
                                 qr.append(self.cursor.fetchone())
                     #handle _any kind
                     if pmkb_so == '_any' or pmkb_so == 'any':
                         if pmkb_pos == '_any':
-                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
 
         elif variant_type == 'CSS' or variant_type == 'complex_substitution':
+        
             input_ref_alt_pos = re.search(r'(\w{3})(\d+)_?(\w{3})?(\d+)?delins(\w+)',achange)
             if input_ref_alt_pos is not None:
                 ref_alt_pos_catch = input_ref_alt_pos.groups()
@@ -208,24 +212,24 @@ class Annotator(BaseAnnotator):
                     if input_end_pos != '':
                         if pmkb_start_pos == input_start_pos:
                             if pmkb_end_pos == input_end_pos and pmkb_alt_allele == input_alt_allele_seq1:
-                                self.cursor.execute(query, {"achange_pmkb": line[0]})
+                                self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                                 qr.append(self.cursor.fetchall())
                     # if there is no end pos for the input variant ex: p.Asp618delinsGluLeuHis 
                     else:
                         if pmkb_start_pos == input_start_pos and pmkb_alt_allele == input_alt_allele_seq1:
-                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchall())
                         elif pmkb_ref_allele == '_any' and pmkb_alt_allele == '_any':
-                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
                         if pmkb_kind == '_exon':
                             if pmkb_pos == exonno:
-                                self.cursor.execute(query,{"achange_pmkb": line[0]})
+                                self.cursor.execute(query,{"achange_pmkb": line[0],"gene": gene})
                                 qr.append(self.cursor.fetchone())
                     #handle _any so
                     if pmkb_so == '_any' or pmkb_so == 'any':
                         if pmkb_pos == '_any':
-                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
             #Handle deletion cases
         
@@ -248,7 +252,6 @@ class Annotator(BaseAnnotator):
                         gene = :gene
                     """, {'gene': gene})
                 pmkb_variants = self.cursor.fetchall()
-
                 for line in pmkb_variants:
                     pmkb_achange = line[0].split(':')
                     pmkb_start_pos = pmkb_achange[1]
@@ -261,24 +264,24 @@ class Annotator(BaseAnnotator):
                     #if the deletion is in an interval
                     if input_end_pos != '' and pmkb_end_pos != '' and input_alt_allele != '':
                         if pmkb_start_pos == input_start_pos and pmkb_ref_allele == input_ref_alt and pmkb_end_pos == input_end_pos:
-                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchall())
                     #else the deletion is in one position only
                     else:
                         if pmkb_ref_allele == input_ref_allele and pmkb_start_pos == input_start_pos:
-                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
                         elif pmkb_ref_allele == '_any' and pmkb_alt_allele == '_any':
-                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
                         if pmkb_kind == '_exon':
                             if pmkb_pos == exonno:
-                                self.cursor.execute(query,{"achange_pmkb": line[0]})
+                                self.cursor.execute(query,{"achange_pmkb": line[0],"gene": gene})
                                 qr.append(self.cursor.fetchone())
                     #handle _any so
                     if pmkb_so == '_any' or pmkb_so == 'any':
                         if pmkb_start_pos == '_any':
-                            self.cursor.execute(query, {"achange_pmkb": line[0]})
+                            self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
         if qr is not None and qr != []:
             return{
@@ -293,40 +296,36 @@ class Annotator(BaseAnnotator):
             }
         _ = secondary_data
 
-    def seq1(seq):
-        """
-        Inspired from BioPython package seq1 function 
+def seq1(seq, custom_map = None):
+    protein_letters_3to1 = {
+    "Ala": "A",
+    "Cys": "C",
+    "Asp": "D",
+    "Glu": "E",
+    "Phe": "F",
+    "Gly": "G",
+    "His": "H",
+    "Ile": "I",
+    "Lys": "K",
+    "Leu": "L",
+    "Met": "M",
+    "Asn": "N",
+    "Pro": "P",
+    "Gln": "Q",
+    "Arg": "R",
+    "Ser": "S",
+    "Thr": "T",
+    "Val": "V",
+    "Trp": "W",
+    "Tyr": "Y",
+    }
+    if custom_map is None:
+        custom_map = {"Ter": "*"}
+    
+    onecode = {k.upper(): v for k,v in protein_letters_3to1.items()}
+    onecode.update((k.upper(), v) for k, v in custom_map.items())
+    seqlist = [seq[3 * i : 3 * (i+1)] for i in range(len(seq)//3)]
+    return "".join(onecode.get(aa.upper()) for aa in seqlist)
 
-        resource:
-            https://github.com/biopython/biopython/blob/master/Bio/SeqUtils/__init__.py
-        """
 
 
-
-        protein_letters_3to1 = {
-            "Ala": "A",
-            "Cys": "C",
-            "Asp": "D",
-            "Glu": "E",
-            "Phe": "F",
-            "Gly": "G",
-            "His": "H",
-            "Ile": "I",
-            "Lys": "K",
-            "Leu": "L",
-            "Met": "M",
-            "Asn": "N",
-            "Pro": "P",
-            "Gln": "Q",
-            "Arg": "R",
-            "Ser": "S",
-            "Thr": "T",
-            "Val": "V",
-            "Trp": "W",
-            "Tyr": "Y",
-            }
-
-        onecode = {k.upper(): v for k,v in protein_letters_3to1.items()}
-        seqlist = [seq[3 * i : 3 * (i+1)] for i in range(len(seq)//3)]
-        return "".join(onecode.get(aa.upper()) for aa in seqlist)
-        
