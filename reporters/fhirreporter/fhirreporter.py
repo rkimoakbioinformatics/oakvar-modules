@@ -457,6 +457,8 @@ class Reporter(BaseReporter):
             converted_ent = BundleEntry(resource=obs_row, fullUrl=uri_maker)
             self.dict_entries[sample].append(converted_ent)
 
+            
+
             #begin all_transcript module optionloop
             if self.module_options.get("all_transcripts") == "true":
                 all_mappings = row["base__all_mappings"].split(";")
