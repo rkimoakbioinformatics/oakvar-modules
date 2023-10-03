@@ -503,6 +503,23 @@ class Reporter(BaseReporter):
                             list_so = sequence_ontology.split(",")
                             amino_acid_change = mapping_list[4].strip()
                             chromosome_change = mapping_list[5].strip()
+
+                        if uniprot_id != '' or uniprot_id != '':
+                            coding_id = Coding()
+                            coding_id.system = Uri("http://loinc.org")
+                            coding_id.code = "48018-6"
+                            coding_id.display = "Gene studied [ID]"
+                            code_uniprot_id = CodeableConcept(coding=[coding_id])
+                            comp_uni_prot = ObservationComponent(code=code_gene_id)
+                            comp_uni_prot.valueCodeableConcept = CodeableConcept(
+                                text=f"{uniprot_id}"
+                            )
+                        mapping_comps.append(comp_uni_prot)
+                        mapping_comps.append(comp_ref)
+                        mapping_comps.append(comp_alt)
+                        mapping_comps.append(comp_chrom)
+                        mapping_comps.append(comp_counting)
+                        mapping_comps.append(comp_sne)
     
                         #create SO system for SO list
                         so_system_coding = Coding()
