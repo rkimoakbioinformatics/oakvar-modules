@@ -283,7 +283,7 @@ class Annotator(BaseAnnotator):
                         if pmkb_start_pos == '_any':
                             self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
-        if qr is not None and qr != []:
+        if qr is not None and qr != [] and None not in qr:
             return{
               "gene_name": qr[0][0],
               "tumor_type":qr[0][1],
