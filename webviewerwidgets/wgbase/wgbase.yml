@@ -1,0 +1,29 @@
+title: Variant Annotation
+version: 1.3.0
+no_data: true
+type: webviewerwidget
+required_annotator: base
+requires_oakvar: '>=2.6.65'
+description: Variant annotation webviewer widget
+developer:
+  name: Ryangguk Kim
+  organization: Oak Bioinformatics, LLC
+  email: rkim@oakbioinformatics.com
+  website: https://oakbioinformatics.com
+  citation: ''
+columnwidth:
+- base__uid: 100
+- base__chrom: 100
+- base__pos: 200
+tags:
+- visualization
+release_note:
+  1.3.0: added exon number.
+  1.2.0: oakvar version
+  1.1.3: improvement for oc 1.8.1
+  1.1.2: multiple sos delimited by semicolon
+  1.1.1: works with oc 1.8.1 and 2nd phase new hg38.
+  1.1.0: works with single variant page in oc 1.7.0.
+  1.0.7: added gene tab aggregated columns.
+  1.0.5: uses full sequence ontology names.
+hidden: true
