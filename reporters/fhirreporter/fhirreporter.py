@@ -1,9 +1,6 @@
 import uuid
-import json
-import requests
 import hashlib
 import sqlite3
-from pathlib import Path
 from oakvar import BaseReporter
 from fhir.resources.patient import Patient
 from fhir.resources.observation import Observation
@@ -13,18 +10,10 @@ from fhir.resources.codeableconcept import CodeableConcept
 from fhir.resources.coding import Coding
 from fhir.resources.reference import Reference
 from fhir.resources.bundle import Bundle, BundleEntry
-from fhir.resources.fhirtypes import (
-    Uri,
-    MetaType,
-    IdentifierType,
-    String,
-    RangeType,
-    Code,
-    BackboneElementType,
-)
+from fhir.resources.fhirtypes import Uri, String , RangeType
 from fhir.resources.quantity import Quantity
 from fhir.resources.identifier import Identifier
-from fhir.resources.list import List, ListEntry
+
 
 
 class Reporter(BaseReporter):
@@ -169,7 +158,6 @@ class Reporter(BaseReporter):
             sample_2_patient.name = [name]
             patient_id = str(uuid.UUID(hex=hex_sample))
             # add to patient dict for reference in row observations
-            # if for future cases a reference is needed it is here otherwise for the MVP it is not needed
             subject = Reference(type="Patient")
             subject.resource_type = "Reference"
             subject.reference = f"urn:uuid:{patient_id}"
@@ -377,7 +365,10 @@ class Reporter(BaseReporter):
             self.num_rows = curs.fetchone()[0]
             id_maker = (
                 (self.str_id)
-                + f"{str(row['base__chrom']) + str(row['base__pos']) + str(row['base__ref_base']) + str(row['base__alt_base'])}"
+                + f"""{str(row['base__chrom']) 
+                     + str(row['base__pos']) 
+                     + str(row['base__ref_base']) 
+                     + str(row['base__alt_base'])}"""
             )
             id = self.uuid_maker(id_maker + self.str_id)
             uri_maker = Uri(f"urn:uuid:{id}")
@@ -405,7 +396,7 @@ class Reporter(BaseReporter):
 
     
             SO = row["base__so"]
-            if SO != ' ' and SO!= None or SO != '' and SO != None:
+            if SO != ' ' and SO is not None or SO != '' and SO is not None:
                 SO_coding = Coding()
                 SO_coding.system = "http://hl7.org/fhir/uv/genomics-reporting/STU2/CodeSystem-tbd-codes-cs"
                 SO_coding.code = "feature-consequence"
@@ -477,7 +468,10 @@ class Reporter(BaseReporter):
                     transcript = mapping_list[0].strip()
                     id_maker = (
                         (self.str_id)
-                        + f"{str(row['base__chrom']) + str(row['base__pos']) + str(row['base__ref_base']) + str(row['base__alt_base'] + transcript)}"
+                        + f"""{str(row['base__chrom']) 
+                             + str(row['base__pos']) 
+                             + str(row['base__ref_base']) 
+                             + str(row['base__alt_base'] + transcript)}"""
                     )
                     mapping_id = self.uuid_maker(id_maker + self.str_id)
                     uri_maker = Uri(f"urn:uuid:{mapping_id}")
@@ -509,11 +503,12 @@ class Reporter(BaseReporter):
                             coding_id.system = Uri("http://loinc.org")
                             coding_id.code = "48018-6"
                             coding_id.display = "Gene studied [ID]"
-                            code_uniprot_id = CodeableConcept(coding=[coding_id])
-                            comp_uni_prot = ObservationComponent(code=code_gene_id)
+                            code_uni_prot = CodeableConcept(coding=[coding_id])
+                            comp_uni_prot = ObservationComponent(code=code_uni_prot)
                             comp_uni_prot.valueCodeableConcept = CodeableConcept(
                                 text=f"{uniprot_id}"
                             )
+                            
                         mapping_comps.append(comp_uni_prot)
                         mapping_comps.append(comp_ref)
                         mapping_comps.append(comp_alt)
@@ -585,5 +580,5 @@ class Reporter(BaseReporter):
                             )
                             mapping_comps.append(comp_rc_change)
                         obs_mapping.component = mapping_comps
-                        mapping_ent = BundleEntry(resource=obs_mapping, fullUrl=uri_maker)
+                        mapping_ent=BundleEntry(resource=obs_mapping,fullUrl=uri_maker)
                         self.dict_entries[sample].append(mapping_ent)
