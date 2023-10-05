@@ -1,13 +1,13 @@
 title: VCF Converter
-version: 3.0.0
+version: 3.1.0
 no_data: true
 type: converter
 description: Converter for VCF format input
 developer:
   module:
-    name: 'Giabao Tonthat, Ryangguk Kim'
+    name: Giabao Tonthat, Ryangguk Kim
     organization: 'Oak Bioinformatics, LLC'
-    email: 'giabaot@hotmail.com, rkim@oakbioinformatics.com'
+    email: giabaot@hotmail.com, info@oakvar.com
     website: 'https://oakvar.com'
     citation: ''
   data:
@@ -16,9 +16,8 @@ developer:
     email: ''
     website: ''
     citation: ''
-requires_oakvar: '2.7.1'
+requires_oakvar: '2.9.36'
 pypi_dependencies:
-  - cyvcf2
   - PyVCF3
 extra_output_columns:
   - name: genotype
@@ -49,6 +48,7 @@ extra_output_columns:
     title: Haplotype strand ID
     type: int
 release_note:
+  3.1.0: Removed cyvcf2 due to compilation in Windows.
   3.0.0: replaced PyVCF3 with cyvcf2 in conversion functions
   2.4.4: fix for unique variants.
   2.4.3: fix for multiple non-vcf and vcf input files
