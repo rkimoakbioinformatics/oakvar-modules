@@ -14,6 +14,8 @@ class Annotator(BaseAnnotator):
         gene = input_data['hugo']
         transcript = input_data['transcript']
         exonno = input_data['exonno']
+        if exonno is not None:
+            exonno = int(exonno)
         if input_data['achange'] != None or input_data['achange'] != '':
             achange = input_data['achange']
         qr = []
@@ -39,7 +41,7 @@ class Annotator(BaseAnnotator):
             input_ref_alt_pos = re.search(r'(\w{3})(\d+)(\w{3}|\?)',achange)
             if input_ref_alt_pos is not None:
                 ref_alt_pos_catch = input_ref_alt_pos.groups()
-                input_pos = ref_alt_pos_catch[1]
+                input_pos = int(ref_alt_pos_catch[1])
                 input_ref_allele = seq1(ref_alt_pos_catch[0])
                 input_alt_allele = seq1(ref_alt_pos_catch[2])
                 #Query the database for the possible variants
@@ -57,27 +59,30 @@ class Annotator(BaseAnnotator):
                 for line in pmkb_variants:
                     pmkb_achange = line[0].split(':')
                     #get pos:ref_allele_alt_allele
-                    pmkb_pos = pmkb_achange[1]
+                    pmkb_pos = codon_trans(pmkb_achange[1])
                     pmkb_ref_allele = pmkb_achange[-2]
                     pmkb_alt_allele = pmkb_achange[-1]
                     pmkb_so = pmkb_achange[-3]
                     pmkb_kind = pmkb_achange[0]
                     #match results of pmkb achange with input data
                     if input_pos in pmkb_pos:
+
                         if  pmkb_ref_allele == input_ref_allele and pmkb_alt_allele == input_alt_allele:
                             self.cursor.execute(f'{query}', {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
                         #if positions meet 
-                        elif pmkb_ref_allele == '_any' and pmkb_alt_allele == '_any':
+                        elif pmkb_ref_allele == '_any' and pmkb_alt_allele == '_any' and pmkb_kind != '_exon':
                             self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
+                            
                         if pmkb_kind == '_exon':
-                            if pmkb_pos == exonno:
+                            if exonno in pmkb_pos:
                                 self.cursor.execute(query,{"achange_pmkb": line[0],"gene": gene})
                                 qr.append(self.cursor.fetchone())
+                                
                     #handle _any kind
                     if pmkb_so == '_any' or pmkb_so == 'any':
-                        if pmkb_pos == '_any':
+                        if pmkb_pos[0] == '_any':
                             self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
         
@@ -103,7 +108,7 @@ class Annotator(BaseAnnotator):
                 for line in pmkb_variants:
                     #get pos:ref_allele_alt_allele
                     pmkb_achange = line[0].split(':')
-                    pmkb_pos = pmkb_achange[1]
+                    pmkb_pos = codon_trans(pmkb_achange[1])
                     pmkb_ref_allele = pmkb_achange[-2]
                     pmkb_alt_allele = pmkb_achange[-1]
                     pmkb_so = pmkb_achange[-3]
@@ -117,12 +122,12 @@ class Annotator(BaseAnnotator):
                             self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
                         if pmkb_kind == '_exon':
-                            if pmkb_pos == exonno:
+                            if exonno in pmkb_pos:
                                 self.cursor.execute(query,{"achange_pmkb": line[0],"gene": gene})
                                 qr.append(self.cursor.fetchone())
                     #handle _any kind
                     if pmkb_so == '_any' or pmkb_so == 'any':
-                        if pmkb_pos == '_any':
+                        if pmkb_pos[0] == '_any':
                             self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
         #handle insertion mutation cases
@@ -147,7 +152,7 @@ class Annotator(BaseAnnotator):
                 #loop through results to get a match
                 for line in pmkb_variants:
                     pmkb_achange = line[0].split(':')
-                    pmkb_pos = pmkb_achange[1]
+                    pmkb_pos = codon_trans(pmkb_achange[1])
                     pmkb_alt_allele = pmkb_achange[-1]
                     input_alt_allele_seq1 = ''
                     pmkb_so = pmkb_achange[-3]
@@ -158,7 +163,7 @@ class Annotator(BaseAnnotator):
                         for i in range(0,len(input_alt_allele)+1,3):
                             if i < len(input_alt_allele):
                                 input_alt_allele_seq1 += seq1(alt_allele[i:i+3])
-                    if pmkb_pos == input_start_pos:    
+                    if input_start_pos in pmkb_pos:    
                         if pmkb_alt_allele == input_alt_allele_seq1:
                             self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
@@ -166,12 +171,12 @@ class Annotator(BaseAnnotator):
                             self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
                         if pmkb_kind == '_exon':
-                            if pmkb_pos == exonno:
+                            if exonno in pmkb_pos:
                                 self.cursor.execute(query,{"achange_pmkb": line[0],"gene": gene})
                                 qr.append(self.cursor.fetchone())
                     #handle _any kind
                     if pmkb_so == '_any' or pmkb_so == 'any':
-                        if pmkb_pos == '_any':
+                        if pmkb_pos[0] == '_any':
                             self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
 
@@ -223,12 +228,12 @@ class Annotator(BaseAnnotator):
                             self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
                         if pmkb_kind == '_exon':
-                            if pmkb_pos == exonno:
+                            if exonno == pmkb_start_pos:
                                 self.cursor.execute(query,{"achange_pmkb": line[0],"gene": gene})
                                 qr.append(self.cursor.fetchone())
                     #handle _any so
                     if pmkb_so == '_any' or pmkb_so == 'any':
-                        if pmkb_pos == '_any':
+                        if pmkb_pos[0] == '_any':
                             self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
             #Handle deletion cases
@@ -271,11 +276,11 @@ class Annotator(BaseAnnotator):
                         if pmkb_ref_allele == input_ref_allele and pmkb_start_pos == input_start_pos:
                             self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
-                        elif pmkb_ref_allele == '_any' and pmkb_alt_allele == '_any':
+                        elif pmkb_ref_allele == '_any' and pmkb_alt_allele == '_any' and pmkb_start_pos == input_start_pos:
                             self.cursor.execute(query, {"achange_pmkb": line[0],"gene": gene})
                             qr.append(self.cursor.fetchone())
                         if pmkb_kind == '_exon':
-                            if pmkb_pos == exonno:
+                            if exonno in pmkb_start_pos:
                                 self.cursor.execute(query,{"achange_pmkb": line[0],"gene": gene})
                                 qr.append(self.cursor.fetchone())
                     #handle _any so
@@ -295,6 +300,21 @@ class Annotator(BaseAnnotator):
               "pmkb_url_variants": qr[0][7]
             }
         _ = secondary_data
+
+def codon_trans(seq):
+    if '-' in seq:
+        seq = [codon for codon in list(map(int, seq.split('-')))]
+        seq = [i for i in range(seq[0], seq[1]+1)]
+        return seq 
+    if ',' in seq:
+        seq = [int(codon) for codon in seq.split(",")]
+        return seq
+    else:
+        if seq != '_any':
+            return [int(seq)]
+        else:
+            return [seq]
+
 
 def seq1(seq, custom_map = None):
     protein_letters_3to1 = {
@@ -326,6 +346,4 @@ def seq1(seq, custom_map = None):
     onecode.update((k.upper(), v) for k, v in custom_map.items())
     seqlist = [seq[3 * i : 3 * (i+1)] for i in range(len(seq)//3)]
     return "".join(onecode.get(aa.upper()) for aa in seqlist)
-
-
 
