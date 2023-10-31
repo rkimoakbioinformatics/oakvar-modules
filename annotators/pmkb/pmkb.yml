@@ -42,9 +42,9 @@ output_columns:
   type: string 
 developer:
   module:
-    name: Gehad Kamel
+    name: ["Gehad Kamel", "Ryangguk Kim"]
     organization: Oak Bioinformatics, LLC
-    email: gehad5kamel@gmail.com
+    email: ["gehad5kamel@gmail.com", "rkim@oakbioinformatics.com"]
     website: https://oakbioinformatics.com
     citation: ''
   data:
