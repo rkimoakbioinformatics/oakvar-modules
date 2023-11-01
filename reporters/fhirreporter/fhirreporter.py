@@ -10,7 +10,7 @@ from fhir.resources.codeableconcept import CodeableConcept
 from fhir.resources.coding import Coding
 from fhir.resources.reference import Reference
 from fhir.resources.bundle import Bundle, BundleEntry
-from fhir.resources.fhirtypes import Uri, String, RangeType, MetaType
+from fhir.resources.fhirtypes import Uri, String, RangeType, MetaType , IdentifierType
 from fhir.resources.quantity import Quantity
 from fhir.resources.identifier import Identifier
 
@@ -287,39 +287,7 @@ class Reporter(BaseReporter):
 
             variant_comps = []
 
-            # get primary transcript ENSEMBL
-            primary_transcript = row["base__transcript"]
-            coding_primary_transcript = Coding()
-            coding_primary_transcript.system = "http://loinc.org"
-            coding_primary_transcript.code = "51958-7"
-            coding_primary_transcript.display = "Transcript reference sequence [ID]"
-            code_transcript = CodeableConcept(coding=[coding_primary_transcript])
-            comp_primary_transcript = ObservationComponent(code=code_transcript)
-            coding_pt_comp = Coding()
-            coding_pt_comp.system = "http://www.ensembl.org"
-            coding_pt_comp.code = primary_transcript
-            coding_pt_comp.display = primary_transcript
-            comp_primary_transcript.valueCodeableConcept = CodeableConcept(
-                coding=[coding_pt_comp],
-            )
-            variant_comps.append(comp_primary_transcript)
 
-            coding_primary_rseqtranscript = Coding()
-            coding_primary_rseqtranscript.system = "http://loinc.org"
-            coding_primary_rseqtranscript.code = "51958-7"
-            coding_primary_rseqtranscript.display = "Transcript reference sequence [ID]"
-            code_rseqtranscript = CodeableConcept(
-                coding=[coding_primary_rseqtranscript]
-            )
-            comp_primary_rseqtranscript = ObservationComponent(code=code_rseqtranscript)
-            coding_pt_rseqcomp = Coding()
-            coding_pt_rseqcomp.system = "http://www.ncbi.nlm.nih.gov/refseq"
-            coding_pt_rseqcomp.code = row["base__refseq"]
-            coding_pt_rseqcomp.display = row["base__refseq"]
-            comp_primary_rseqtranscript.valueCodeableConcept = CodeableConcept(
-                coding=[coding_pt_rseqcomp]
-            )
-            variant_comps.append(comp_primary_rseqtranscript)
 
             # Get Alleles from sqlite file
             ref = row["base__ref_base"]
@@ -486,6 +454,8 @@ class Reporter(BaseReporter):
                     ]
                 ),
             )
+            mc_row.derivedFrom = [Reference(type=Uri('variant'),identifier=Identifier(value=str(variant_id)))]
+
             gene_id = row["base__hugo"]
             if gene_id is not None:
                 coding_id = Coding()
@@ -504,6 +474,39 @@ class Reporter(BaseReporter):
                 mc_row.component = [comp_gene_id]
             else:
                 mc_row.component = []
+            # get primary transcript ENSEMBL
+            primary_transcript = row["base__transcript"]
+            coding_primary_transcript = Coding()
+            coding_primary_transcript.system = "http://loinc.org"
+            coding_primary_transcript.code = "51958-7"
+            coding_primary_transcript.display = "Transcript reference sequence [ID]"
+            code_transcript = CodeableConcept(coding=[coding_primary_transcript])
+            comp_primary_transcript = ObservationComponent(code=code_transcript)
+            coding_pt_comp = Coding()
+            coding_pt_comp.system = "http://www.ensembl.org"
+            coding_pt_comp.code = primary_transcript
+            coding_pt_comp.display = primary_transcript
+            comp_primary_transcript.valueCodeableConcept = CodeableConcept(
+                coding=[coding_pt_comp],
+            )
+            mc_row.component.append(comp_primary_transcript)
+
+            coding_primary_rseqtranscript = Coding()
+            coding_primary_rseqtranscript.system = "http://loinc.org"
+            coding_primary_rseqtranscript.code = "51958-7"
+            coding_primary_rseqtranscript.display = "Transcript reference sequence [ID]"
+            code_rseqtranscript = CodeableConcept(
+                coding=[coding_primary_rseqtranscript]
+            )
+            comp_primary_rseqtranscript = ObservationComponent(code=code_rseqtranscript)
+            coding_pt_rseqcomp = Coding()
+            coding_pt_rseqcomp.system = "http://www.ncbi.nlm.nih.gov/refseq"
+            coding_pt_rseqcomp.code = row["base__refseq"]
+            coding_pt_rseqcomp.display = row["base__refseq"]
+            comp_primary_rseqtranscript.valueCodeableConcept = CodeableConcept(
+                coding=[coding_pt_rseqcomp]
+            )
+            mc_row.component.append(comp_primary_rseqtranscript)
 
             SO = row["base__so"]
             if SO != " " and SO is not None or SO != "" and SO is not None:
@@ -811,6 +814,7 @@ class Reporter(BaseReporter):
                             )
                             mapping_comps.append(comp_rc_change)
                         mc_mapping.component = mapping_comps
+                        mc_mapping.derivedFrom = [Reference(type=Uri('variant'),identifier=Identifier(value=str(variant_id)))]
                         mapping_ent = BundleEntry(
                             resource=mc_mapping, fullUrl=uri_maker
                         )
