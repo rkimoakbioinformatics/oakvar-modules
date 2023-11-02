@@ -2,9 +2,9 @@ title: MAF Reporter
 description: Mutation Annotation File (MAF) Reporter
 type: reporter
 level: variant
-version: 0.0.4
+version: 1.0.0
 no_data: true
-requires_oakvar: "2.9.12"
+requires_oakvar: "2.9.34"
 requires:
   - ncbigene
   - dbsnp
@@ -21,9 +21,9 @@ requires:
 output_filename_schema:
 - '{run_name}.*.maf'
 developer:
-  name:  Iulian Ichim, Ryangguk Kim
+  name:  ["Iulian Ichim", "Ryangguk Kim"]
   organization: Oak Bioinformatics, LLC
-  email: ichim.iulian12@gmail.com, rkim@oakbioinformatics.com
+  email: ["ichim.iulian12@gmail.com", "rkim@oakbioinformatics.com"]
   website: https://oakbioinformatics.com
   citation: ''
 tags:

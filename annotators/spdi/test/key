@@ -1,0 +1,97 @@
+#OakVar Report
+#Created at Wednesday 09/13/2023 07:35:43
+#Report level: variant
+#
+Variant Annotation																Samples and Tags				Original Input					SPDI Annotator
+UID	Chrom	Position	End Position	Ref Base	Alt Base	Tags	Coding	Gene	Transcript	Sequence Ontology	cDNA change	Protein Change	Exon number	All Mappings	RefSeq	Genotypes	Sample Count	Samples	Tags	Chrom	Pos	End Position	Reference allele	Alternate allele	SPDI notation
+1	chr1	14930	14930	A	G			DDX11L2	ENST00000456328.2	lnc_RNA			0	ENST00000456328.2:DDX11L2::2kb_downstream_variant,lnc_RNA:::0			1	no-sample							chr1:14929:A:G
+2	chr1	15904	15904	-	C			DDX11L2	ENST00000456328.2	lnc_RNA			0	ENST00000456328.2:DDX11L2::2kb_downstream_variant,lnc_RNA:::0; ENST00000619216.1:MIR6859-1::2kb_downstream_variant,miRNA:::0			1	no-sample							chr1:15903:CC:CCC
+3	chr1	55509099	55509101	ATT	-			ENSG00000234810	ENST00000643167.1	lnc_RNA			1	ENST00000643167.1:ENSG00000234810::intron_variant,lnc_RNA:::1; ENST00000646341.1:ENSG00000234810::intron_variant,lnc_RNA:::1			1	no-sample							chr1:55509098:ATT:-
+4	chr1	55512578	55512581	TGTT	-			ENSG00000234810	ENST00000643167.1	lnc_RNA			1	ENST00000643167.1:ENSG00000234810::intron_variant,lnc_RNA:::1; ENST00000646341.1:ENSG00000234810::intron_variant,lnc_RNA:::1			1	no-sample							chr1:55512577:TGTTTGT:TGT
+5	chr1	55514277	55514277	A	-			ENSG00000234810	ENST00000643167.1	lnc_RNA			1	ENST00000643167.1:ENSG00000234810::intron_variant,lnc_RNA:::1; ENST00000646341.1:ENSG00000234810::intron_variant,lnc_RNA:::1			1	no-sample							chr1:55514276:AAAAAAAAAAAA:AAAAAAAAAAA
+6	chr1	55517724	55517724	-	TAAC			ENSG00000234810	ENST00000643167.1	lnc_RNA			1	ENST00000643167.1:ENSG00000234810::intron_variant,lnc_RNA:::1; ENST00000646341.1:ENSG00000234810::intron_variant,lnc_RNA:::1			1	no-sample							chr1:55517723:TAACT:TAACTAACT
+7	chr1	55520088	55520089	TG	-			ENSG00000234810	ENST00000643167.1	lnc_RNA			1	ENST00000643167.1:ENSG00000234810::intron_variant,lnc_RNA:::1; ENST00000646341.1:ENSG00000234810::intron_variant,lnc_RNA:::1			1	no-sample							chr1:55520087:TGTG:TG
+8	chr1	55523086	55523086	C	-			ENSG00000234810	ENST00000643167.1	lnc_RNA			1	ENST00000643167.1:ENSG00000234810::intron_variant,lnc_RNA:::1; ENST00000646341.1:ENSG00000234810::intron_variant,lnc_RNA:::1			1	no-sample							chr1:55523085:CCC:CC
+9	chr1	55512578	55512581	TGTT	-			ENSG00000234810	ENST00000643167.1	lnc_RNA			1	ENST00000643167.1:ENSG00000234810::intron_variant,lnc_RNA:::1; ENST00000646341.1:ENSG00000234810::intron_variant,lnc_RNA:::1			1	no-sample							chr1:55512577:TGTTTGT:TGT
+10	chr1	55524422	55524425	GTTA	-			ENSG00000234810	ENST00000643167.1	lnc_RNA			1	ENST00000643167.1:ENSG00000234810::intron_variant,lnc_RNA:::1; ENST00000646341.1:ENSG00000234810::intron_variant,lnc_RNA:::1			1	no-sample							chr1:55524421:GTTAGTT:GTT
+11	chr1	55532166	55532166	-	T			ENSG00000234810	ENST00000643167.1	lnc_RNA			1	ENST00000643167.1:ENSG00000234810::intron_variant,lnc_RNA:::1; ENST00000646341.1:ENSG00000234810::intron_variant,lnc_RNA:::1			1	no-sample							chr1:55532165:TTTTTT:TTTTTTT
+12	chr1	55532568	55532575	GCTCGCAC	-			ENSG00000234810	ENST00000643167.1	lnc_RNA			1	ENST00000643167.1:ENSG00000234810::intron_variant,lnc_RNA:::1; ENST00000646341.1:ENSG00000234810::intron_variant,lnc_RNA:::1			1	no-sample							chr1:55532567:GCTCGCACGCTC:GCTC
+13	chr1	63736	63738	CTA	-			OR4F5	ENST00000641515.2	2kb_upstream_variant	c.-1740_-1738del		0	ENST00000641515.2:OR4F5:A0A2U3U0J3:2kb_upstream_variant::c.-1740_-1738del:0; ENST00000642116.1:ENSG00000290826::lnc_RNA:::3	NM_001005484		1	no-sample							chr1:63735:CTACTA:CTA
+14	chr1	66436	66437	TT	-			OR4F5	ENST00000641515.2	intron_variant	c.9+863_9+864del		2	ENST00000641515.2:OR4F5:A0A2U3U0J3:intron_variant::c.9+863_9+864del:2	NM_001005484		1	no-sample							chr1:66435:TT:-
+15	chr1	82134	82148	AAAAAAAAAAAAAAA	-												1	no-sample							chr1:82133:AAAAAAAAAAAAAAAAAAAAA:AAAAAA
+16	chr1	866161	866161	A	-			ENSG00000288531	ENST00000661463.1	lnc_RNA			2	ENST00000446136.1:FAM41C::2kb_downstream_variant,lnc_RNA:::0; ENST00000661463.1:ENSG00000288531::intron_variant,lnc_RNA:::2; ENST00000671208.1:ENSG00000288531::lnc_RNA:::2			1	no-sample							chr1:866160:AAA:AA
+17	chr1	869599	869603	AAAAA	-			FAM41C	ENST00000427857.1	lnc_RNA			2	ENST00000427857.1:FAM41C::intron_variant,lnc_RNA:::2; ENST00000432963.1:FAM41C::intron_variant,lnc_RNA:::1; ENST00000446136.1:FAM41C::intron_variant,lnc_RNA:::2; ENST00000661463.1:ENSG00000288531::2kb_downstream_variant,lnc_RNA:::0			1	no-sample							chr1:869598:AAAAAAAAAAA:AAAAAA
+18	chr1	871923	871925	TTT	-			FAM41C	ENST00000427857.1	lnc_RNA			2	ENST00000427857.1:FAM41C::intron_variant,lnc_RNA:::2; ENST00000432963.1:FAM41C::2kb_upstream_variant,lnc_RNA:::0; ENST00000446136.1:FAM41C::intron_variant,lnc_RNA:::2			1	no-sample							chr1:871922:TTTTTTTTTTTTTTTT:TTTTTTTTTTTTT
+19	chr1	875518	875520	TTC	-			FAM41C	ENST00000427857.1	lnc_RNA			1	ENST00000427857.1:FAM41C::intron_variant,lnc_RNA:::1; ENST00000446136.1:FAM41C::intron_variant,lnc_RNA:::1			1	no-sample							chr1:875517:TTCTTCT:TTCT
+20	chr1	878992	878995	TGTT	-												1	no-sample							chr1:878991:TGTTTGTTT:TGTTT
+21	chr1	885946	885949	CAGT	-												1	no-sample							chr1:885945:CAGTCAG:CAG
+22	chr1	10110	10114	ACCCT	-			DDX11L2	ENST00000456328.2	lnc_RNA			0	ENST00000456328.2:DDX11L2::2kb_upstream_variant,lnc_RNA:::0			1	no-sample							chr1:10109:ACCCTA:A
+#OakVar Report
+#Created at Wednesday 09/13/2023 07:35:43
+#Report level: gene
+#
+Variant Annotation	
+Gene	Note
+DDX11L2	
+ENSG00000234810	
+ENSG00000288531	
+ENSG00000290826	
+FAM41C	
+MIR6859-1	
+OR4F5	
+#OakVar Report
+#Created at Wednesday 09/13/2023 07:35:43
+#Report level: sample
+#
+Variant Annotation	
+UID	Sample
+1	no-sample
+2	no-sample
+3	no-sample
+4	no-sample
+5	no-sample
+6	no-sample
+7	no-sample
+8	no-sample
+9	no-sample
+10	no-sample
+11	no-sample
+12	no-sample
+13	no-sample
+14	no-sample
+15	no-sample
+16	no-sample
+17	no-sample
+18	no-sample
+19	no-sample
+20	no-sample
+21	no-sample
+22	no-sample
+#OakVar Report
+#Created at Wednesday 09/13/2023 07:35:43
+#Report level: mapping
+#
+Variant Annotation			
+Original Line	Tags	UID	Input file number
+3		1	0
+4		2	0
+5		3	0
+6		4	0
+7		5	0
+8		6	0
+9		7	0
+10		8	0
+11		9	0
+12		10	0
+13		11	0
+14		12	0
+15		13	0
+16		14	0
+17		15	0
+18		16	0
+19		17	0
+20		18	0
+21		19	0
+22		20	0
+23		21	0
+24		22	0
