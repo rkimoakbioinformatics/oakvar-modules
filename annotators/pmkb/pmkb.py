@@ -130,6 +130,7 @@ class Annotator(BaseAnnotator):
             achange_pmkb = row[0]
             pmkb_achange = achange_pmkb.split(":")
             pmkb_pos = codon_trans(pmkb_achange[1])
+            pmkb_ref_allele = pmkb_achange[-2]
             pmkb_alt_allele = pmkb_achange[-1]
             input_alt_allele_seq1 = ""
             pmkb_so = pmkb_achange[-3]
@@ -222,6 +223,7 @@ class Annotator(BaseAnnotator):
             pmkb_start_pos = pmkb_achange[1]
             # get pos:alt_allele
             pmkb_end_pos = pmkb_achange[2]
+            pmkb_ref_allele = pmkb_achange[-2]
             pmkb_alt_allele = pmkb_achange[-1]
             input_alt_allele_seq1 = ""
             pmkb_so = pmkb_achange[-3]
@@ -230,9 +232,9 @@ class Annotator(BaseAnnotator):
             if input_alt_allele != None:
                 for i in range(0, len(input_alt_allele) + 1, 3):
                     if i < len(input_alt_allele):
-                        input_alt_allele_seq1 += seq1(alt_allele[i : i + 3])
+                        input_alt_allele_seq1 += seq1(input_alt_allele[i : i + 3])
             # handle _any so
-            if (pmkb_so == "_any" or pmkb_so == "any") and pmkb_pos[0] == -1:
+            if (pmkb_so == "_any" or pmkb_so == "any"):
                 self.add_to_qr(achange_pmkb, gene, qr)
             # if variant description has start and end pos - check matching with the pmkb database
             elif (
