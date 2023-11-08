@@ -270,6 +270,7 @@ class Reporter(BaseReporter):
         sample_with_variants = row["tagsampler__samples"].split(",")
 
         for sample in sample_with_variants:
+ 
             # create codingType for row  Variant Observation
             coding = Coding()
             coding.system = Uri("http://loinc.org")
@@ -613,12 +614,25 @@ class Reporter(BaseReporter):
 
             # begin all_transcript module optionloop
             if self.module_options.get("all_transcripts") == "true":
+                skip = False
                 mc_num = 1
                 all_mappings = row["base__all_mappings"].split(";")
 
                 for mapping in all_mappings:
                     mc_num += 1
                     mapping_comps = []
+
+                    mapping_list = mapping.split(":")
+
+                    if len(mapping_list) > 1:
+                        uniprot_id = mapping_list[1].strip()
+                        sequence_ontology = mapping_list[3].strip()
+                        list_so = sequence_ontology.split(",")
+                        amino_acid_change = mapping_list[4].strip()
+                        chromosome_change = mapping_list[5].strip()
+                        if list_so == 'unknown':
+                            skip = True
+                    if skip: continue 
                     mc_mapping = Observation(
                         status="final",
                         category=[
@@ -653,7 +667,7 @@ class Reporter(BaseReporter):
                         ),
                     )
 
-                    mapping_list = mapping.split(":")
+
                     transcript = mapping_list[0].strip()
                     id_maker = (
                         (self.str_id)
@@ -699,12 +713,6 @@ class Reporter(BaseReporter):
 
                         mapping_comps.append(comp_rseqtranscript)
 
-                        if len(mapping_list) > 1:
-                            uniprot_id = mapping_list[1].strip()
-                            sequence_ontology = mapping_list[3].strip()
-                            list_so = sequence_ontology.split(",")
-                            amino_acid_change = mapping_list[4].strip()
-                            chromosome_change = mapping_list[5].strip()
 
                         if uniprot_id != "" or uniprot_id != "":
                             coding_id = Coding()
