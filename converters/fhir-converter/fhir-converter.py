@@ -43,7 +43,7 @@ class Converter(BaseConverter):
         for file in file_list:
             name = os.path.basename(file)
             version =version_finder(name)
-            if int(version[1]) > self.highest_gen_version:
+            if int(version[1]) > int(self.highest_gen_version):
                 self.gencode_db = file
                 self.highest_gen_version = version[1]
 
