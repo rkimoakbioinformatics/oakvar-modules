@@ -1,0 +1,23 @@
+title: fhirreporter
+version: 1.0.0
+no_data: true
+type: reporter
+level: variant
+description: FHIR JSON file reporter
+requires_oakvar: "2.9.20"
+pypi_dependencies:
+- fhir.resources
+- uuid
+- hashlib
+output_filename_schema:
+- "{run_name}.{transcript_option}.fhir.json"
+developer:
+    name: Akash Rampersad, Ryangguk Kim 
+    organization: Oak Bioinformatics, LLC
+    email: akashjrampersad@gmail.com, rkim@oakbioinformatics.com
+    website: https://www.oakbioinformatics.com
+    citation: ''
+release_note:
+  1.0.0: initial release producing a bundle of variant observations 
+  0.1.0: working FHIR reporter with proper references and validation
+  0.0.1: initial version
