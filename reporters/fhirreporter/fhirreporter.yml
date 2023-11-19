@@ -1,16 +1,16 @@
-title: fhirreporter
-version: 1.0.0
+title: FHIR reporter
+version: 1.0.2
 no_data: true
 type: reporter
 level: variant
-description: FHIR JSON file reporter
-requires_oakvar: "2.9.20"
+description: FHIR format JSON file reporter
+requires_oakvar: "2.9.60"
 pypi_dependencies:
 - fhir.resources
 - uuid
-- hashlib
 output_filename_schema:
-- "{run_name}.{transcript_option}.fhir.json"
+- "{run_name}__*.primary.fhir.json"
+- "{run_name}__*.all.fhir.json"
 developer:
     name: Akash Rampersad, Ryangguk Kim 
     organization: Oak Bioinformatics, LLC
