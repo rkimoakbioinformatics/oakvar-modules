@@ -1,0 +1,84 @@
+##################################
+#
+# Mandatory fields
+#
+##################################
+title: pmkb
+description: PMKB is a database for clinical interpretations for clinical variants in a structured way.
+type: annotator
+level: variant
+version: 1.7.0
+data_version: 1.7.0
+datasource: 1.7.0
+# If your module does not have its own data under module_dir/data folder,
+# remove data_version field and uncomment no_data field.
+# no_data: true
+
+input_format: crx
+output_columns:
+- name: gene_name
+  title: Gene name
+  type: string
+- name: tumor_type
+  title: Tumor type
+  type: string
+- name: tissue_type
+  title: Tissue type
+  type: string
+- name: pmkb_url_interpretation
+  title: PMKB URL Interpretation
+  type: string
+- name: interpretations
+  title: interpretations
+  type: string
+- name: citations
+  title: citations
+  type: string
+- name: achange
+  title: Amino Acid Change
+  type: string
+- name: pmkb_url_variants
+  title: PMKB variant URL
+  type: string 
+developer:
+  module:
+    name: ["Gehad Kamel", "Ryangguk Kim"]
+    organization: Oak Bioinformatics, LLC
+    email: ["gehad5kamel@gmail.com", "rkim@oakbioinformatics.com"]
+    website: https://oakbioinformatics.com
+    citation: ''
+  data:
+    citation: 'Linda Huang and others, The cancer precision medicine knowledge base for structured clinical-grade mutations and interpretations, Journal of the American Medical Informatics Association, Volume 24, Issue 3, May 2017, Pages 513–519, https://doi.org/10.1093/jamia/ocw148'
+    organization: 'Weill Cornell Medicine Englander Institue for Precision Medicine'
+    email: ''
+    website: 'https://pmkb.weill.cornell.edu/'
+
+#################################
+#
+# Optional fields
+#
+#################################
+tags:
+- clinical relevance
+- precision medicine
+- cancer variants
+
+# If your module depends on other OakVar modules, 
+# list them below and uncomment.
+
+# requires:
+# - oakvar_module_name
+
+# If your module depends on PyPI packages,
+# list the name of the PyPI packages below and uncommont.
+
+# pypi_dependency:
+# - sqlite3
+
+# If your module works with OakVar versions higher than
+# a number, uncomment below and put the number.
+
+# requires_oakvar: "2.8.0"
+
+release_note:
+  0.0.1: initial version
