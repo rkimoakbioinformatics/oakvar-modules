@@ -1,62 +1,21 @@
-##################################
-#
-# Mandatory fields
-#
-##################################
-title: fhir-converter
-description: This is an OakVar converter module.
+title: FHIR converter
+version: 1.0.0
+no_data: true
 type: converter
 level: variant
-version: 0.0.1
-
-# If your module has its own data under module_dir/data folder,
-# remove no_data field and uncomment data_version field with 
-# a data version number.
-no_data: true
-# data_version: 0.0.1
-
+description: FHIR format JSON file converter
+requires_oakvar: "2.9.78"
+pypi_dependencies:
+- pathlib
+- os
+- isjon
+- glob
+- sqlite3
+output_filename_schema:
+- "exampleinput__s0.primary.fhir.json.sqlite"
 developer:
-  module:
-    name: ''
-    organization: ''
-    email: ''
-    website: ''
+    name: Akash Rampersad, Ryangguk Kim 
+    organization: Oak Bioinformatics, LLC
+    email: akashjrampersad@gmail.com, rkim@oakbioinformatics.com
+    website: https://www.oakbioinformatics.com
     citation: ''
-  data:
-    name: ''
-    organization: ''
-    email: ''
-    website: ''
-    citation: ''
-
-#################################
-#
-# Optional fields
-#
-#################################
-
-# tags are what users of OakVar can use to find your module.
-# Please consider adding tags useful in finding your module.
-
-# tags:
-# - input
-
-# If your module depends on other OakVar modules, 
-# list them below and uncomment.
-
-# requires:
-# - oakvar_module_name
-
-# If your module depends on PyPI packages,
-# list the name of the PyPI packages below and uncommont.
-
-# pypi_dependency:
-# - sqlite3
-
-# If your module works with OakVar versions higher than
-# a number, uncomment below and put the number.
-
-# requires_oakvar: "2.8.0"
-
-release_note:
-  0.0.1: initial version
