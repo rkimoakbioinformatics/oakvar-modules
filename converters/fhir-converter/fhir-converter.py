@@ -19,11 +19,18 @@ class Converter(BaseConverter):
         self.lines = None
 
     def setup(self, *args, **kwargs):
+        from pathlib import Path
+        from oakvar.lib.exceptions import ModuleNotExist
+
         fhir_dir = ov.lib.module.local.get_module_dir("fhir-converter")
-        mapping_file = str(fhir_dir) + "\GRCh38_RefSeq2UCSC.txt"
+        if fhir_dir is None:
+            fhir_dir = Path(__file__).parent
+        mapping_file = fhir_dir / "GRCh38_RefSeq2UCSC.txt"
 
         gencode_dir = ov.lib.module.local.get_module_dir("gencode")
-        gen_data = str(gencode_dir) + "\data"
+        if gencode_dir is None:
+            raise ModuleNotExist("gencode module should be installed.")
+        gen_data = gencode_dir / "data"
         path_data = pathlib.Path(gen_data)
         file_list = glob.glob(os.path.join(path_data, "*.sqlite"))
         self.gencode_db = ""
