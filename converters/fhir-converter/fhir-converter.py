@@ -72,6 +72,32 @@ class Converter(BaseConverter):
             "https://api.ncbi.nlm.nih.gov/variation/v0/",
             "http://www.ensembl.org",
         ]
+        self.loinc_chrom_dict = {
+            "LA21254-0": "chr1",
+            "LA21255-7": "chr2",
+            "LA21256-5": "chr3",
+            "LA21257-3": "chr4",
+            "LA21258-1": "chr5",
+            "LA21259-9": "chr6",
+            "LA21260-7": "chr7",
+            "LA21261-5": "chr8",
+            "LA21262-3": "chr9",
+            "LA21263-1": "chr10",
+            "LA21264-9": "chr11",
+            "LA21265-6": "chr12",
+            "LA21266-4": "chr13",
+            "LA21267-2": "chr14",
+            "LA21268-0": "chr15",
+            "LA21269-8": "chr16",
+            "LA21270-6": "chr17",
+            "LA21271-4": "chr18",
+            "LA21272-2": "chr19",
+            "LA21273-0": "chr20",
+            "LA21274-8": "chr21",
+            "LA21275-5": "chr22",
+            "LA21276-3": "chrX",
+            "LA21277-1": "chrY",
+        }
         json_file = open(self.input_path, "r")
         self.parser = ijson.parse(json_file)
 
@@ -161,6 +187,8 @@ class Converter(BaseConverter):
             self.ref_or_alt = "Ref"
         if value == "69551-0":
             self.ref_or_alt = "Alt"
+        if value in list(self.loinc_chrom_dict.keys()):
+            self.var_dict["chrom"] = self.loinc_chrom_dict[value]
 
     def check_valueString(self, prefix, event, value):
         if self.ref_or_alt == "Ref":
