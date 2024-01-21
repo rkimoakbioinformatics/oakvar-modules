@@ -4,7 +4,7 @@ import re
 import os
 from oakvar.lib.module.local import get_module_dir, get_module_conf
 import oakvar as ov
-
+from refactor import variant_conditionals
 class File_manipulation():
     def __init__(self):
         #initialize the object as connection to database using API and read as csv and then do data manipulation
@@ -23,16 +23,12 @@ class File_manipulation():
         variant_pmkb.drop(variant_pmkb.index[variant_pmkb['Variant'] == 'rearrangement'], inplace = True)
         variant_pmkb = variant_pmkb[variant_pmkb['Amino Acid Change'] != 'Unknown']
         variant_pmkb = variant_pmkb.reset_index(drop= True)
-        # print(variant_pmkb['achange'].info())
         variant_pmkb['achange'] = variant_pmkb['achange'].str.join(" ")
-        # variant_pmkb_missense = variant_pmkb.query('Variant == "missense"')
-        # variant_pmkb_missense = variant_pmkb_missense.reset_index(drop = True)
-        # aa = variant_pmkb_missense['achange'][~variant_pmkb_missense['achange'].str.contains('codon|exon|anymutation')]
-
+        
         #iterate through specific column 
         for variant in range(len(variant_pmkb.loc[:,"achange"])):
             pos = variant_pmkb.loc[variant,"achange"]
-            get_missense  = re.search(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense|frameshift|insertion|deletion|any|indel)$',pos)
+            get_variant  = re.search(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense|frameshift|insertion|deletion|any|indel)$',pos)
             # any_mutation = re.search(r'any\smutation', pos)
             any_category = re.search(r'^any\s*.*',pos)
             #Handling any category ex: any mutation, any frameshift
@@ -41,63 +37,13 @@ class File_manipulation():
                 m[1] = '_any' if m[1] == 'mutation' else m[1]
                 pos = re.sub(r'any\s*.*', f'_codon:_any:{m[1]}:_any:_any',pos)
                 variant_pmkb.at[variant,'achange'] = pos
-            # if any_mutation:
-            #     m = any_mutation.group().split(",")
-            #     pos = re.sub(r'any\smutation', f'_codon:_any:any',pos)
-            #     variant_pmkb.at[variant,'achange'] = pos
-            if get_missense:
-                get_missense = get_missense.group()
-                match = re.search(r'(\d.*)[^A-Za-z]',get_missense)
+            if get_variant:
+                get_variant = get_variant.group()
+                match = re.search(r'(\d.*)[^A-Za-z]',get_variant)
                 if match:
                     d = match.group().split(',')
-                    #misssense / nonsense
-                    if 'exon' in pos and 'missense' in pos:
-                        pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_exon:{",".join(d).replace(" ","")}:missense:_any:_any',pos)
-                        variant_pmkb.at[variant, 'achange'] = pos
-                    elif 'exon' in pos and 'nonsense' in pos:
-                        pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_exon:{",".join(d).replace(" ","")}:nonsense:_any:_any',pos)
-                        variant_pmkb.at[variant, 'achange'] = pos
-
-                    elif 'codon' in pos and'missense' in pos:
-                        pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_codon:{",".join(d).replace(" ","")}:missense:_any:_any',pos)
-                        variant_pmkb.at[variant, 'achange'] = pos
-
-                    elif 'codon' in pos and 'nonsense' in pos:
-                        pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\s(missense|nonsense)$',f'_codon:{",".join(d).replace(" ","")}:nonsense:_any:_any',pos)
-                        variant_pmkb.at[variant, 'achange'] = pos
-                    #Frameshift
-                    elif 'codon' in pos and 'frameshift' in pos:
-                        pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sframeshift$',f'_codon:{",".join(d).replace(" ","")}:frameshift:_any:_any',pos)
-                        variant_pmkb.at[variant, 'achange'] = pos
-                    elif 'exon' in pos and 'frameshift' in pos:
-                        pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sframeshift$',f'_exon:{",".join(d).replace(" ","")}:frameshift:_any:_any',pos)
-                        variant_pmkb.at[variant, 'achange'] = pos
-                    #insertion
-                    elif 'codon' in pos and 'insertion' in pos:
-                        pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sinsertion$',f'_codon:{",".join(d).replace(" ","")}:insertion:_any:_any',pos)
-                        variant_pmkb.at[variant, 'achange'] = pos
-                    elif 'exon' in pos and 'insertion' in pos:
-                        pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sinsertion$',f'_exon:{",".join(d).replace(" ","")}:insertion:_any:_any',pos)
-                        variant_pmkb.at[variant, 'achange'] = pos
-                    #deletion
-                    elif 'codon' in pos and 'deletion' in pos:
-                        pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sdeletion$',f'_codon:{",".join(d).replace(" ","")}:deletion:_any:_any',pos)
-                        variant_pmkb.at[variant, 'achange'] = pos
-                    elif 'exon' in pos and 'deletion' in pos:
-                        pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sdeletion$',f'_exon:{",".join(d).replace(" ","")}:deletion:_any:_any',pos)
-                        variant_pmkb.at[variant, 'achange'] = pos
-                    #any 
-                    elif 'exon' in pos and 'any' in pos:
-                        pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sany$',f'_exon:{",".join(d).replace(" ","")}:_any:_any:_any',pos)
-                        variant_pmkb.at[variant, 'achange'] = pos
-                    elif 'codon' in pos and 'any' in pos:
-                        pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sany$',f'_codon:{",".join(d).replace(" ","")}:_any:_any:_any',pos)
-                        variant_pmkb.at[variant, 'achange'] = pos
-                    #indel
-                    elif 'exon' in pos and 'indel' in pos:
-                        pos = re.sub(r'(codon|exon)...\s(\d*.*[0-9])*\sindel$',f'_exon:{",".join(d).replace(" ","")}:indel:_any:_any',pos)
-                        variant_pmkb.at[variant, 'achange'] = pos
-
+                    ec_identifier = pos.split(" ")[0].split("(")[0]
+                    variant_conditionals(variant_pmkb,pos,ec_identifier,variant,d)
         variant_pmkb.to_sql(os.path.splitext(csv_file)[0], db_conn, if_exists = 'replace', index = False )
 
     #variants new parsing
