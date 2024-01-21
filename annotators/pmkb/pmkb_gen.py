@@ -4,7 +4,8 @@ import re
 import os
 from oakvar.lib.module.local import get_module_dir, get_module_conf
 import oakvar as ov
-from refactor import variant_conditionals
+from refactor import variant_conditionals, variant_sequel_conditional
+
 class File_manipulation():
     def __init__(self):
         #initialize the object as connection to database using API and read as csv and then do data manipulation
@@ -49,83 +50,11 @@ class File_manipulation():
     #variants new parsing
     def variants_sequel_parsing(self, conn, csv_file):
         variants_ds = pd.read_csv(csv_file)
-        for variant in variants_ds.index:
-            desc = variants_ds.loc[variant,'Variant']
-            v = variants_ds.loc[variant,'achange']
-            if desc == 'missense':
-                if '_codon' not in v and '_exon' not in v:
-                    ex = re.search(r'([a-zA-Z])([0-9]*_[A-Za-z0-9]*|[0-9]*)([A-Za-z]*.)',v)
-                    groups = ex.groups()
-                    f = re.search(r'(\w)(\d+)_?(\w?)(\d+)?(delins|del)(\w)?',"".join(groups))
-                    if f:
-                        group_f = f.groups()
-                        if group_f[4] == 'delins':
-                            v = f'_codon:{group_f[1]}:{group_f[3]}:indel:{group_f[0]}X{group_f[2]}:Y'
-                            variants_ds.loc[variant,'achange'] = v
-                        else:
-                            #D419del
-                            v = f'_codon:{group_f[1]}:{group_f[1]}:{group_f[4]}etion:{group_f[0]}:-'
-                            variants_ds.loc[variant, 'achange'] = v
-
-                    else:
-                        v = f'_codon:{groups[1]}:{groups[1]}:{desc}:{groups[0]}:{groups[2]}'
-                        variants_ds.loc[variant,'achange'] = v
-
-            elif desc == 'nonsense':
-                if "_codon" not in v and '_exon' not in v:
-                    a_change_nonsense = re.search(r'(\w)(\d+)(\*)',v)
-                    groups_nonsense = a_change_nonsense.groups()
-                    v = f'_codon:{groups_nonsense[1]}:{groups_nonsense[1]}:{desc}:{groups_nonsense[0]}:*'
-                    variants_ds.loc[variant,'achange'] = v
-                    # print(variants_ds.loc[variant,'achange'])
-            elif desc == 'indel':
-                if '_codon' not in v and '_exon' not in v:
-                    # print(variants_ds.loc[variant,'achange'])
-                    if '_' in v and 'delins' in v:
-                        a_change_indel = re.search(r'(\w)(\d+)_(\w)(\d+)[a-z]+([A-Z0-9\s]+)',v)
-                        groups_indel = a_change_indel.groups()
-                        v = f'_codon:{groups_indel[1]}:{groups_indel[3]}:indel:{groups_indel[0]}X{groups_indel[2]}:{groups_indel[4]}'
-                        variants_ds.loc[variant,'achange'] = v
-
-                    else:
-                        a_change_indel = re.search(r'(\w)(\d+|\d+_\w\d+)[a-z]+(\w+|\s)',v)
-                        groups_indel = a_change_indel.groups()
-                        f = re.search(r'(\w)(\d+)_(\w)(\d+)[a-z]',"".join(groups_indel))
-                        if f:
-                            group_f = f.groups()
-                            v = f'_codon:{group_f[1]}:{group_f[3]}:indel:{group_f[0]}X{group_f[2]}:{group_f[2]}'
-                            variants_ds.loc[variant,'achange'] = v
-                        else:
-                            v = f'_codon:{groups_indel[1]}:indel:{groups_indel[0]}:{groups_indel[2]}'
-                            variants_ds.loc[variant,'achange'] = v
-            elif desc == 'frameshift':
-                if '_codon' not in v and '_exon' not in v:
-                    a_change_fs = re.search(r'(\w)(\d+)(?:\w+|(\*)?)',v)
-                    fs_groups = a_change_fs.groups()
-                    if fs_groups[2]:
-                        v = f'_codon:{fs_groups[1]}:{desc}:{fs_groups[0]}:*'
-                        variants_ds.loc[variant,'achange'] = v
-                    else:
-                        v = f'_codon:{fs_groups[1]}:{desc}:{fs_groups[0]}:-'
-                        variants_ds.loc[variant, 'achange'] = v
-
-            elif desc == 'insertion':
-                if '_codon' not in v and '_exon' not in v:
-                    achange_ins = re.search(r'(\w)(\d+)_(\w)(\d+)ins(\w+)',v)
-                    groups_ins = achange_ins.groups()
-                    v = f'_codon:{groups_ins[3]}:{groups_ins[3]}:{desc}:-:{groups_ins[4]}'
-                    variants_ds.loc[variant, 'achange'] = v
-            elif desc == 'deletion':
-                if '_codon' not in v and '_exon' not in v:
-                    achange_del = re.search(r'(\w)(\d+)_?(\w?)(\d+)?del',v)
-                    groups_del = achange_del.groups()
-                    if groups_del[3] == None:
-                        v = f'_codon:{groups_del[1]}:{desc}:{groups_del[0]}:-'
-                        variants_ds.loc[variant,'achange'] = v
-                    else:
-                        v = f'_codon:{groups_del[1]}:{groups_del[3]}:{desc}:{groups_del[0]}X{groups_del[2]}:-'
-                        variants_ds.loc[variant,'achange'] = v
+        
+        variant_sequel_conditional(variants_ds)
+        
         variants_ds.to_sql(os.path.splitext(csv_file)[0], conn, if_exists = 'replace', index= False)
+
     def final_variants_codon_exon_trans(self, db_conn, csv_file):
         #To be investigated
         gencode_dir = ov.lib.module.local.get_module_dir("gencode")
@@ -135,7 +64,28 @@ class File_manipulation():
         # conn_pmkb = db_conn
         variants_ds = pd.read_csv(csv_file)
         c = conn.cursor()
-        # pmkb = conn_pmkb.cursor()
+        chrom_query = """
+                    SELECT
+                        chrom
+                    FROM
+                        chroms
+                    WHERE 
+                        chromid = (
+                        SELECT 
+                            chromid
+                        FROM 
+                            transcript
+                        WHERE 
+                            name LIKE :transcript)
+                    """
+        transcript_query = """
+                        SELECT 
+                            tid
+                        FROM 
+                            transcript
+                        WHERE 
+                            name LIKE :transcript
+                        """
         for row in variants_ds.index:
             if '_exon' in variants_ds.loc[row , 'achange'] and "NOTCH1" not in variants_ds.loc[row,'Gene']:
                 data = variants_ds.loc[row,'achange'].split(":")
@@ -153,31 +103,9 @@ class File_manipulation():
                 # print(variants_ds.loc[row,'Transcript ID (GRCh37/hg19)'])
                     t = variants_ds.loc[row, 'Transcript ID (GRCh37/hg19)']
                     # print(t)
-                    c.execute("""
-                    SELECT
-                        chrom
-                    FROM
-                        chroms
-                    WHERE 
-                        chromid = (
-                        SELECT 
-                            chromid
-                        FROM 
-                            transcript
-                        WHERE 
-                            name LIKE :transcript)
-                    """, {"transcript": t+"%"})
+                    c.execute(chrom_query, {"transcript": t+"%"})
                     chromd = c.fetchmany()[0]
-                    c.execute(
-                        """
-                        SELECT 
-                            tid
-                        FROM 
-                            transcript
-                        WHERE 
-                            name LIKE :transcript
-                        """, {"transcript": t+"%"}
-                    )
+                    c.execute(transcript_query, {"transcript": t+"%"})
                     tid = c.fetchall()[0][0]
                     # print(tid)
                     t_name = f'transcript_frags_{chromd[0]}'
@@ -210,7 +138,7 @@ class File_manipulation():
         variants_ds.to_sql(os.path.splitext(csv_file)[0], db_conn, if_exists='replace', index = False)
 
         '''
-        Interpretations dataset method
+        Interpretations dataset methods
         '''
 
     def interpretations_cleaning(self, conn, csv_file):
@@ -446,7 +374,7 @@ db_conn = sqlite3.connect('pmkb.sqlite', timeout = 30)
 files_csv = os.listdir('.')
 #upload pmkb files into the database
 for file_csv in files_csv:
-    if 'pmkb' in file_csv:
+    if 'pmkb_' in file_csv:
         upload_csv(db_conn, file_csv)
 
 
