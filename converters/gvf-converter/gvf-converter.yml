@@ -1,16 +1,16 @@
 title: GVF Converter
-version: 0.0.1
+version: 1.0.0
 no_data: true
 type: converter
 description: Allows user to input files in GVF/GFF/GFF3 format.
 developer:
   name: Shayne Skrtic, Iulian Ichim, Ryangguk Kim
   organization: Oak Bioinformatics, LLC
-  email: skrtics@xavier.edu ichim.iulian12@gmail.com, rkim@oakbioinformatics.com
+  email: skrtics@xavier.edu, ichim.iulian12@gmail.com, rkim@oakbioinformatics.com
   website: https://oakbioinformatics.com
   citation: ""
 requires_oakvar: "2.9.0"
 tags:
 - input/output
 release_note:
-  0.0.1: first realease
+  1.0.0: first realease
