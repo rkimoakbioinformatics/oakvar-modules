@@ -28,9 +28,11 @@ from fhir.resources.codeableconcept import CodeableConcept
 from fhir.resources.coding import Coding
 from fhir.resources.reference import Reference
 from fhir.resources.bundle import Bundle, BundleEntry
+from fhir.resources import attachment, sampleddata
 from fhir.resources.fhirtypes import Uri
-from fhir.resources.fhirtypes import String
-from fhir.resources.fhirtypes import RangeType
+from fhir.resources.fhirtypes import Boolean, String , Integer
+from fhir.resources import range, ratio, period
+from fhir.resources.fhirtypes import DateTime, Time 
 from fhir.resources.fhirtypes import MetaType
 from fhir.resources.observation import Observation
 from fhir.resources.identifier import Identifier
@@ -39,6 +41,10 @@ import os, sys; sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 from fhir_component import *
 from fhir_coding import *
 from fhir_consts import *
+
+
+
+
 
 class Reporter(BaseReporter):
     def __init__(self, *args, **kwargs):
@@ -54,6 +60,22 @@ class Reporter(BaseReporter):
         self.dict_patient: Dict[str, Reference] = {}
         self.ensembl_to_refseq_d: Dict[str, List[str]] = {}
         self.allele_frequency = None
+        self.yaml_terms = {
+            'code': fhir_coding.get_coding_generic,
+            "valueAttachment": fhir_component.get_attachment_comp,
+            "valueBoolean" : fhir_component.get_boolean_value,
+            "valueCodeableConcept": fhir_component.get_codeable_concept_generic,
+            "effectiveDateTime": fhir_component.get_effDateTime_comp,
+            "valueInteger": fhir_component.get_integer_comp,
+            "valuePeriod": fhir_component.get_period_comp,
+            "valueQuantity": fhir_component.get_quantity_comp,
+            "valueRange": fhir_component.get_range_comp,
+            "valueRatio": fhir_component.get_ratio_comp,
+            "valueReference": fhir_component.get_reference_comp ,
+            "valueSampledData": fhir_component.get_SampledData_comp,
+            "valueString": fhir_component.get_string_comp
+            }
+        self.yaml_components = []
 
     def setup(self):
         from oakvar import get_mapper
@@ -252,6 +274,7 @@ class Reporter(BaseReporter):
             code = component['code']
             coding = code['coding']
             component_code = coding['code']
+            
     def add_gnomad_AF(self, frequency, components: list):
         component = get_gnomad_allele_frequency()
         frequency = valueQuantity(value=frequency)
@@ -261,25 +284,25 @@ class Reporter(BaseReporter):
         components.append(component)
 
 
-    def add_components_option(self, row, option_yaml: dict , components: list):
-        component_list = yaml.safe_load(option_yaml)
-        for component in components:
-            code = comp['code']
-            type_code = code['coding']['code']
-            if type_code == "69547-8"":
-                self.add_fhir_ref_base(row,component)
-            if type_code == "48000-4"
-                self.add_fhir_chrom(row, components)
-            if type_code == "92822-6":
-                self.add_fhir_coord_system(row, components)
-            if type_code == "81254-5":
-                self.add_fhir_pos(row, components)
-            if type_code == "69547-8":
-                self.add_fhir_ref_base(row, components)
-            if type_code == "69551-0": 
-                self.add_fhir_alt_base(row, components)
-            if type_code == "92821-8":
-                self.allele_frequency = component['valueQuantity']['value']
+    def write_generic_comp_code(comp_yaml: dict):
+        data = yaml.safe_load(comp_yaml)
+        components = data['module_options']['fhirreporter']['components']
+        list_components = [component['component'] for component in components]
+        for component in list_components:
+            keys = list(component.keys())
+            counter = 0
+            while counter <= len(keys-1):
+                value_key = keys[counter]
+                value_json = component[value_key]
+                component_to_add = self.value_terms[value_key](value_json)
+                self.yaml_components.append(component_to_add)
+
+    
+        
+
+
+
+
 
 
 

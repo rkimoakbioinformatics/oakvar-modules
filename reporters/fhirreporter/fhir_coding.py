@@ -18,13 +18,21 @@ from typing import List
 from fhir_consts import *
 
 
-def get_codeable_concept(system: str, code: str, display: str):
+def     get_codeable_concept(system: str, code: str, display: str):
     from fhir.resources.codeableconcept import CodeableConcept
 
     codeable_concept = CodeableConcept() # type: ignore
     coding = get_coding(system, code, display)
     codeable_concept.coding = [coding] # type: ignore
     return codeable_concept
+
+def get_coding_generic(coding_json):
+    coding = Coding()
+    coding.code= coding_json['code']
+    coding.system = coding_json['system']
+    if coding_json['display']:
+        coding.display = coding_json['display']
+    return coding
 
 def get_coding(system, code, display):
     from fhir.resources.fhirtypes import Uri
