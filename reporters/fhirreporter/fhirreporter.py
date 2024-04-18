@@ -19,6 +19,7 @@ from typing import Dict
 from typing import Tuple
 import uuid
 import hashlib
+import yaml
 import sqlite3
 from oakvar import BaseReporter
 from fhir.resources.patient import Patient
@@ -27,9 +28,11 @@ from fhir.resources.codeableconcept import CodeableConcept
 from fhir.resources.coding import Coding
 from fhir.resources.reference import Reference
 from fhir.resources.bundle import Bundle, BundleEntry
+from fhir.resources import attachment, sampleddata
 from fhir.resources.fhirtypes import Uri
-from fhir.resources.fhirtypes import String
-from fhir.resources.fhirtypes import RangeType
+from fhir.resources.fhirtypes import Boolean, String , Integer
+from fhir.resources import range, ratio, period
+from fhir.resources.fhirtypes import DateTime, Time 
 from fhir.resources.fhirtypes import MetaType
 from fhir.resources.observation import Observation
 from fhir.resources.identifier import Identifier
@@ -38,6 +41,10 @@ import os, sys; sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 from fhir_component import *
 from fhir_coding import *
 from fhir_consts import *
+
+
+
+
 
 class Reporter(BaseReporter):
     def __init__(self, *args, **kwargs):
@@ -52,6 +59,23 @@ class Reporter(BaseReporter):
         self.dict_bundles: Dict[str, Bundle] = {}
         self.dict_patient: Dict[str, Reference] = {}
         self.ensembl_to_refseq_d: Dict[str, List[str]] = {}
+        self.allele_frequency = None
+        self.yaml_terms = {
+            'code': fhir_coding.get_coding_generic,
+            "valueAttachment": fhir_component.get_attachment_comp,
+            "valueBoolean" : fhir_component.get_boolean_value,
+            "valueCodeableConcept": fhir_component.get_codeable_concept_generic,
+            "effectiveDateTime": fhir_component.get_effDateTime_comp,
+            "valueInteger": fhir_component.get_integer_comp,
+            "valuePeriod": fhir_component.get_period_comp,
+            "valueQuantity": fhir_component.get_quantity_comp,
+            "valueRange": fhir_component.get_range_comp,
+            "valueRatio": fhir_component.get_ratio_comp,
+            "valueReference": fhir_component.get_reference_comp ,
+            "valueSampledData": fhir_component.get_SampledData_comp,
+            "valueString": fhir_component.get_string_comp
+            }
+        self.yaml_components = []
 
     def setup(self):
         from oakvar import get_mapper
@@ -243,6 +267,47 @@ class Reporter(BaseReporter):
         component.valueCodeableConcept = \
             get_codeable_concept_ensembl_transcript(ensembl) # type: ignore
         mapping_comps.append(component)
+
+    def add_fhir_components(self, components: list):
+        list_components = components['components']
+        for component in list_components:
+            code = component['code']
+            coding = code['coding']
+            component_code = coding['code']
+            
+    def add_gnomad_AF(self, frequency, components: list):
+        component = get_gnomad_allele_frequency()
+        frequency = valueQuantity(value=frequency)
+        frequency.system = Uri('http://unitsofmeasure.org')
+        frequency.code = String("1")
+        component.valueQuantity = frequency
+        components.append(component)
+
+
+    def write_generic_comp_code(comp_yaml: dict):
+        data = yaml.safe_load(comp_yaml)
+        components = data['module_options']['fhirreporter']['components']
+        list_components = [component['component'] for component in components]
+        for component in list_components:
+            keys = list(component.keys())
+            counter = 0
+            while counter <= len(keys-1):
+                value_key = keys[counter]
+                value_json = component[value_key]
+                component_to_add = self.value_terms[value_key](value_json)
+                self.yaml_components.append(component_to_add)
+
+    
+        
+
+
+
+
+
+
+
+
+
 
     def get_observation(self, sample, row):
         # Creates CC for Laboratory.
@@ -521,4 +586,3 @@ class Reporter(BaseReporter):
                 resource=molecular_consequence, fullUrl=molecular_consequence_uri
             )
             entry.append(molecular_consequence_bundle)
-
