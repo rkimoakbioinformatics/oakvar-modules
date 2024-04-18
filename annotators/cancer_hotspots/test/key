@@ -1,0 +1,47 @@
+#CRAVAT Report
+#Created at Wednesday 12/23/2020 12:35:03
+#Report level: variant
+#
+Variant Annotation																Cancer Hotspots
+UID	Chrom	Position	Ref Base	Alt Base	Note	Coding	Gene	Transcript	Sequence Ontology	cDNA change	Protein Change	All Mappings	Sample Count	Samples	Tags	Cancer Types
+1	chr3	179218303	G	A		Yes	PIK3CA	ENST00000263967.4	missense_variant	c.1633G>A	p.Glu545Lys	ENST00000263967.4:PIK3CA:P42336:missense_variant:p.Glu545Lys:c.1633G>A; ENST00000643187.1:PIK3CA::missense_variant:p.Glu545Lys:c.1633G>A	1	s0		[["breast", 162], ["bowel", 88], ["bladder", 77], ["lung", 51], ["headandneck", 45], ["cervix", 33], ["esophagusstomach", 32], ["uterus", 22], ["cnsbrain", 16], ["biliarytract", 8], ["kidney", 8], ["prostate", 7], ["skin", 7], ["pancreas", 5], ["ovaryfallopiantube", 4], ["thyroid", 3], ["penis", 2], ["testis", 2], ["liver", 1], ["unk", 1], ["vulvavagina", 1]]
+2	chr3	179234284	A	G		Yes	PIK3CA	ENST00000263967.4	missense_variant	c.3127A>G	p.Met1043Val	ENST00000263967.4:PIK3CA:P42336:missense_variant:p.Met1043Val:c.3127A>G; ENST00000643187.1:PIK3CA::3_prime_UTR_variant::c.*207A>G	1	s1		[["cnsbrain", 8], ["uterus", 7], ["headandneck", 4], ["breast", 3], ["bowel", 1], ["softtissue", 1], ["thyroid", 1]]
+3	chr17	7673803	G	A		Yes	TP53	ENST00000269305.8	missense_variant	c.817C>T	p.Arg273Cys	ENST00000269305.8:TP53:P04637:missense_variant:p.Arg273Cys:c.817C>T; ENST00000359597.8:TP53::missense_variant:p.Arg273Cys:c.817C>T; ENST00000413465.6:TP53::intron_variant::c.782+378C>T; ENST00000420246.6:TP53:P04637:missense_variant:p.Arg273Cys:c.817C>T; ENST00000445888.6:TP53:P04637:missense_variant:p.Arg273Cys:c.817C>T; ENST00000455263.6:TP53:P04637:missense_variant:p.Arg273Cys:c.817C>T; ENST00000504290.5:TP53:P04637:missense_variant:p.Arg141Cys:c.421C>T; ENST00000504937.5:TP53:P04637:missense_variant:p.Arg141Cys:c.421C>T; ENST00000510385.5:TP53:P04637:missense_variant:p.Arg141Cys:c.421C>T; ENST00000574684.1:TP53::2kb_downstream_variant,processed_transcript::; ENST00000610292.4:TP53:P04637:missense_variant:p.Arg234Cys:c.700C>T; ENST00000610538.4:TP53:P04637:missense_variant:p.Arg234Cys:c.700C>T; ENST00000610623.4:TP53::missense_variant:p.Arg114Cys:c.340C>T; ENST00000615910.4:TP53::missense_variant:p.Arg262Cys:c.784C>T; ENST00000617185.4:TP53:P04637:missense_variant:p.Arg273Cys:c.817C>T; ENST00000618944.4:TP53::missense_variant:p.Arg114Cys:c.340C>T; ENST00000619186.4:TP53::missense_variant:p.Arg114Cys:c.340C>T; ENST00000619485.4:TP53:P04637:missense_variant:p.Arg234Cys:c.700C>T; ENST00000620739.4:TP53:P04637:missense_variant:p.Arg234Cys:c.700C>T; ENST00000622645.4:TP53:P04637:missense_variant:p.Arg234Cys:c.700C>T; ENST00000635293.1:TP53::missense_variant,NMD_transcript_variant:p.Arg234Cys:c.700C>T	1	s2		[["cnsbrain", 81], ["bowel", 48], ["esophagusstomach", 36], ["breast", 17], ["ovaryfallopiantube", 15], ["headandneck", 14], ["lung", 14], ["prostate", 14], ["uterus", 11], ["pancreas", 7], ["bladder", 6], ["bone", 3], ["kidney", 3], ["lymph", 3], ["blood", 2], ["softtissue", 2], ["thyroid", 2], ["adrenalgland", 1], ["liver", 1], ["skin", 1], ["thymus", 1], ["unk", 1]]
+4	chr16	11255472	C	T		Yes	SOCS1	ENST00000332029.3	missense_variant	c.7G>A	p.Ala3Thr	ENST00000332029.3:SOCS1:O15524:missense_variant:p.Ala3Thr:c.7G>A; ENST00000572173.1:RMI2:Q96E14:intron_variant::c.-516+5694C>T; ENST00000644787.1:SOCS1:O15524:missense_variant:p.Ala3Thr:c.7G>A; ENST00000649869.1:RMI2::intron_variant,processed_transcript::	1	s3		[["lymph", 3]]
+5	chr22	41170516	G	T		Yes	EP300	ENST00000263253.9	missense_variant	c.4397G>T	p.Trp1466Leu	ENST00000263253.9:EP300:Q09472:missense_variant:p.Trp1466Leu:c.4397G>T; ENST00000415054.1:AL035658.1::intron_variant,lnc_RNA::; ENST00000635584.1:EP300::2kb_downstream_variant,processed_transcript::; ENST00000674155.1:EP300::missense_variant:p.Trp1440Leu:c.4319G>T	1	s4		[["esophagusstomach", 2], ["bowel", 1]]
+6	chr2	197400752	T	C		Yes	SF3B1	ENST00000335508.10	missense_variant	c.2681A>G	p.Asp894Gly	ENST00000335508.10:SF3B1:O75533:missense_variant:p.Asp894Gly:c.2681A>G; ENST00000462613.1:SF3B1::2kb_downstream_variant,processed_transcript::; ENST00000652026.1:SF3B1::NMD_transcript_variant,3_prime_UTR_variant::c.*3748A>G; ENST00000652738.1:SF3B1::NMD_transcript_variant,3_prime_UTR_variant::c.*2940A>G	1	s5		[["blood", 1], ["skin", 1]]
+#CRAVAT Report
+#Created at Wednesday 12/23/2020 12:35:03
+#Report level: gene
+#
+Variant Annotation					
+Gene	Note	Number of Coding Variants	Number of Noncoding Variants	Sequence Ontology	All Sequence Ontologies
+PIK3CA		2	0	missense_variant	missense_variant(2),3_prime_UTR_variant(1)
+TP53		1	0	missense_variant	intron_variant(1),missense_variant(1),NMD_transcript_variant(1),processed_transcript(1)
+SOCS1		1	0	missense_variant	missense_variant(1)
+EP300		1	0	missense_variant	missense_variant(1),processed_transcript(1)
+SF3B1		1	0	missense_variant	missense_variant(1),NMD_transcript_variant(1),processed_transcript(1),3_prime_UTR_variant(1)
+#CRAVAT Report
+#Created at Wednesday 12/23/2020 12:35:03
+#Report level: sample
+#
+Variant Annotation	
+UID	Sample
+1	s0
+2	s1
+3	s2
+4	s3
+5	s4
+6	s5
+#CRAVAT Report
+#Created at Wednesday 12/23/2020 12:35:03
+#Report level: mapping
+#
+Variant Annotation			
+Original Line	User Tags	UID	Input File Number
+1		1	0
+2		2	0
+3		3	0
+4		4	0
+5		5	0
+6		6	0

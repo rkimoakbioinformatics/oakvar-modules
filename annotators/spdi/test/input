@@ -1,0 +1,24 @@
+#Chrom	Position	Strand	Reference	Alternate
+
+chr1    14930   +       A       G
+chr1    15904   +       -       C
+chr1    55509099   +       ATT       - 
+chr1    55512578    +   TGTTTGT TGT
+chr1    55514277    +   A    -
+chr1    55517724    +   T    TAACT
+chr1    55520088    +   TGT    T
+chr1    55523086    +   CC    C
+chr1    55512578    +   TGTTT    T
+chr1    55524422    +   GTTAG    G
+chr1    55532166    +   -    T
+chr1    55532568    +   GCTCGCACG    G
+chr1    63736    +   CTAC    C
+chr1    66436    +   TT    -
+chr1    82134    +   AAAAAAAAAAAAAAAA    A
+chr1    866161    +   A    -
+chr1    869599    +   AAAAAAAAAAA    AAAAAA
+chr1    871923    +   TTT    -
+chr1    875518    +   TTCT    T
+chr1    878992    +   TGTTT    T
+chr1    885946    +   CAGTC    C
+chr1    10110    +   ACCCTA    A

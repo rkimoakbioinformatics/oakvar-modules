@@ -23,7 +23,7 @@ from fhir.resources import range, ratio , quantity
 def get_base_component_gene():
     code_coding = Coding() # type: ignore
     code_coding.system = Uri("http://loinc.org")
-    code_coding.code = "48018-6"   # type: ignore
+    code_coding.code = "48018-6" # type: ignore
     code_coding.display = "Gene studied [ID]" # type: ignore
     code = CodeableConcept(coding=[code_coding]) # type: ignore
     return ObservationComponent(code=code) # type: ignore
@@ -287,15 +287,4 @@ def get_SampledData_comp(sampled_data_component):
         comp.data = String(sampled_data_component['data'])
     
     return comp
-    
-
-
-
-
-
-
-
-
-
-
     

@@ -1,0 +1,35 @@
+title: MAF Reporter
+description: Mutation Annotation File (MAF) Reporter
+type: reporter
+level: variant
+version: 1.0.0
+no_data: true
+requires_oakvar: "2.9.34"
+requires:
+  - ncbigene
+  - dbsnp
+  - ensembl_regulatory_build
+  - sift
+  - clinvar
+  - cosmic
+  - gnomad
+  - polyphen2
+  - sift
+  - thousandgenomes
+  - encode_tfbs
+  - hg19
+output_filename_schema:
+- '{run_name}.*.maf'
+developer:
+  name:  ["Iulian Ichim", "Ryangguk Kim"]
+  organization: Oak Bioinformatics, LLC
+  email: ["ichim.iulian12@gmail.com", "rkim@oakbioinformatics.com"]
+  website: https://oakbioinformatics.com
+  citation: ''
+tags:
+- input/output
+release_note:
+  0.0.4: Added missing annotator warnings
+  0.0.3: Additional columns added to the Protected MAF file format
+  0.0.2: Somatic MAF now contains additional previously unused variant columns
+  0.0.1: initial version

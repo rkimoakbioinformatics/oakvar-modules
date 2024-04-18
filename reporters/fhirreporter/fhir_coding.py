@@ -18,7 +18,7 @@ from typing import List
 from fhir_consts import *
 
 
-def     get_codeable_concept(system: str, code: str, display: str):
+def get_codeable_concept(system: str, code: str, display: str):
     from fhir.resources.codeableconcept import CodeableConcept
 
     codeable_concept = CodeableConcept() # type: ignore
