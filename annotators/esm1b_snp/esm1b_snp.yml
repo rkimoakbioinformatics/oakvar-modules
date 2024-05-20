@@ -1,0 +1,39 @@
+name: esm1b_snp
+title: ESM1b_SNP
+code_version: 0.1.0
+type: annotator
+level: variant
+version: 1.0.0
+data_version: 1.0.0
+input_columns:
+- uid
+- chrom
+- pos
+- pos_end
+- ref_base
+- alt_base
+- tags
+- coding
+- hugo
+- transcript
+- so
+- cchange
+- achange
+- exonno
+- all_mappings
+output_columns:
+- name: score
+  type: string
+  title: Score
+  desc: LLR Score Threshold < -7.5 is likely pathogenic
+  index: 1
+input_format: crx
+developer:
+  module:
+    name: ["Shayne Skrtic"]
+    organization: Oak Bioinformatics, LLC
+    email: ["skrtics@xavier.edu"]
+    website: https://oakbioinformatics.com
+    citation: ''
+  data:
+    citation: 'Brandes, N., Goldman, G., Wang, C.H. et al. Genome-wide prediction of disease variant effects with a deep protein language model. Nat Genet 55, 1512–1522 (2023). https://doi.org/10.1038/s41588-023-01465-0'
