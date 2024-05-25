@@ -1,0 +1,37 @@
+title: GWAS Catalog
+version: 1.0.0
+description: GWAS Catalog Annotator
+level: variant
+type: annotator
+secondary_inputs:
+  dbsnp: {}
+output_columns:
+- name: all
+  title: All annotations
+  type: string
+  table: true
+  table_headers:
+  - name: allele
+    title: Allele
+    type: string
+  - name: trait
+    title: Trait
+    type: string
+  - name: p_value
+    title: P value
+    type: float
+  - name: or_beta
+    title: Odds Ratio/Beta
+    type: float
+  - name: pubmed_id
+    title: PubMed ID
+    type: string
+requires:
+- dbsnp
+tags:
+- variants
+- diseases
+- traits
+- Genome-wide association studies 
+release_note:
+  0.0.1: initial version
