@@ -2,6 +2,7 @@ from oakvar import BaseAnnotator
 
 class Annotator(BaseAnnotator):
     def setup(self):
+        pass
     
     def split_pval_bits(self, pval_bits):
         pval_coeff = (pval_bits >> 8) & 0xFF
@@ -48,6 +49,7 @@ class Annotator(BaseAnnotator):
         return None
     
     def cleanup(self):
+        pass
 
 
 if __name__ == '__main__':
