@@ -26,6 +26,20 @@ output_columns:
   - name: pubmed_id
     title: PubMed ID
     type: string
+developer:
+  module:
+    name: Gizi Golt 
+    organization: Oak Bioinformatics, LLC
+    email: gizigolt@outlook.com
+    website: https://oakbioinformatics.com
+    citation: ""
+  data:
+    citation: 'Sollis, E., Mosaku, A., Abid, A., et al. (2023). The NHGRI-EBI GWAS Catalog: knowledgebase and deposition resource. Nucleic Acids Research,
+      51(D1):D977-85.'
+    email: ""
+    name: NHGRI-EBI
+    organization: NHGRI-EBI
+    website: https://www.ebi.ac.uk/gwas/
 requires:
 - dbsnp
 tags:
