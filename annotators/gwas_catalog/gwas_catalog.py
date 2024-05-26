@@ -36,6 +36,8 @@ class Annotator(BaseAnnotator):
                         pubmed_id = annotation['pubmed_id']
                         pval_coeff, pval_exp = self.split_pval_bits(pval_bits)
                         p_value = pval_coeff * (10 ** pval_exp)
+                        if or_beta is not None:
+                            or_beta = round(or_beta, 6)
                         all_results.append({
                             'allele': allele,
                             'trait': trait,
