@@ -8,6 +8,9 @@ class Annotator(BaseAnnotator):
         pval_coeff = (pval_bits >> 8) & 0xFF
         pval_exp = -(pval_bits & 0xFF)
         return pval_coeff, pval_exp
+        
+    def format_p_value(self, p_value):
+        return format(p_value, '.9g')
 
     def annotate(self, input_data, secondary_data):
         rsid = None
@@ -41,8 +44,8 @@ class Annotator(BaseAnnotator):
                         all_results.append({
                             'allele': allele,
                             'trait': trait,
-                            'p_value': p_value,
-                            'or_beta': or_beta,
+                            'p_value': self.format_p_value(p_value),
+                            'or_beta': round(or_beta, 9) if or_beta is not None else None,
                             'pubmed_id': pubmed_id
                         })
             result = {'all': all_results} if all_results else None
