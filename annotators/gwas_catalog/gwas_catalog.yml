@@ -1,0 +1,51 @@
+title: GWAS Catalog
+version: 1.0.0
+description: GWAS Catalog Annotator
+level: variant
+type: annotator
+secondary_inputs:
+  dbsnp: {}
+output_columns:
+- name: all
+  title: All annotations
+  type: string
+  table: true
+  table_headers:
+  - name: allele
+    title: Allele
+    type: string
+  - name: trait
+    title: Trait
+    type: string
+  - name: p_value
+    title: P value
+    type: float
+  - name: or_beta
+    title: Odds Ratio/Beta
+    type: float
+  - name: pubmed_id
+    title: PubMed ID
+    type: string
+developer:
+  module:
+    name: Gizi Golt 
+    organization: Oak Bioinformatics, LLC
+    email: gizigolt@outlook.com
+    website: https://oakbioinformatics.com
+    citation: ""
+  data:
+    citation: 'Sollis, E., Mosaku, A., Abid, A., et al. (2023). The NHGRI-EBI GWAS Catalog: knowledgebase and deposition resource. Nucleic Acids Research,
+      51(D1):D977-85.'
+    email: ""
+    name: NHGRI-EBI
+    organization: NHGRI-EBI
+    website: https://www.ebi.ac.uk/gwas/
+requires:
+- dbsnp
+tags:
+- variants
+- diseases
+- traits
+- Genome-wide association studies 
+release_note:
+  0.0.1: initial version
