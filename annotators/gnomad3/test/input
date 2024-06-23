@@ -1,0 +1,19 @@
+#Chrom	Position	Strand	Ref Base	Alt Base	Sample Id	Tags
+chr10	2987654	+	T	A		Does_Not_Exist
+chr10	2987655	+	C	G		Exists_in_v3
+chr3	41194775	+	C	A		plus_upstream_CTNNB1
+chr15	48717160	+	G	C		plus_SBS_SEP152
+chr7	55019338	+	G	A		plus_SBS_EGFR
+chr1	7965337	+	-	T		plus_ins_PARK7
+chr17	31343157	+	-	TATT		plus_ins_NF1_intron
+chr3	179234287	+	A	-		plus-del_PIK3CA
+chr17	31169906	+	TGTT	-		plus_del_NF1
+chr7	140719262	+	A	G		minus_downstream_BRAF
+chr12	25209822	+	C	G		minus_SBS_KRAS
+chr9	21968622	+	C	-		minus_del_CDKN2
+chr7	140800417	+	CTG	-		minus_del_BRAF
+chr7	140734780	+	-	G		minus_ins_BRAF
+chr17	7673369	+	-	GT		minus_ins_TP53
+chr1	7965337	+	-	C		fuzzy_ins_PARK7
+chr7	140800417	+	CT	-		fuzzy_del_BRAF
+

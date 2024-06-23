@@ -7,9 +7,9 @@ title: pmkb
 description: PMKB is a database for clinical interpretations for clinical variants in a structured way.
 type: annotator
 level: variant
-version: 1.7.0
-data_version: 1.7.0
-datasource: 1.7.0
+version: 1.0.0
+data_version: 1.0.0
+datasource: 1.0.0
 # If your module does not have its own data under module_dir/data folder,
 # remove data_version field and uncomment no_data field.
 # no_data: true
@@ -81,4 +81,4 @@ tags:
 # requires_oakvar: "2.8.0"
 
 release_note:
-  0.0.1: initial version
+  1.0.0: initial version

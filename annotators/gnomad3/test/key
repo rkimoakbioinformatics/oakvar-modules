@@ -1,0 +1,75 @@
+#CRAVAT Report
+#Created at Friday 04/17/2020 15:55:44
+#Report level: variant
+#
+Variant Annotation																gnomAD3								
+UID	Chrom	Position	Ref Base	Alt Base	Note	Coding	Hugo	Transcript	Sequence Ontology	cDNA change	Protein Change	All Mappings	Sample Count	Samples	Tags	Global AF	African AF	Ashkenazi Jewish AF	East Asian AF	Finnish AF	Latino AF	Non-Fin Eur AF	Other AF	South Asian AF
+1	chr10	2987654	T	A									0		Does_Not_Exist									
+2	chr10	2987655	C	G									0		Exists_in_v3	2.11285e-05	0.0	0.0	0.0	0.0	0.0	4.6697e-05	0.0	0.0
+3	chr3	41194775	C	A			CTNNB1	ENST00000405570.5	2kb upstream			ENST00000405570.5:CTNNB1:P35222:2kb upstream:(na):(na)	0		plus_upstream_CTNNB1	0.000565872	0.00183499	0.0	0.0	0.0	0.000219877	0.0	0.000465116	0.0
+4	chr15	48717160	G	C									0		plus_SBS_SEP152	2.80218e-05	7.176e-05	0.0	0.0	0.0	7.35402e-05	0.0	0.0	0.0
+5	chr7	55019338	G	A		Yes	EGFR	ENST00000275493.6	missense		A21T	ENST00000275493.6:EGFR:P00533:missense:A21T:G61A; ENST00000342916.7:EGFR:(na):missense:A21T:G61A; ENST00000344576.6:EGFR:(na):missense:A21T:G61A; ENST00000420316.6:EGFR:(na):missense:A21T:G61A; ENST00000442591.5:EGFR:A0A0B4J1Y5:missense:A21T:G61A; ENST00000454757.6:EGFR:E9PFD7:missense:A21T:G61A; ENST00000455089.5:EGFR:Q504U8:missense:A21T:G61A	0		plus_SBS_EGFR	7.02395e-05	0.000119224	0.0	0.00159642	0.0	0.0	0.0	0.0	0.0
+6	chr1	7965337	-	T		Yes	PARK7	ENST00000338639.9	frameshift insertion		_35_	ENST00000338639.9:PARK7:Q99497:frameshift insertion:_35_:-104T; ENST00000377488.5:PARK7:Q99497:frameshift insertion:_35_:-104T; ENST00000377491.5:PARK7:Q99497:frameshift insertion:_35_:-104T; ENST00000377493.9:PARK7:K7ELW0:frameshift insertion:_35_:-104T; ENST00000493678.5:PARK7:Q99497:frameshift insertion:_35_:-104T	0		plus_ins_PARK7	6.98178e-06	0.0	0.0	0.0	0.0	7.33138e-05	0.0	0.0	0.0
+7	chr17	31343157	-	TATT			NF1	ENST00000358273.8	intron			ENST00000356175.7:NF1:(na):intron:(na):(na); ENST00000358273.8:NF1:P21359:intron:(na):(na)	0		plus_ins_NF1_intron									
+8	chr3	179234287	A	-		Yes	PIK3CA	ENST00000263967.3	frameshift deletion		_1044_	ENST00000263967.3:PIK3CA:P42336:frameshift deletion:_1044_:A3130-	0		plus-del_PIK3CA									
+9	chr17	31169906	TGTT	-		Yes	NF1	ENST00000358273.8	frameshift deletion		_165_	ENST00000356175.7:NF1:(na):frameshift deletion:_165_:TGTT495-; ENST00000358273.8:NF1:P21359:frameshift deletion:_165_:TGTT495-; ENST00000431387.8:NF1:(na):frameshift deletion:_165_:TGTT495-	0		plus_del_NF1									
+10	chr7	140719262	A	G			NDUFB2	ENST00000476279.5	intron			ENST00000461457.1:NDUFB2:C9JRV4:intron:(na):(na); ENST00000476279.5:NDUFB2:O95178:intron:(na):(na)	0		minus_downstream_BRAF	0.00118589	0.000190214	0.000301023	0.0	0.00381461	0.00029274	0.0017495	0.00139405	0.000328084
+11	chr12	25209822	C	G		Yes	KRAS	ENST00000311936.7	missense		K180N	ENST00000256078.8:KRAS:P01116:3-prime utr:(na):(na); ENST00000311936.7:KRAS:(na):missense:K180N:G540C; ENST00000553788.5:LYRM5:G3V4R2:2kb downstream:(na):(na); ENST00000557334.5:KRAS:G3V5T7:missense:K67N:G201C	0		minus_SBS_KRAS									
+12	chr9	21968622	C	-			CDKN2A	ENST00000361570.4	intron			ENST00000304494.9:CDKN2A:P42771:intron:(na):(na); ENST00000361570.4:CDKN2A:A0A0A0MRI0:intron:(na):(na); ENST00000479692.2:CDKN2A:K7ENC6:2kb downstream:(na):(na); ENST00000494262.5:CDKN2A:(na):intron:(na):(na); ENST00000498124.1:CDKN2A:(na):3-prime utr:(na):(na); ENST00000498628.6:CDKN2A:(na):intron:(na):(na); ENST00000530628.2:CDKN2A:Q8N726:intron:(na):(na); ENST00000578845.2:CDKN2A:(na):intron:(na):(na); ENST00000579122.1:CDKN2A:J3QRG6:intron:(na):(na); ENST00000579755.1:CDKN2A:Q8N726:intron:(na):(na)	0		minus_del_CDKN2	3.48899e-05	2.37778e-05	0.0	0.0	0.0	0.0	6.19521e-05	0.0	0.0
+13	chr7	140800417	CTG	-		Yes	BRAF	ENST00000288602.10	inframe deletion		_308_	ENST00000288602.10:BRAF:P15056:inframe deletion:_308_:CAG923-	0		minus_del_BRAF									
+14	chr7	140734780	-	G			BRAF	ENST00000288602.10	intron			ENST00000288602.10:BRAF:P15056:intron:(na):(na)	0		minus_ins_BRAF	2.65661e-05	0.000141363	0.0	0.0	0.0	0.0	0.0	0.0	0.0
+15	chr17	7673369	-	GT			TP53	ENST00000445888.6	intron			ENST00000269305.8:TP53:P04637:intron:(na):(na); ENST00000359597.8:TP53:J3KP33:intron:(na):(na); ENST00000413465.6:TP53:E7EQX7:intron:(na):(na); ENST00000420246.6:TP53:(na):intron:(na):(na); ENST00000445888.6:TP53:P04637:intron:(na):(na); ENST00000455263.6:TP53:(na):intron:(na):(na); ENST00000504290.5:TP53:(na):intron:(na):(na); ENST00000504937.5:TP53:(na):intron:(na):(na); ENST00000510385.5:TP53:(na):intron:(na):(na); ENST00000610292.4:TP53:(na):intron:(na):(na); ENST00000610538.4:TP53:(na):intron:(na):(na); ENST00000610623.4:TP53:A0A087WT22:intron:(na):(na); ENST00000615910.4:TP53:A0A087WZU8:intron:(na):(na); ENST00000617185.4:TP53:(na):intron:(na):(na); ENST00000618944.4:TP53:A0A087WXZ1:intron:(na):(na); ENST00000619186.4:TP53:A0A087X1Q1:intron:(na):(na); ENST00000619485.4:TP53:(na):intron:(na):(na); ENST00000620739.4:TP53:(na):intron:(na):(na); ENST00000622645.4:TP53:(na):intron:(na):(na)	0		minus_ins_TP53	0.00019567	0.000595806	0.0	0.0	0.0	0.000147059	1.54923e-05	0.0	0.0
+16	chr1	7965337	-	C		Yes	PARK7	ENST00000338639.9	frameshift insertion		_35_	ENST00000338639.9:PARK7:Q99497:frameshift insertion:_35_:-104C; ENST00000377488.5:PARK7:Q99497:frameshift insertion:_35_:-104C; ENST00000377491.5:PARK7:Q99497:frameshift insertion:_35_:-104C; ENST00000377493.9:PARK7:K7ELW0:frameshift insertion:_35_:-104C; ENST00000493678.5:PARK7:Q99497:frameshift insertion:_35_:-104C	0		fuzzy_ins_PARK7									
+17	chr7	140800417	CT	-		Yes	BRAF	ENST00000288602.10	frameshift deletion		_308_	ENST00000288602.10:BRAF:P15056:frameshift deletion:_308_:AG924-	0		fuzzy_del_BRAF									
+#CRAVAT Report
+#Created at Friday 04/17/2020 15:55:44
+#Report level: gene
+#
+Variant Annotation					
+Hugo	Note	Number of Coding Variants	Number of Noncoding Variants	Sequence Ontology	All Sequence Ontologies
+#CRAVAT Report
+#Created at Friday 04/17/2020 15:55:44
+#Report level: sample
+#
+Variant Annotation	
+UID	Sample
+1	
+2	
+3	
+4	
+5	
+6	
+7	
+8	
+9	
+10	
+11	
+12	
+13	
+14	
+15	
+16	
+17	
+#CRAVAT Report
+#Created at Friday 04/17/2020 15:55:44
+#Report level: mapping
+#
+Variant Annotation			
+Original Line	User Tags	UID	Input File Number
+2	Does_Not_Exist	1	0
+3	Exists_in_v3	2	0
+4	plus_upstream_CTNNB1	3	0
+5	plus_SBS_SEP152	4	0
+6	plus_SBS_EGFR	5	0
+7	plus_ins_PARK7	6	0
+8	plus_ins_NF1_intron	7	0
+9	plus-del_PIK3CA	8	0
+10	plus_del_NF1	9	0
+11	minus_downstream_BRAF	10	0
+12	minus_SBS_KRAS	11	0
+13	minus_del_CDKN2	12	0
+14	minus_del_BRAF	13	0
+15	minus_ins_BRAF	14	0
+16	minus_ins_TP53	15	0
+17	fuzzy_ins_PARK7	16	0
+18	fuzzy_del_BRAF	17	0

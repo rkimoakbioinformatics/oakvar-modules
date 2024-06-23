@@ -1,0 +1,113 @@
+title: gnomAD3
+description: Genome Aggregation Database (gnomAD) is a resource developed by an international
+  coalition of investigators, with the goal of aggregating and harmonizing both exome
+  and genome sequencing data from a wide variety of large-scale sequencing projects
+type: annotator
+version: 1.1.2
+data_version: 1.0.0
+datasource: v3
+level: variant
+input_format: crv
+developer:
+  citation: Karczewski, Konrad J., et al. "The Mutational Constraint Spectrum Quantified
+    from Variation in 141,456 Humans." BioRxiv, Apr. 2020, p. 531210. www.biorxiv.org,
+    doi:10.1101/531210.
+  email: ''
+  name: Broad Institute
+  organization: Broad Institute
+  website: http://gnomad.broadinstitute.org/
+requires:
+- wggnomad3
+output_columns:
+- filterable: true
+  name: af
+  title: Global AF
+  type: float
+  width: 70
+  hidden: false
+- filterable: true
+  name: af_afr
+  title: African AF
+  type: float
+  width: 70
+  hidden: true
+- filterable: true
+  name: af_asj
+  title: Ashkenazi Jewish AF
+  type: float
+  width: 70
+  hidden: true
+- filterable: true
+  name: af_eas
+  title: East Asian AF
+  type: float
+  width: 70
+  hidden: true
+- filterable: true
+  name: af_fin
+  title: Finnish AF
+  type: float
+  width: 70
+  hidden: true
+- filterable: true
+  name: af_lat
+  title: Latino AF
+  type: float
+  width: 70
+  hidden: true
+- desc: non-Finnish European
+  filterable: true
+  name: af_nfe
+  title: Non-Fin Eur AF
+  type: float
+  width: 70
+  hidden: true
+- filterable: true
+  name: af_oth
+  title: Other AF
+  type: float
+  width: 70
+  hidden: true
+- filterable: true
+  name: af_sas
+  title: South Asian AF
+  type: float
+  width: 70
+  hidden: true
+tags:
+- allele frequency
+module_options:
+  fhirreporter:
+    components:
+      - component:
+          code:
+            coding:
+              - system: "http://loinc.org"
+                code: "92821-8"
+                display: "gnomAD v3 Allele Frequency"
+          valueQuantity:
+            system: "http://unitsofmeasure.org"
+            code: "1"
+            value: "$$$gnomad3__af$$$"
+      - component:
+          code:
+            coding:
+              - system: "http://loinc.org"
+                code: "92821-8"
+                display: "gnomAD v3 African Allele Frequency"
+          valueQuantity:
+            system: "http://unitsofmeasure.org"
+            code: "1"
+            value: "$$$gnomad3__af_afr$$$"
+      - component:
+          code:
+            coding:
+              - system: "http://loinc.org"
+                code: "92821-8"
+                display: "gnomAD v3 Ashzenazi Jewish Allele Frequency"
+          valueQuantity:
+            system: "http://unitsofmeasure.org"
+            code: "1"
+            value: "$$$gnomad3__af_asj$$$"
+release-note:
+  1.1.0: return None if no annotation
