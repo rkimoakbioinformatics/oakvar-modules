@@ -38,13 +38,44 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+
 from typing import Optional
 from oakvar import BaseAnnotator
-
+import sqlite3
 
 class Annotator(BaseAnnotator):
+
     def annotate(self, input_data: dict, secondary_data: Optional[dict] = None):
+
         assert input_data is not None
         _ = secondary_data
-        out = {}
-        return out
+
+        self.connection = sqlite3.connect('gnomad4.sqlite')
+        self.cursor = self.connection.cursor()
+
+        chrom = input_data["chrom"].upper()
+        pos = input_data["pos"]
+        ref = input_data["ref_base"]
+        alt = input_data["alt_base"]
+
+        self.cursor.execute(
+            f"SELECT AF_ALL, AF_AFR, AF_AMR, AF_ASJ, AF_EAS, AF_SAS, AF_FIN, AF_MID, AF_NFE FROM {chrom} WHERE POS={pos} AND REF='{ref}' AND ALT='{alt}'") 
+        qr = self.cursor.fetchone()
+
+        if qr is not None:
+            return {
+            "AF_ALL": qr[0],
+            "AF_AFR": qr[1],
+            "AF_AMR": qr[2],
+            "AF_ASJ": qr[3],
+            "AF_EAS": qr[4],
+            "AF_SAS": qr[5],
+            "AF_FIN": qr[6],
+            "AF_MID": qr[7],
+            "AF_NFE": qr[8]
+            }
+
+if __name__ == '__main__':
+    annotator = Annotator(sys.argv)
+    annotator.run()
+

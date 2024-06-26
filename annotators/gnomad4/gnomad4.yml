@@ -12,19 +12,43 @@ version: 0.0.1
 # If your module does not have its own data under module_dir/data folder,
 # remove data_version field and uncomment no_data field.
 data_version: 0.0.1
-# no_data: true
+#no_data: true
 
 input_format: crx
 output_columns:
-- name: field1
-  title: Field 1
+- name: AF_ALL
+  title: Overall AF
+  type: string
+- name: AF_AFR
+  title: African AF
+  type: string
+- name: AF_AMR
+  title: Latino AF
+  type: string
+- name: AF_ASJ
+  title: Ashkenazi Jewish AF
+  type: string
+- name: AF_EAS
+  title: East Asian AF
+  type: string
+- name: AF_SAS
+  title: South Asian AF
+  type: string
+- name: AF_FIN
+  title: Finnish AF
+  type: string
+- name: AF_MID
+  title: Middle Eastern AF
+  type: string
+- name: AF_NFE
+  title: Non-Finnish European AF
   type: string
 developer:
   module:
-    name: ''
-    organization: ''
-    email: ''
-    website: ''
+    name: Martin Stoves and Ryangguk Kim
+    organization: Oak Bioinformatics, LLC
+    email: martin.stoves@hotmail.com, rkim@oakbioinformatics.com
+    website: https://oakbioinformatics.com
     citation: ''
   data:
     name: ''
@@ -39,7 +63,7 @@ developer:
 #
 #################################
 tags:
-- clinical relevance
+- allele frequency
 
 # If your module depends on other OakVar modules, 
 # list them below and uncomment.
@@ -50,8 +74,8 @@ tags:
 # If your module depends on PyPI packages,
 # list the name of the PyPI packages below and uncommont.
 
-# pypi_dependency:
-# - sqlite3
+pypi_dependency:
+- sqlite3
 
 # If your module works with OakVar versions higher than
 # a number, uncomment below and put the number.
