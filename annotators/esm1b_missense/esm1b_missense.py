@@ -56,6 +56,7 @@ class Annotator(BaseAnnotator):
 
         # Parse the all_mappings JSON string into a dictionary
         all_mappings = json.loads(input_data['all_mappings'])
+        print(f'{all_mappings}\n')
 
         # Amino acid three-letter to single-letter code dictionary
         aa_dict = {
@@ -67,26 +68,31 @@ class Annotator(BaseAnnotator):
         for gene_symbol in all_mappings:
             mappings = all_mappings[gene_symbol]
             for mapping in mappings:
-                uniprot_id, aa_change, molecular_consequence, transcript_id, cdna_change, exon_number = mapping
+                transcript_id, refseq_id, flag1, flag2, exon_number, cdna_change, aa_change, molecular_consequence, uniprot_ids = mapping
 
-                # Skip if the UniProt ID is empty ADDED
-                if not uniprot_id:
-                    continue
+                # Split uniprot_ids if there are multiple IDs separated by commas
+                uniprot_id_list = uniprot_ids.split(',')
 
-                # Check for "MIS" as the molecular consequence
-                if "MIS" in molecular_consequence and aa_change.startswith("p."):
-                    # Extract the parts of the amino acid change
-                    match = re.match(r'p\.([A-Z][a-z]{2})(\d+)([A-Z][a-z]{2})', aa_change)
-                    if match:
-                        ref_aa, pos, var_aa = match.groups()
-                        if var_aa != "Ter":  # Ensure it is not a termination mutation
-                            # Convert the variant amino acid from three-letter to single-letter code
-                            var_aa_single = aa_dict.get(var_aa, var_aa)
+                # Process each UniProt ID separately
+                for uniprot_id in uniprot_id_list:
+                    # Skip if the UniProt ID is empty
+                    if not uniprot_id:
+                        continue
 
-                            result.append({
-                                "Uniprot": uniprot_id,
-                                "pos": int(pos),  # Ensure pos is an integer
-                                "var": var_aa_single
-                            })
+                    # Check for "MIS" as the molecular consequence
+                    if "MIS" in molecular_consequence and aa_change.startswith("p."):
+                        # Extract the parts of the amino acid change
+                        match = re.match(r'p\.([A-Z][a-z]{2})(\d+)([A-Z][a-z]{2})', aa_change)
+                        if match:
+                            ref_aa, pos, var_aa = match.groups()
+                            if var_aa != "Ter":  # Ensure it is not a termination mutation
+                                # Convert the variant amino acid from three-letter to single-letter code
+                                var_aa_single = aa_dict.get(var_aa, var_aa)
+
+                                result.append({
+                                    "Uniprot": uniprot_id,
+                                    "pos": int(pos),  # Ensure pos is an integer
+                                    "var": var_aa_single
+                                })
 
         return result
