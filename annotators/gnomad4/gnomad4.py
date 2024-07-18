@@ -50,9 +50,6 @@ class Annotator(BaseAnnotator):
         assert input_data is not None
         _ = secondary_data
 
-        self.connection = sqlite3.connect('gnomad4.sqlite')
-        self.cursor = self.connection.cursor()
-
         chrom = input_data["chrom"].upper()
         pos = input_data["pos"]
         ref = input_data["ref_base"]
