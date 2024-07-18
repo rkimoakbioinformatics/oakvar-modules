@@ -74,8 +74,7 @@ tags:
 # If your module depends on PyPI packages,
 # list the name of the PyPI packages below and uncommont.
 
-pypi_dependency:
-- sqlite3
+#pypi_dependency:
 
 # If your module works with OakVar versions higher than
 # a number, uncomment below and put the number.
