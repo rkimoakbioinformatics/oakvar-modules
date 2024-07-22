@@ -1,0 +1,1 @@
+Covid Variant Annotator Module
