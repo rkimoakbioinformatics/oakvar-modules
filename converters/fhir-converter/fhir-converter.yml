@@ -1,0 +1,21 @@
+title: FHIR converter
+version: 1.0.0
+no_data: true
+type: converter
+level: variant
+description: FHIR format JSON file converter
+requires_oakvar: "2.9.78"
+pypi_dependencies:
+- pathlib
+- os
+- isjon
+- glob
+- sqlite3
+output_filename_schema:
+- "exampleinput__s0.primary.fhir.json.sqlite"
+developer:
+    name: Akash Rampersad, Ryangguk Kim 
+    organization: Oak Bioinformatics, LLC
+    email: akashjrampersad@gmail.com, rkim@oakbioinformatics.com
+    website: https://www.oakbioinformatics.com
+    citation: ''
